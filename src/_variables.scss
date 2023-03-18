@@ -1,12 +1,37 @@
+/* Colors */
 $primary-color: #1d1d1f;
 $secondary-color: #666666;
 $third-color: #cec9c1;
-
 $accent-color: #e4b133;
-
 $success-color: #28a745;
 $info-color: #17a2b8;
 $warning-color: #ffc107;
 $danger-color: #dc3545;
-
 $navbar-color: #424242;
+
+/* Font sizes */
+$small-font-size: 14px;
+$medium-font-size: 18px;
+$large-font-size: 20px;
+
+/* Padding and margin */
+$small-spacing: 5px;
+$medium-spacing: 10px;
+$large-spacing: 20px;
+
+/* Border */
+$border-radius: 5px;
+$border-width: 1px;
+
+/* Typography */
+$font-family: 'Roboto', sans-serif;
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+/* Breakpoints */
+$small-breakpoint: 576px;
+$medium-breakpoint: 768px;
+$large-breakpoint: 992px;
+$extra-large-breakpoint: 1200px;

@@ -1,0 +1,10 @@
+.admin-equipment-list {
+    display: flex;
+    flex-direction: row;
+
+    .equipment-list {
+        flex: 1;
+        height: 100vh;
+        background-color: rgb(70, 70, 70);
+    }
+}

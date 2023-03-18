@@ -1,0 +1,10 @@
+.admin-equipment-management {
+    display: flex;
+    flex-direction: row;
+
+    .management-section {
+        flex: 1;
+        height: 100vh;
+        background-color: rgb(70, 70, 70);
+    }
+}

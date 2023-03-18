@@ -1,0 +1,48 @@
+@import "../../variables";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.admin-page {
+    display: flex;
+
+    .sidebar-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .MuiDrawer-paper {
+        height: 100%;
+        background-color: #848799;
+        position: fixed;
+        z-index: 0;
+    }
+
+    .MuiListItem-root {
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    .MuiListItemText-primary {
+        color: #fff;
+    }
+
+
+}
+
+.admin-home {
+    display: flex;
+    flex-direction: row;
+
+    .home-content {
+        flex: 1;
+        height: 100vh;
+        background-color: rgb(70, 70, 70);
+    }
+}

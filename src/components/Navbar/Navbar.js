@@ -2,13 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.scss";
 import { useAuth } from "../../contexts/AuthContext";
-import { getUserNotifications, clearUserNotifications } from "../../api/api";
+import {
+  getUserNotifications,
+  clearUserNotifications,
+  markNotificationsAsRead,
+} from "../../api/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NotificationDropdown = ({ notifications, onClearNotifications }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  const toggleDropdown = () => {
+  const toggleDropdown = async () => {
+    if (!isOpen) {
+      await markNotificationsAsRead(user.id);
+    }
     setIsOpen(!isOpen);
   };
   const handleClearNotifications = async () => {

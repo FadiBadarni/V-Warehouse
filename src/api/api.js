@@ -160,6 +160,22 @@ export async function clearUserNotifications(userId) {
     );
   }
 }
+export async function markNotificationsAsRead(userId) {
+  try {
+    const response = await axiosInstance.put(`/notifications/read/${userId}`);
+    if (response.status === 200) {
+      console.log("Notifications marked as read successfully");
+    } else {
+      console.log("Failed to mark notifications as read");
+    }
+  } catch (error) {
+    console.error(
+      "An error occurred while marking notifications as read:",
+      error
+    );
+  }
+}
+
 export async function sendBorrowRequest(borrowRequestData) {
   try {
     const response = await axiosInstance.post(
