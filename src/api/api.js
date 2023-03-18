@@ -49,7 +49,10 @@ export async function loginUser(email, password, login) {
       window.localStorage.setItem("token", response.data.token);
       // Update the isAuthenticated state after login
       login(response.data.token);
-      return response.data;
+      return {
+        token: response.data.token,
+        userInfo: response.data.userInfo, // Return userInfo object as part of the result
+      };
     } else {
       console.log("Login failed");
     }
@@ -82,11 +85,99 @@ export const getUserInfo = async () => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log("getUserInfo response data:", data);
+    window.localStorage.setItem("userId", data.id);
     return data;
   } else {
     throw new Error("Failed to fetch user info");
   }
 };
+export function getUserIdFromLocalStorage() {
+  return localStorage.getItem("userId");
+}
+export async function getWarehouseItems() {
+  try {
+    const response = await axiosInstance.get("/warehouseItems");
+    if (response.status === 200) {
+      console.log("Warehouse items fetched successfully");
+      return response.data;
+    } else {
+      console.log("Failed to fetch warehouse items");
+      return [];
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching warehouse items:", error);
+    return [];
+  }
+}
+
+export async function getWarehouseItemById(id) {
+  try {
+    const response = await axiosInstance.get(`/warehouseItems/${id}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.log("Failed to fetch warehouse item");
+      return null;
+    }
+  } catch (error) {
+    console.error(
+      "An error occurred while fetching warehouse item by ID:",
+      error
+    );
+    return null;
+  }
+}
+export async function getUserNotifications(userId) {
+  try {
+    const response = await axiosInstance.get(`/notifications/${userId}`);
+    if (response.status === 200) {
+      console.log("User notifications fetched successfully");
+      return response.data;
+    } else {
+      console.log("Failed to fetch user notifications");
+      return [];
+    }
+  } catch (error) {
+    console.error(
+      "An error occurred while fetching user notifications:",
+      error
+    );
+    return [];
+  }
+}
+export async function clearUserNotifications(userId) {
+  try {
+    const response = await axiosInstance.delete(`/notifications/${userId}`);
+    if (response.status === 204) {
+      console.log("User notifications cleared successfully");
+    } else {
+      console.log("Failed to clear user notifications");
+    }
+  } catch (error) {
+    console.error(
+      "An error occurred while clearing user notifications:",
+      error
+    );
+  }
+}
+export async function sendBorrowRequest(borrowRequestData) {
+  try {
+    const response = await axiosInstance.post(
+      `/borrow-requests`,
+      borrowRequestData
+    );
+    console.log(borrowRequestData);
+    if (response.status === 201) {
+      console.log("Borrow request sent successfully");
+      return response.data;
+    } else {
+      console.log("Failed to send borrow request");
+      return null;
+    }
+  } catch (error) {
+    console.error("An error occurred while sending borrow request:", error);
+    return null;
+  }
+}
 
 export { axiosInstance };

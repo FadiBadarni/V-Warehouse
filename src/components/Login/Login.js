@@ -14,10 +14,8 @@ function Login() {
     e.preventDefault();
     try {
       const result = await loginUser(email, password, login);
-      console.log("Result from API:", result);
       if (result.token) {
         window.localStorage.setItem("token", result.token);
-        console.log("Token saved to local storage");
         login(result.token);
         navigate("/dashboard"); // Redirect to the dashboard page
       } else {

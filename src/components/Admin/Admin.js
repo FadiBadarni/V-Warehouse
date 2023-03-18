@@ -1,12 +1,10 @@
 import React from "react";
+import useAdminRole from "../../hooks/useAdminRole";
 
-function Admin() {
-  return (
-    <div>
-      <h1>Admin Page</h1>
-      <p>This page is accessible only to users with the ADMIN role.</p>
-    </div>
-  );
-}
+const Admin = () => {
+  useAdminRole();
+
+  return <div>Admin Page</div>;
+};
 
 export default Admin;
