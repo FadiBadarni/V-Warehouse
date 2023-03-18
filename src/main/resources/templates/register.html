@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+    <header>
+        <h1>Create an account</h1>
+    </header>
+
+    <main>
+        <form th:object="${data}" th:action="@{/register}" method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:field="*{email}"/>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" th:field="*{password}"/>
+
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" th:field="*{confirmPassword}"/>
+
+            <select name="role" id="role" required="required">
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIn</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </main>
+</body>
+</html>
