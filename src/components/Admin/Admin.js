@@ -9,7 +9,11 @@ const Admin = () => {
   return (
     <div className="admin-home">
       <AdminLayout></AdminLayout>
-      <div className="home-content"></div>
+      <div className="home-content">
+        <div className="header">
+          <h1>Admin Control Panel Home Page</h1>
+        </div>
+      </div>
     </div>
   );
 };

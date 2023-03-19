@@ -1,9 +1,11 @@
 import React from "react";
+import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 
 import "./EquipmentOrders.scss";
 
 const EquipmentOrders = () => {
+  useAdminRole();
   return (
     <div className="section equipment-orders">
       <AdminLayout></AdminLayout>

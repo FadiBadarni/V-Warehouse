@@ -1,9 +1,11 @@
 import React from "react";
+import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 
 import "./Statistics.scss";
 
 const Statistics = () => {
+  useAdminRole();
   return (
     <div className="statistics" id="statistics">
       <AdminLayout></AdminLayout>

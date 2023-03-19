@@ -32,7 +32,7 @@ const AdminLayout = ({ children }) => (
       <List>
         {sidebarLinks.map(({ text, path }) => (
           <Link to={path} key={text} className="sidebar-link">
-            <ListItem ListItemButton>
+            <ListItem button>
               <ListItemText primary={text} />
             </ListItem>
           </Link>

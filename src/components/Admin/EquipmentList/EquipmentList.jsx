@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getWarehouseItems } from "../../../api/api";
+import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
+import TextField from "@mui/material/TextField";
+
 import "./EquipmentList.scss";
 
 const EquipmentList = () => {
+  useAdminRole();
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -22,16 +26,28 @@ const EquipmentList = () => {
     <div className="admin-equipment-list">
       <AdminLayout></AdminLayout>
       <main className="equipment-list">
-        <h2>Equipment List</h2>
-        {items.map((item) => (
-          <div key={item.id} className="item">
-            <div className="item-details">
-              <h3>{item.name}</h3>
-              <p>{item.description}</p>
+        <p className="title">
+          Effortlessly Browse and Filter Equipment Categories
+        </p>
+        <div className="search">
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            fullWidth
+            label="Search By Category"
+          />
+        </div>
+        <div className="equipments-grid">
+          {items.map((item) => (
+            <div key={item.id} className="list-item">
+              <div className="item-details">
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+              </div>
+              <div className="item-tag">{item.type}</div>
             </div>
-            <div className="item-tag">{item.type}</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </main>
     </div>
   );
