@@ -15,5 +15,6 @@ public class NotificationDTO {
     private String message;
     private LocalDateTime date;
     private Long userId;
+    private boolean isRead;
 
 }

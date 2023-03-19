@@ -4,12 +4,12 @@ import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.BorrowRequest;
 import com.example.visualvortex.repositories.BorrowRequestRepository;
+import com.example.visualvortex.repositories.NotificationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Base64;
-import java.util.Optional;
+import java.time.LocalDateTime;
+
 
 @Service
 public class BorrowRequestService {
@@ -19,6 +19,9 @@ public class BorrowRequestService {
 
     @Autowired
     private NotificationsService notificationsService;
+
+    @Autowired
+    private NotificationsRepository notificationsRepository;
 
     public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO borrowRequestDTO) {
         BorrowRequest borrowRequest = new BorrowRequest();
@@ -38,6 +41,16 @@ public class BorrowRequestService {
 //        }
 
         BorrowRequest savedBorrowRequest = borrowRequestRepository.save(borrowRequest);
+
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setDate(LocalDateTime.now());
+        notificationDTO.setUserId(borrowRequestDTO.getUserId());
+        notificationDTO.setMessage("Your Request Was Sent.");
+        notificationsService.createNotification(notificationDTO);
+
+
+
+
 
         BorrowRequestDTO resultDTO = new BorrowRequestDTO();
         resultDTO.setUserId(savedBorrowRequest.getUserId());

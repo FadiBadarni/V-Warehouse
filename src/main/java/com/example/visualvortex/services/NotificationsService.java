@@ -42,11 +42,18 @@ public class NotificationsService {
         notificationDTO.setMessage(notification.getMessage());
         notificationDTO.setDate(notification.getDate());
         notificationDTO.setUserId(notification.getUser().getId());
+        notificationDTO.setRead(notification.isRead());
         return notificationDTO;
     }
 
     public void clearUserNotifications(Long userId) {
         List<Notifications> notifications = notificationsRepository.findByUserId(userId);
         notificationsRepository.deleteAll(notifications);
+    }
+
+    public void markUserNotificationsAsRead(Long userId) {
+        List<Notifications> notifications = notificationsRepository.findByUserId(userId);
+        notifications.forEach(notification -> notification.setRead(true));
+        notificationsRepository.saveAll(notifications);
     }
 }
