@@ -11,24 +11,29 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "accounts") // users is already used by postgresql
+@Table(name = "accounts")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@Getter
-@Setter
 public class User implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    private Integer year;
+
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
 
     @Override
@@ -43,7 +48,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

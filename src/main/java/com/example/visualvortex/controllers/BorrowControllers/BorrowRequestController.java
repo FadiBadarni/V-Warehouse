@@ -19,8 +19,5 @@ public class BorrowRequestController {
         BorrowRequestDTO newBorrowRequestDTO = borrowRequestService.createBorrowRequest(borrowRequestDTO);
         return new ResponseEntity<>(newBorrowRequestDTO, HttpStatus.CREATED);
     }
-    @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint() {
-        return new ResponseEntity<>("Test endpoint reached", HttpStatus.OK);
-    }
+
 }

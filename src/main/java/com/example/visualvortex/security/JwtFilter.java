@@ -2,6 +2,7 @@ package com.example.visualvortex.security;
 
 import com.example.visualvortex.services.JwtUtil;
 import com.example.visualvortex.services.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,12 +28,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (hasJwtToken(request)) {
-            String token = extractToken(request);
-            authenticateUser(token, request);
+        try {
+            if (hasJwtToken(request)) {
+                String token = extractToken(request);
+                authenticateUser(token, request);
+            }
+            filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            // Handle expired token exception here, e.g., by sending a 401 response
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has expired");
         }
-
-        doFilter(request, response, filterChain);
     }
 
 
@@ -47,8 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private void authenticateUser(String token, HttpServletRequest request) {
-        String email = jwtUtil.extractUsername(token);
-        UserDetails userDetails = userService.loadUserByUsername(email);
+        String username = jwtUtil.extractUsername(token);
+        UserDetails userDetails = userService.loadUserByUsername(username);
 
         if (jwtUtil.isTokenValid(token, userDetails)) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

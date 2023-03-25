@@ -23,7 +23,7 @@ public class RegisterController {
                 throw new PasswordDoNotMatchs();
             }
 
-            userService.registerUser(data.getEmail(), data.getPassword());
+            userService.registerUser(data.getEmail(), data.getUsername(),data.getYear(),data.getPassword());
             return ResponseEntity.ok().build();
         } catch (PasswordDoNotMatchs ex) {
             return ResponseEntity.badRequest().body("Passwords do NOT match!");

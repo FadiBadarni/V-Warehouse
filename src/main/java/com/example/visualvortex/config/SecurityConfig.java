@@ -42,10 +42,6 @@ public class SecurityConfig {
                             .requestMatchers("/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
                 })
-                .formLogin(customizer -> {
-                    customizer.loginPage("/login").usernameParameter("email").successHandler(successHandler()).permitAll();
-                })
-                .logout(customizer -> customizer.logoutUrl("/logout").permitAll())
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
