@@ -1,3 +1,5 @@
+@import "../../variables";
+
 .item-details-container {
     display: flex;
     flex-direction: column;
@@ -11,16 +13,68 @@
     font-size: 2rem;
     margin-bottom: 20px;
     font-weight: bold;
-    color: #007bff;
+    color: $sce-primary-color;
 }
+
 
 .item-info {
     text-align: center;
     margin-bottom: 30px;
+    background-color: $sce-background-color;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .item-title {
+        color: $sce-primary-color;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .item-description {
+        color: $sce-text-color3;
+        font-size: 16px;
+        font-weight: 400;
+
+        .label {
+            color: $sce-primary-color;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+    }
+
+    .item-details {
+        .ltr & {
+            text-align: left;
+        }
+
+        .rtl & {
+            text-align: right;
+        }
+
+        .label {
+            color: $sce-primary-color;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        p {
+            color: $sce-text-color3;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
 }
 
-.late-policy {
-    background-color: #f6f6f6;
+.late-policy,
+.borrow-form {
+    background-color: $sce-background-color;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -32,11 +86,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f6f6f6;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
 
     label {
         display: flex;
@@ -45,14 +94,6 @@
         margin-bottom: 10px;
     }
 
-    input[type="date"],
-    input[type="text"] {
-        margin-top: 5px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-    }
 }
 
 button {
@@ -61,8 +102,8 @@ button {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: $sce-primary-color;
+    color: $sce-text-color;
     border: none;
 
     &:disabled {
@@ -71,6 +112,7 @@ button {
     }
 }
 
+
 .signature-modal {
     display: flex;
     flex-direction: column;
@@ -78,7 +120,7 @@ button {
     align-items: center;
     position: absolute;
     top: 50%;
-    left: 32%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;

@@ -15,60 +15,70 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export async function registerUser(email, password, confirmPassword, role) {
+function handleResponse(response, successMessage, errorMessage) {
+  if (response.status >= 200 && response.status < 300) {
+    console.log(successMessage);
+    return response.data;
+  } else {
+    console.log(errorMessage);
+    return null;
+  }
+}
+
+export async function registerUser(
+  email,
+  username,
+  year,
+  password,
+  confirmPassword
+) {
   try {
-    const response = await axios.post("http://localhost:8080/api/register", {
+    const response = await axiosInstance.post("/register", {
       email,
+      username,
+      year,
       password,
       confirmPassword,
-      role,
     });
 
-    if (response.status === 200) {
-      console.log("Registration successful");
-      return true;
-    } else {
-      console.log("Registration failed");
-      return false;
-    }
+    return handleResponse(
+      response,
+      "Registration successful",
+      "Registration failed"
+    );
   } catch (error) {
     console.error("An error occurred during registration:", error);
     return false;
   }
 }
 
-export async function loginUser(email, password, login) {
+export async function loginUser(username, password) {
   try {
-    const response = await axios.post("http://localhost:8080/api/login", {
-      email: email,
-      password: password,
+    const response = await axiosInstance.post("/login", {
+      username,
+      password,
     });
 
     if (response.status === 200) {
       console.log("Login successful");
-      window.localStorage.setItem("token", response.data.token);
-      // Update the isAuthenticated state after login
-      login(response.data.token);
       return {
         token: response.data.token,
         userInfo: response.data.userInfo, // Return userInfo object as part of the result
       };
     } else {
       console.log("Login failed");
+      throw new Error("Login failed");
     }
   } catch (error) {
     console.error("An error occurred:", error);
+    throw error;
   }
 }
 
 export async function logoutUser() {
   try {
-    const response = await axios.get("/api/logout");
-    if (response.status === 200) {
-      console.log("Logout successful");
-    } else {
-      console.log("Logout failed");
-    }
+    const response = await axiosInstance.get("/logout");
+    handleResponse(response, "Logout successful", "Logout failed");
   } catch (error) {
     console.error("An error occurred:", error);
   }
@@ -82,7 +92,9 @@ export const getUserInfo = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  if (response.status === 403 || response.status === 401) {
+    return { status: "TokenExpired" };
+  }
   if (response.ok) {
     const data = await response.json();
     window.localStorage.setItem("userId", data.id);
@@ -91,6 +103,7 @@ export const getUserInfo = async () => {
     throw new Error("Failed to fetch user info");
   }
 };
+
 export function getUserIdFromLocalStorage() {
   return localStorage.getItem("userId");
 }
@@ -196,5 +209,23 @@ export async function sendBorrowRequest(borrowRequestData) {
     return null;
   }
 }
+
+export const translateText = async (text, targetLanguage) => {
+  try {
+    const apiKey = "AIzaSyARi94taMPUOMUWQiQVjvosqJpMO8rontE";
+    const response = await axios.post(
+      `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
+      {
+        q: text,
+        target: targetLanguage,
+      }
+    );
+
+    return response.data.data.translations[0].translatedText;
+  } catch (error) {
+    console.error("Error translating text:", error);
+    return text;
+  }
+};
 
 export { axiosInstance };

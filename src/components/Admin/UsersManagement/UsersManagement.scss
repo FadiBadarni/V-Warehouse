@@ -1,0 +1,24 @@
+.users-management {
+    display: flex;
+    flex-direction: row;
+
+    .users-section {
+        flex: 1;
+        height: 100vh;
+        background-color: rgb(70, 70, 70);
+    }
+}
+
+.dropzone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #666;
+    border-radius: 4px;
+    width: 50%;
+    height: 200px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}

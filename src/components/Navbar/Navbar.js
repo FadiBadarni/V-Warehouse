@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import LanguageSelector from "../LanguageSelector";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 import "./Navbar.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import {
@@ -9,9 +12,15 @@ import {
 } from "../../api/api";
 import { motion, AnimatePresence } from "framer-motion";
 
+const getLanguageDirection = (language) => {
+  const rtlLanguages = ["he"];
+  return rtlLanguages.includes(language) ? "rtl" : "ltr";
+};
+
 const NotificationDropdown = ({ notifications, onClearNotifications }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { t } = useTranslation();
   const toggleDropdown = async () => {
     if (!isOpen) {
       await markNotificationsAsRead(user.id);
@@ -30,7 +39,7 @@ const NotificationDropdown = ({ notifications, onClearNotifications }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
-      <span>Notifications</span>
+      <span>{t("navbar.notifications")}</span>
       <AnimatePresence>
         {isOpen && (
           <motion.ul
@@ -70,6 +79,8 @@ const NotificationDropdown = ({ notifications, onClearNotifications }) => {
 const Navbar = ({ children }) => {
   const { isAuthenticated, logout, user } = useAuth();
   const [notifications, setNotifications] = useState([]);
+  const { t } = useTranslation();
+  const direction = getLanguageDirection(i18n.language);
   useEffect(() => {
     const fetchNotifications = async () => {
       if (user && user.id) {
@@ -88,23 +99,23 @@ const Navbar = ({ children }) => {
     setNotifications([]);
   };
   return (
-    <div id="navigation-bar">
-      <nav>
-        <ul>
+    <div id="navigation-bar" className={direction}>
+      <nav className="navbar">
+        <ul className="navbar-menu">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">{t("navbar.home")}</Link>
           </li>
           <li>
-            <Link to="/warehouse">Warehouse</Link>
+            <Link to="/warehouse">{t("navbar.warehouse")}</Link>
           </li>
           <li>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">{t("navbar.dashboard")}</Link>
           </li>
 
           {!isAuthenticated && (
             <>
               <li>
-                <Link to="/auth/login">Login</Link>
+                <Link to="/auth/login">{t("navbar.login")}</Link>
               </li>
             </>
           )}
@@ -118,13 +129,17 @@ const Navbar = ({ children }) => {
               </li>
               <li>
                 <Link to="/auth/logout" onClick={handleLogout}>
-                  Logout
+                  {t("navbar.logout")}
                 </Link>
               </li>
             </>
           )}
+          <li>
+            <LanguageSelector />
+          </li>
         </ul>
       </nav>
+
       <div className="content">{children}</div>
     </div>
   );

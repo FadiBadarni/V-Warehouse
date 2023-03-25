@@ -9,7 +9,7 @@ const sidebarLinks = [
   { text: "Home", path: "/admin" },
   { text: "Equipment List", path: "/admin/equipment-list" },
   { text: "Equipment Management", path: "/admin/equipment-management" },
-  { text: "Loan Management", path: "/admin/loan-management" },
+  { text: "Users Management", path: "/admin/users-management" },
   { text: "Equipment Ordering", path: "/admin/equipment-orders" },
   { text: "Statistics", path: "/admin/statistics" },
 ];

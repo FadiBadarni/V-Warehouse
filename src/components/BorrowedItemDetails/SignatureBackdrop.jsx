@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const SignatureBackdrop = ({ handleClose }) => (
+const SignatureBackdrop = ({ handleClose }) => {
   <motion.div
     style={{
       position: "fixed",
@@ -17,7 +17,7 @@ const SignatureBackdrop = ({ handleClose }) => (
     exit={{ opacity: 0 }}
     transition={{ duration: 0.3 }}
     onClick={handleClose}
-  ></motion.div>
-);
+  ></motion.div>;
+};
 
 export default SignatureBackdrop;

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [year, setYear] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -12,7 +14,13 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await registerUser(email, password, confirmPassword);
+    const result = await registerUser(
+      email,
+      username,
+      year,
+      password,
+      confirmPassword
+    );
     if (result) {
       navigate("/auth/login");
     } else {
@@ -30,6 +38,19 @@ function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+        </label>
+        <br />
+        <label>
+          username:
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          year:
+          <input value={year} onChange={(e) => setYear(e.target.value)} />
         </label>
         <br />
         <label>

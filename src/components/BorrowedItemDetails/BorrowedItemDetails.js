@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  getWarehouseItemById,
-  sendBorrowRequest,
-  getUserIdFromLocalStorage,
-} from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-
-import "./BorrowedItemDetails.scss";
 import ItemInfo from "./ItemInfo";
 import LatePolicy from "./LatePolicy";
 import BorrowForm from "./BorrowForm";
 import SignatureModal from "./SignatureModal";
 import SignatureBackdrop from "./SignatureBackdrop";
+import { useTranslation } from "react-i18next";
+import { translateText } from "../../api/api";
+import {
+  getWarehouseItemById,
+  sendBorrowRequest,
+  getUserIdFromLocalStorage,
+} from "../../api/api";
+
+import "./BorrowedItemDetails.scss";
 
 const BorrowedItemDetails = () => {
+  const { t, i18n } = useTranslation();
+
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -31,14 +35,45 @@ const BorrowedItemDetails = () => {
     const fetchItemDetails = async (itemId) => {
       try {
         const itemDetails = await getWarehouseItemById(itemId);
-        setItem(itemDetails);
+        if (i18n.language !== "en") {
+          const translatedName = await translateText(
+            itemDetails.name,
+            i18n.language
+          );
+          const translatedDescription = await translateText(
+            itemDetails.description,
+            i18n.language
+          );
+          const translatedType = await translateText(
+            itemDetails.type,
+            i18n.language
+          );
+          const translatedAccompanyingEquipment = await translateText(
+            itemDetails.accompanyingEquipment,
+            i18n.language
+          );
+          const translatedSafetyInstructions = await translateText(
+            itemDetails.safetyInstructions,
+            i18n.language
+          );
+          setItem({
+            ...itemDetails,
+            name: translatedName,
+            description: translatedDescription,
+            type: translatedType,
+            accompanyingEquipment: translatedAccompanyingEquipment,
+            safetyInstructions: translatedSafetyInstructions,
+          });
+        } else {
+          setItem(itemDetails);
+        }
       } catch (error) {
         console.error("Error fetching item details:", error);
       }
     };
 
     fetchItemDetails(id);
-  }, [id]);
+  }, [id, i18n.language]);
 
   const handleSendRequest = () => {
     setShowModal(true);
@@ -103,7 +138,7 @@ const BorrowedItemDetails = () => {
 
   return (
     <div className="item-details-container">
-      <h1 className="page-title">Gear Up for Your Journey</h1>
+      <h1 className="page-title">{t("borrowPage.title")}</h1>
       <ItemInfo item={item}></ItemInfo>
       <LatePolicy></LatePolicy>
       <BorrowForm

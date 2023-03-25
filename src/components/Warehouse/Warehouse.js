@@ -3,6 +3,8 @@ import { getWarehouseItems } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { translateText } from "../../api/api";
 import "./Warehouse.scss";
 
 const Warehouse = () => {
@@ -10,16 +12,8 @@ const Warehouse = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
-  const tags = [
-    "All",
-    "Audio",
-    "Camera",
-    "Lighting",
-    "Computer",
-    "Video Production",
-    "Presentation",
-    "Storage",
-  ];
+  const tags = ["All", "Audio", "Cameras", "Lighting", "iPads", "Printers"];
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -29,7 +23,28 @@ const Warehouse = () => {
         if (isAuthenticated) {
           try {
             const warehouseItems = await getWarehouseItems();
-            setItems(warehouseItems);
+            const translatedItems = await Promise.all(
+              warehouseItems.map(async (item) => {
+                if (i18n.language !== "en") {
+                  const translatedName = await translateText(
+                    item.name,
+                    i18n.language
+                  );
+                  const translatedDescription = await translateText(
+                    item.description,
+                    i18n.language
+                  );
+
+                  return {
+                    ...item,
+                    name: translatedName,
+                    description: translatedDescription,
+                  };
+                }
+                return item;
+              })
+            );
+            setItems(translatedItems);
           } catch (error) {
             console.error("Error fetching warehouse items:", error);
           }
@@ -38,7 +53,7 @@ const Warehouse = () => {
 
       fetchItems();
     }
-  }, [isAuthenticated, navigate, loading]);
+  }, [isAuthenticated, navigate, loading, i18n.language]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -47,10 +62,8 @@ const Warehouse = () => {
   return (
     <div className="warehouse-container">
       <header className="warehouse-header">
-        <h1>The Visual Nexus: Where Creativity Meets Equipment</h1>
-        <h2>
-          Discover, reserve, and conquer your projects with the right tools
-        </h2>
+        <h1>{t("warehouse.title")}</h1>
+        <h2>{t("warehouse.subtitle")}</h2>
       </header>
       <div className="tag-container">
         {tags.map((tag, index) => (

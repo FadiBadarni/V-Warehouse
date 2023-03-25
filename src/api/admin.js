@@ -25,4 +25,18 @@ export const addEquipmentItem = async (item) => {
   }
 };
 
+export const importUsers = async (formData) => {
+  try {
+    const response = await axiosInstance.post("/importUsers", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error importing users:", error);
+    return null;
+  }
+};
+
 export { axiosInstance };

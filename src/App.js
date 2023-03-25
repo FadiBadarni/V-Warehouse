@@ -1,0 +1,84 @@
+import React, { useState, useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Dashboard from "./components/Dashboard/Dashboard";
+import LoginFailed from "./components/LoginFailed/LoginFailed";
+import Register from "./components/Register/Register";
+import Login from "./components/Login/Login";
+import Admin from "./components/Admin/Admin";
+import Warehouse from "./components/Warehouse/Warehouse";
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Home/Home";
+import BorrowedItemDetails from "./components/BorrowedItemDetails/BorrowedItemDetails";
+import Unauthorized from "./components/ErrorPages/Unauthorized";
+
+import EquipmentList from "./components/Admin/EquipmentList/EquipmentList";
+import EquipmentManagement from "./components/Admin/EquipmentManagement/EquipmentManagement";
+import EquipmentOrders from "./components/Admin/EquipmentOrders/EquipmentOrders";
+import Statistics from "./components/Admin/Statistics/Statistics";
+import UsersManagement from "./components/Admin/UsersManagement/UsersManagement";
+import { useAuth } from "./contexts/AuthContext";
+import { Modal, Button } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
+import { useTranslation } from "react-i18next";
+
+function App() {
+  const { i18n } = useTranslation();
+  const [direction, setDirection] = useState("ltr");
+
+  useEffect(() => {
+    setDirection(i18n.language === "hr" ? "rtl" : "ltr");
+  }, [i18n.language]);
+
+  const { showTokenExpiredModal, setShowTokenExpiredModal } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCloseModal = () => {
+    setShowTokenExpiredModal(false);
+    navigate("/auth/login");
+  };
+  return (
+    <>
+      <Navbar>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/auth/register" element={<Register />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/login-failed" element={<LoginFailed />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/warehouse" element={<Warehouse />} />
+          <Route path="/warehouse/item/:id" element={<BorrowedItemDetails />} />
+
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/equipment-list" element={<EquipmentList />} />
+          <Route path="/admin/equipment-orders" element={<EquipmentOrders />} />
+          <Route
+            path="/admin/equipment-management"
+            element={<EquipmentManagement />}
+          />
+
+          <Route path="/admin/users-management" element={<UsersManagement />} />
+          <Route path="/admin/statistics" element={<Statistics />} />
+
+          <Route path="/unauthorized" element={<Unauthorized />} />
+        </Routes>
+      </Navbar>
+      <Modal
+        open={showTokenExpiredModal}
+        onClose={handleCloseModal}
+        size="tiny"
+      >
+        <Modal.Header>Session Expired</Modal.Header>
+        <Modal.Content>
+          <p>Your session has expired. Please log in again.</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={handleCloseModal} primary>
+            Log In
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    </>
+  );
+}
+
+export default App;

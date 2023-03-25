@@ -2,36 +2,48 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { getUserInfo } from "../../api/api";
+import { Modal, Button } from "semantic-ui-react";
+import { logoutUser } from "../../api/api";
+import "semantic-ui-css/semantic.min.css";
+
 import "./Dashboard.scss";
 
 function Dashboard() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [picture, setPicture] = useState("");
-  const [age, setAge] = useState("");
+  const [username, setUsername] = useState("");
+  const [year, setYear] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       navigate("/auth/login");
-    } else {
+    } else if (user) {
       const fetchUserInfo = async () => {
         try {
           const userInfo = await getUserInfo();
-          setEmail(userInfo.email);
-          setFirstName(userInfo.firstName);
-          setLastName(userInfo.lastName);
-          setPicture(userInfo.picture);
-          setAge(userInfo.age);
+          if (userInfo && userInfo.status === "TokenExpired") {
+            setShowModal(true);
+          } else if (userInfo) {
+            setEmail(userInfo.email);
+            setUsername(userInfo.username);
+            setYear(userInfo.year);
+          }
         } catch (error) {
           console.error("Error fetching user info:", error);
         }
       };
       fetchUserInfo();
     }
-  }, [isAuthenticated, navigate, loading]);
+  }, [isAuthenticated, navigate, loading, user]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    logoutUser();
+    navigate("/auth/login");
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -39,21 +51,27 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      <Modal open={showModal} onClose={handleCloseModal} size="tiny">
+        <Modal.Header>Session Expired</Modal.Header>
+        <Modal.Content>
+          <p>Your session has expired. Please log in again.</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={handleCloseModal} primary>
+            Log In
+          </Button>
+        </Modal.Actions>
+      </Modal>
       {isAuthenticated ? (
         <>
           <div className="profile-banner">
-            <img
-              className="profileImage"
-              src={picture}
-              alt={`${firstName} ${lastName}`}
-            />
             <div className="profile-details">
-              <h1>{`${firstName} ${lastName}`}</h1>
+              <h1>{`${username}`}</h1>
               <p>
                 <strong>Email:</strong> {email}
               </p>
               <p>
-                <strong>Age:</strong> {age}
+                <strong>Year:</strong> {year}
               </p>
             </div>
           </div>
@@ -82,6 +100,12 @@ function Dashboard() {
                 <div className="item-card">Item 6</div>
               </div>
             </div>
+            {isAuthenticated && user && user.role.includes("TEACHER") && (
+              <div className="sub-section">
+                <h2>Teacher-specific section</h2>
+                {/* Add content specific to teachers here */}
+              </div>
+            )}
           </div>
         </>
       ) : (

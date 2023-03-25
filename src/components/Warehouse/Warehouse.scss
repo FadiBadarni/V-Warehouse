@@ -1,20 +1,23 @@
-@import '../../variables';
+@import "../../variables";
 
 .warehouse-container {
     text-align: center;
     padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .warehouse-header {
     h1 {
         font-size: 2.5rem;
+        color: $sce-primary-color;
         margin-bottom: 10px;
     }
 
     h2 {
         font-size: 1.5rem;
         font-weight: normal;
-        color: #666;
+        color: $sce-text-color2;
         margin-bottom: 30px;
     }
 }
@@ -26,9 +29,8 @@
     padding: 1rem;
 }
 
-
 .item {
-    background: linear-gradient(to bottom right, #a5a5a5, #7a7a7a);
+    background-color: $sce-primary-color;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: #ffffff;
@@ -37,6 +39,7 @@
     overflow: hidden;
     padding: 1rem;
     position: relative;
+    transition: transform 0.3s;
 
     &:hover {
         transform: translateY(-10px);
@@ -45,6 +48,7 @@
 
 .item-details {
     margin-bottom: 10px;
+    flex-grow: 1;
 
     h3 {
         text-align: center;
@@ -57,8 +61,8 @@
 }
 
 .item-tag {
-    background-color: $accent-color;
-    color: #fff;
+    background-color: $sce-text-color;
+    color: $sce-primary-color;
     font-weight: bold;
     padding: 4px 8px;
     border-radius: 5px;
@@ -75,10 +79,10 @@
 }
 
 .tag-button {
-    background-color: #f8f8f8;
-    border: 1px solid #e0e0e0;
+    background-color: $sce-background-color;
+    border: 1px solid $sce-text-color3;
     border-radius: 2px;
-    color: #333;
+    color: $sce-primary-color;
     cursor: pointer;
     font-size: 14px;
     margin: 0.25rem;
@@ -88,7 +92,8 @@
 
     &:hover,
     &.selected {
-        background-color: #e0e0e0;
-        border-color: #c8c8c8;
+        background-color: $sce-text-color2;
+        border-color: $sce-text-color3;
+        color: $sce-background-color;
     }
 }
