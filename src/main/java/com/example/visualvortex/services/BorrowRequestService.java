@@ -24,13 +24,15 @@ public class BorrowRequestService {
     private NotificationsRepository notificationsRepository;
 
     public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO borrowRequestDTO) {
-        BorrowRequest borrowRequest = new BorrowRequest();
-        borrowRequest.setUserId(borrowRequestDTO.getUserId());
-        borrowRequest.setItemId(borrowRequestDTO.getItemId());
-        borrowRequest.setIntendedStartDate(borrowRequestDTO.getIntendedStartDate());
-        borrowRequest.setIntendedReturnDate(borrowRequestDTO.getIntendedReturnDate());
-        borrowRequest.setBorrowingReason(borrowRequestDTO.getBorrowingReason());
-        borrowRequest.setQuantity(borrowRequestDTO.getQuantity());
+        BorrowRequest borrowRequest = BorrowRequest.builder()
+                .userId(borrowRequestDTO.getUserId())
+                .itemId(borrowRequestDTO.getItemId())
+                .intendedStartDate(borrowRequestDTO.getIntendedStartDate())
+                .intendedReturnDate(borrowRequestDTO.getIntendedReturnDate())
+                .borrowingReason(borrowRequestDTO.getBorrowingReason())
+                .quantity(borrowRequestDTO.getQuantity())
+                .sentRequestTime(LocalDateTime.now())
+                .build();
 
 //        System.out.println("signatureData before decoding: " + borrowRequestDTO.getSignatureData());
 //        try {

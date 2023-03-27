@@ -14,24 +14,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Builder
-@Getter
-@Setter
 public class BorrowRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long userId;
     private Long itemId;
+
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()::timestamp(0)")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime intendedStartDate;
-    @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()::timestamp(0)")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime intendedReturnDate;
+    private LocalDateTime intendedStartDate, intendedReturnDate;
+
     @Column(nullable = false)
     private String borrowingReason;
     @Column(nullable = true, columnDefinition = "bytea")
     private byte[] signatureData;
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
+    private LocalDateTime sentRequestTime;
+
 }
