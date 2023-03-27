@@ -7,6 +7,7 @@
     box-sizing: border-box;
 }
 
+
 .navbar {
     overflow: visible;
     background-color: $sce-primary-color;
@@ -15,10 +16,11 @@
     width: 100%;
     z-index: 5;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-bottom: 3px solid $sce-text-color2;
+
 
     .navbar-menu {
         display: flex;
+
 
         .ltr & {
             justify-content: flex-start;
@@ -86,7 +88,7 @@
 }
 
 .content {
-    margin-top: 60px;
+    margin-top: 53px;
 }
 
 .notification-dropdown {

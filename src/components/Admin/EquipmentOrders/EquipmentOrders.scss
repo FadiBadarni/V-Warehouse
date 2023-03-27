@@ -2,9 +2,41 @@
     display: flex;
     flex-direction: row;
 
-    .orders-section {
+    &__content {
         flex: 1;
         height: 100vh;
-        background-color: rgb(70, 70, 70);
+        background-color: #f2f2f2;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+
+        .MuiTable-root {
+
+            /* styles for the table element */
+            .MuiTableHead-root {
+
+                /* styles for the table header */
+                th {
+                    /* styles for the table header cells */
+                }
+            }
+
+            .MuiTableBody-root {
+
+                /* styles for the table body */
+                td {
+                    /* styles for the table body cells */
+                }
+            }
+
+            .MuiButton-root {
+                /* styles for the buttons in the table */
+            }
+        }
+    }
+
+    &__title,
+    &__pending-title {
+        color: #444444;
     }
 }

@@ -39,4 +39,19 @@ export const importUsers = async (formData) => {
   }
 };
 
+export async function getWarehouseRequests() {
+  try {
+    const response = await axiosInstance.get("/requests");
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.log("Failed to fetch warehouse items");
+      return [];
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching warehouse items:", error);
+    return [];
+  }
+}
+
 export { axiosInstance };
