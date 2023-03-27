@@ -4,24 +4,24 @@ const ItemInfo = ({ item }) => {
   const { t } = useTranslation();
   return (
     <div className="item-info">
-      <h2 className="item-title">
-        <span className="label">{t("borrowPage.itemInfoTitle")} </span>
-        {item.name}
-      </h2>
-      <p className="item-description">{item.description}</p>
-      <div className="item-details">
+      <h2 className="item-info__title">{t("borrowPage.itemInfoTitle")}</h2>
+      <p className="item-info__description">{item.description}</p>
+      <div className="item-info__details">
         <p>
-          <span className="label">{t("borrowPage.type")} </span> {item.type}
+          <span className="item-info__label">{t("borrowPage.type")}:</span>{" "}
+          <span className="item-info__value">{item.type}</span>
         </p>
         <p>
-          <span className="label">
-            {t("borrowPage.accompanyingEquipment")}{" "}
+          <span className="item-info__label">
+            {t("borrowPage.accompanyingEquipment")}:
           </span>{" "}
-          {item.accompanyingEquipment}
+          <span className="item-info__value">{item.accompanyingEquipment}</span>
         </p>
         <p>
-          <span className="label">{t("borrowPage.safetyInstructions")} </span>{" "}
-          {item.safetyInstructions}
+          <span className="item-info__label">
+            {t("borrowPage.safetyInstructions")}:{" "}
+          </span>
+          <span className="item-info__value">{item.safetyInstructions}</span>
         </p>
       </div>
     </div>

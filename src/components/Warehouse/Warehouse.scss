@@ -1,99 +1,110 @@
 @import "../../variables";
+@import "../../directions";
 
-.warehouse-container {
-    text-align: center;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
-.warehouse-header {
-    h1 {
-        font-size: 2.5rem;
-        color: $sce-primary-color;
-        margin-bottom: 10px;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-        font-weight: normal;
-        color: $sce-text-color2;
-        margin-bottom: 30px;
-    }
+.warehouse-background {
+    background-image: url("../../assets/warehouseBg.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 .warehouse {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 1rem;
-    padding: 1rem;
-}
-
-.item {
-    background-color: $sce-primary-color;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 1rem;
-    position: relative;
-    transition: transform 0.3s;
-
-    &:hover {
-        transform: translateY(-10px);
-    }
-}
-
-.item-details {
-    margin-bottom: 10px;
-    flex-grow: 1;
-
-    h3 {
-        text-align: center;
-        font-size: 1.3rem;
-    }
-
-    p {
-        font-size: 0.9rem;
-    }
-}
-
-.item-tag {
-    background-color: $sce-text-color;
-    color: $sce-primary-color;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 5px;
-    left: 10px;
-}
-
-.tag-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.tag-button {
-    background-color: $sce-background-color;
-    border: 1px solid $sce-text-color3;
-    border-radius: 2px;
-    color: $sce-primary-color;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 0.25rem;
-    padding: 0.5rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
     text-align: center;
-    transition: all 0.3s;
 
-    &:hover,
-    &.selected {
-        background-color: $sce-text-color2;
-        border-color: $sce-text-color3;
-        color: $sce-background-color;
+    &__header {
+
+        h1 {
+            font-size: 2.5rem;
+            color: $sce-primary-color;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: $sce-text-color2;
+            margin-bottom: 30px;
+        }
+    }
+
+    &__tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    &__tag-button {
+        background-color: $sce-background-color;
+        border: 1px solid $sce-text-color3;
+        border-radius: 2px;
+        color: $sce-primary-color;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 0.25rem;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        transition: all 0.3s;
+
+        &:hover,
+        &--selected {
+            background-color: $sce-text-color2;
+            border-color: $sce-text-color3;
+            color: $sce-background-color;
+        }
+    }
+
+    &__items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 1rem;
+        padding: 1rem;
+    }
+
+    &__item {
+        background-color: $sce-text-color3;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 1rem;
+        position: relative;
+        transition: transform 0.3s;
+
+        &:hover {
+            transform: translateY(-10px);
+        }
+    }
+
+    &__item-details {
+        margin-bottom: 10px;
+        flex-grow: 1;
+
+        h3 {
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+    }
+
+    &__item-tag {
+        background-color: $sce-text-color;
+        color: $sce-primary-color;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 5px;
+        position: absolute;
+        bottom: 5px;
+        left: 10px;
     }
 }

@@ -60,36 +60,40 @@ const Warehouse = () => {
   }
 
   return (
-    <div className="warehouse-container">
-      <header className="warehouse-header">
-        <h1>{t("warehouse.title")}</h1>
-        <h2>{t("warehouse.subtitle")}</h2>
-      </header>
-      <div className="tag-container">
-        {tags.map((tag, index) => (
-          <button
-            key={index}
-            className={`tag-button ${selectedTag === tag ? "selected" : ""}`}
-            onClick={() => setSelectedTag(tag === "All" ? null : tag)}
-          >
-            {tag}
-          </button>
-        ))}
-      </div>
+    <div className="warehouse-background">
       <div className="warehouse">
-        {items
-          .filter((item) => !selectedTag || item.type === selectedTag)
-          .map((item) => (
-            <div key={item.id} className="item">
-              <div className="item-details">
-                <h3>
-                  <Link to={`/warehouse/item/${item.id}`}>{item.name}</Link>
-                </h3>
-                <p>{item.description}</p>
-              </div>
-              <div className="item-tag">{item.type}</div>
-            </div>
+        <header className="warehouse__header">
+          <h1>{t("warehouse.title")}</h1>
+          <h2>{t("warehouse.subtitle")}</h2>
+        </header>
+        <div className="warehouse__tag-container">
+          {tags.map((tag, index) => (
+            <button
+              key={index}
+              className={`warehouse__tag-button ${
+                selectedTag === tag ? "warehouse__tag-button--selected" : ""
+              }`}
+              onClick={() => setSelectedTag(tag === "All" ? null : tag)}
+            >
+              {tag}
+            </button>
           ))}
+        </div>
+        <div className="warehouse__items">
+          {items
+            .filter((item) => !selectedTag || item.type === selectedTag)
+            .map((item) => (
+              <div key={item.id} className="warehouse__item">
+                <div className="warehouse__item-details">
+                  <h3>
+                    <Link to={`/warehouse/item/${item.id}`}>{item.name}</Link>
+                  </h3>
+                  <p>{item.description}</p>
+                </div>
+                <div className="warehouse__item-tag">{item.type}</div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

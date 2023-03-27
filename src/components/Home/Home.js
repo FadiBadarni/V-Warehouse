@@ -8,37 +8,36 @@ const Home = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="home-container">
-      <header className="header">
-        <div className="header-content">
-          <div className="home-title">
+    <div className="home">
+      <header className="home__header">
+        <div className="home__header-content">
+          <div className="home__title">
             <div>{t("home.title")}</div>
             <p>{t("home.subtitle")}</p>
           </div>
-          <div className="action-img">
+          <div className="home__img">
             <img src={images.action} alt="" />
           </div>
         </div>
-        <div className="header-cta">
-          <p className="home-subtitle">{t("home.browsetitle")}</p>
-          <button className="home-cta">{t("home.cta")}</button>
+        <div className="home__subheader">
+          <p className="home__subheader-subtitle">{t("home.browsetitle")}</p>
+          <button className="home__subheader-button">{t("home.cta")}</button>
         </div>
       </header>
 
-      <section className="features-section">
-        <div className="features-bg"></div>
-        <div className="features-content">
+      <section className="features">
+        <div className="features__content">
           <h2>{t("home.services")}</h2>
-          <div className="features-grid">
-            <div className="feature">
+          <div className="features__grid">
+            <div className="features__grid-item">
               <h3>{t("home.equipmentRentals")}</h3>
               <p>{t("home.equipmentRentalsDesc")}</p>
             </div>
-            <div className="feature">
+            <div className="features__grid-item">
               <h3>{t("home.equipmentManagement")}</h3>
               <p>{t("home.equipmentManagementDesc")}</p>
             </div>
-            <div className="feature">
+            <div className="features__grid-item">
               <h3>{t("home.procurement")}</h3>
               <p>{t("home.procurementDesc")}</p>
             </div>

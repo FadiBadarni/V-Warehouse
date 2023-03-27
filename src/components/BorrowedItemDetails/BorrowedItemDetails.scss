@@ -1,4 +1,5 @@
 @import "../../variables";
+@import '../../directions';
 
 .item-details-container {
     display: flex;
@@ -18,61 +19,72 @@
 
 
 .item-info {
-    text-align: center;
-    margin-bottom: 30px;
     background-color: $sce-background-color;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 30px;
 
-    .item-title {
+    &__title {
         color: $sce-primary-color;
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 10px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
     }
 
-    .item-description {
+    &__description {
         color: $sce-text-color3;
-        font-size: 16px;
-        font-weight: 400;
+        margin-bottom: 1.5rem;
 
-        .label {
-            color: $sce-primary-color;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-    }
-
-    .item-details {
         .ltr & {
-            text-align: left;
+            font-size: 1.3rem;
         }
 
         .rtl & {
-            text-align: right;
+            font-size: 1.4rem;
+        }
+    }
+
+    &__details {
+        &__label {
+            color: $sce-text-color;
+            font-size: 1rem;
+            font-weight: bold;
         }
 
-        .label {
-            color: $sce-primary-color;
-            font-size: 1.2rem;
-            font-weight: 600;
+        &__value {
+            color: $sce-text-color3;
+            font-size: 1rem;
         }
 
         p {
-            color: $sce-text-color3;
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-bottom: 10px;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
+            margin-bottom: 0.5rem;
         }
+
+        span {
+            font-size: 1.1rem;
+        }
+
+
     }
 }
 
-.late-policy,
+.late-policy {
+    background-color: $sce-background-color;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+
+
 .borrow-form {
     background-color: $sce-background-color;
     padding: 20px;
@@ -80,35 +92,102 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     margin-bottom: 30px;
     width: 100%;
-}
-
-.borrow-form {
+    max-width: 800px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: url(../../assets/sceBg1.png);
+    background-repeat: no-repeat;
+    background-size: contain;
 
-    label {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 10px;
+    &__title {
+        color: $sce-primary-color;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+
     }
 
-}
+    &__request {
+        width: 70%;
+        padding: 30px 0;
+        background: #18222e7c;
+        border-radius: 1rem;
+        color: white;
+        transition: .2s;
+        display: flex;
+        flex-direction: column;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: $sce-primary-color;
-    color: $sce-text-color;
-    border: none;
+    &__field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
 
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+    &__label {
+        font-weight: 700;
+        margin: 0 auto;
+
+
+        .ltr & {
+            font-size: 1.3rem;
+
+        }
+
+        .rtl & {
+            font-size: 1.4rem;
+        }
+    }
+
+
+
+    &__datetime-picker {
+        padding: 10px;
+        width: 250px;
+        border: 1px solid $sce-primary-color;
+        border-radius: 5px;
+    }
+
+    &__input {
+        padding: 10px;
+        width: 250px;
+        border: 1px solid $sce-primary-color;
+        border-radius: 5px;
+    }
+
+    &__textarea {
+        max-height: 200px;
+        min-height: 50px;
+        width: 250px;
+        max-width: 250px;
+        min-width: 250px;
+
+        overflow-y: scroll;
+        overflow-x: scroll;
+        border: 1px solid $sce-primary-color;
+        border-radius: 5px;
+    }
+
+    &__button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: $sce-primary-color;
+        color: $sce-text-color;
+        border: none;
+        margin: 0 auto;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -116,19 +195,36 @@ button {
 .signature-modal {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.signature-modal-content {
+    position: relative;
     background-color: white;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 80%;
     max-width: 500px;
-    z-index: 1000;
+
+    h3 {
+        color: $sce-text-color3;
+        text-align: center;
+    }
+
+    p {
+        font-size: 1rem;
+        text-align: justify;
+        color: $sce-primary-color;
+    }
 }
 
 .signature-canvas {
@@ -142,4 +238,29 @@ button {
     display: flex;
     justify-content: space-around;
     width: 100%;
+
+    button {
+        background-color: $sce-primary-color;
+        color: $sce-background-color;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            background-color: $sce-text-color2;
+        }
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
 }
