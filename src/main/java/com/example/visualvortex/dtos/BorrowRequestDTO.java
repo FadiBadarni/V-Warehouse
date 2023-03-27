@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BorrowRequestDTO {
     private LocalDateTime intendedStartDate;
     private LocalDateTime intendedReturnDate;
+    private LocalDateTime sentRequestTime;
     private String borrowingReason;
     private Integer quantity;
     private Long userId;

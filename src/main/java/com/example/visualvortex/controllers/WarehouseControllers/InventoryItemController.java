@@ -33,14 +33,14 @@ public class InventoryItemController {
 
 
     private InventoryItemDTO toDTO(InventoryItem item) {
-        InventoryItemDTO dto = new InventoryItemDTO();
-        dto.setId(item.getId());
-        dto.setName(item.getName());
-        dto.setDescription(item.getDescription());
-        dto.setQuantity(item.getQuantity());
-        dto.setType(item.getType());
-        dto.setSafetyInstructions(item.getSafetyInstructions());
-        dto.setAccompanyingEquipment(item.getAccompanyingEquipment());
-        return dto;
+        return InventoryItemDTO.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .quantity(item.getQuantity())
+                .type(item.getType())
+                .safetyInstructions(item.getSafetyInstructions())
+                .accompanyingEquipment(item.getAccompanyingEquipment())
+                .build();
     }
 }

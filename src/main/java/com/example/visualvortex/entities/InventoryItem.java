@@ -10,8 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 @Builder
-@Getter
-@Setter
 public class InventoryItem {
 
     @Id

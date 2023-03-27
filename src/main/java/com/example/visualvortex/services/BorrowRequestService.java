@@ -3,12 +3,14 @@ package com.example.visualvortex.services;
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.BorrowRequest;
+import com.example.visualvortex.entities.InventoryItem;
 import com.example.visualvortex.repositories.BorrowRequestRepository;
 import com.example.visualvortex.repositories.NotificationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -22,6 +24,12 @@ public class BorrowRequestService {
 
     @Autowired
     private NotificationsRepository notificationsRepository;
+
+
+    public List<BorrowRequest> getAllRequests() {
+        return borrowRequestRepository.findAll();
+    }
+
 
     public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO borrowRequestDTO) {
         BorrowRequest borrowRequest = BorrowRequest.builder()
