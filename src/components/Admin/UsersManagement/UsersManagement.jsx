@@ -3,10 +3,13 @@ import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useDropzone } from "react-dropzone";
 import { importUsers } from "../../../api/admin";
+import { useTranslation } from "react-i18next";
 import "./UsersManagement.scss";
 
 const UsersManagement = () => {
   useAdminRole();
+  const { i18n } = useTranslation();
+  const direction = i18n.language === "he" ? "rtl" : "ltr";
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles(acceptedFiles);
@@ -39,7 +42,7 @@ const UsersManagement = () => {
 
   return (
     <div className="users-management">
-      <AdminLayout></AdminLayout>
+      <AdminLayout direction={direction}></AdminLayout>
       <div className="users-section">
         <h2>Users Management Section</h2>
 

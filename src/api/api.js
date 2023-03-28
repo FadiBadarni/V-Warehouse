@@ -141,6 +141,7 @@ export async function getWarehouseItemById(id) {
     return null;
   }
 }
+
 export async function getUserNotifications(userId) {
   try {
     const response = await axiosInstance.get(`/notifications/${userId}`);

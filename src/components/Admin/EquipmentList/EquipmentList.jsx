@@ -3,11 +3,15 @@ import { getWarehouseItems } from "../../../api/api";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import TextField from "@mui/material/TextField";
+import { useTranslation } from "react-i18next";
 
 import "./EquipmentList.scss";
 
 const EquipmentList = () => {
   useAdminRole();
+  const { i18n } = useTranslation();
+  const direction = i18n.language === "he" ? "rtl" : "ltr";
+
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -24,7 +28,7 @@ const EquipmentList = () => {
   });
   return (
     <div className="admin-equipment-list">
-      <AdminLayout></AdminLayout>
+      <AdminLayout direction={direction}></AdminLayout>
       <main className="equipment-list">
         <p className="title">
           Effortlessly Browse and Filter Equipment Categories

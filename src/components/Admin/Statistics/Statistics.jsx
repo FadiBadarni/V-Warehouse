@@ -1,14 +1,18 @@
 import React from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
+import { useTranslation } from "react-i18next";
 
 import "./Statistics.scss";
 
 const Statistics = () => {
   useAdminRole();
+  const { i18n } = useTranslation();
+  const direction = i18n.language === "he" ? "rtl" : "ltr";
+
   return (
     <div className="statistics" id="statistics">
-      <AdminLayout></AdminLayout>
+      <AdminLayout direction={direction}></AdminLayout>
       <div className="hero-section">
         <h2>Statistics</h2>
         <table>

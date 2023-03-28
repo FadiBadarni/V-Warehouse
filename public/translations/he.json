@@ -62,7 +62,18 @@
         "clearButton": "נקה",
         "submitButton": "שלח",
         "closeButton": "סגור"
-
+      },
+      "sidebar": {
+        "home": "בית",
+        "equipmentList": "רשימת ציוד",
+        "equipmentManagement": "ניהול ציוד",
+        "usersManagement": "ניהול משתמשים",
+        "borrowRequests": "בקשות השאלה",
+        "statistics": "סטטיסטיקה"
+      },
+      "borrowRequests": {
+        "title": "בקשות השאלה",
+        "pendingTitle": "הזמנות ממתינות:"
       }
   }
   

@@ -62,6 +62,18 @@
         "clearButton": "Clear",
         "submitButton": "Submit",
         "closeButton": "Close"
+      },
+      "sidebar": {
+        "home": "Home",
+        "equipmentList": "Equipment List",
+        "equipmentManagement": "Equipment Management",
+        "usersManagement": "Users Management",
+        "borrowRequests": "Borrow Requests",
+        "statistics": "Statistics"
+      },
+      "borrowRequests": {
+        "title": "Borrow Requests",
+        "pendingTitle": "Pending Orders:"
       }
   }
   

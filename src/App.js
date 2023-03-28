@@ -13,7 +13,7 @@ import Unauthorized from "./components/ErrorPages/Unauthorized";
 
 import EquipmentList from "./components/Admin/EquipmentList/EquipmentList";
 import EquipmentManagement from "./components/Admin/EquipmentManagement/EquipmentManagement";
-import EquipmentOrders from "./components/Admin/EquipmentOrders/EquipmentOrders";
+import BorrowRequests from "./components/Admin/BorrowRequests/BorrowRequests";
 import Statistics from "./components/Admin/Statistics/Statistics";
 import UsersManagement from "./components/Admin/UsersManagement/UsersManagement";
 import { useAuth } from "./contexts/AuthContext";
@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 
 function App() {
   const { i18n } = useTranslation();
-  const [direction, setDirection] = useState("ltr");
+  const [, setDirection] = useState("ltr");
 
   useEffect(() => {
     setDirection(i18n.language === "hr" ? "rtl" : "ltr");
@@ -50,7 +50,7 @@ function App() {
 
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/equipment-list" element={<EquipmentList />} />
-          <Route path="/admin/equipment-orders" element={<EquipmentOrders />} />
+          <Route path="/admin/borrow-requests" element={<BorrowRequests />} />
           <Route
             path="/admin/equipment-management"
             element={<EquipmentManagement />}

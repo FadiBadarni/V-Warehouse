@@ -39,6 +39,21 @@ export const importUsers = async (formData) => {
   }
 };
 
+export async function getUserById(userId) {
+  try {
+    const response = await axiosInstance.get(`/userInfo/${userId}`);
+    if (response.status === 200) {
+      console.log("User data fetched successfully");
+      return response.data;
+    } else {
+      throw new Error(`Failed to fetch user data: Status ${response.status}`);
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching user data:", error);
+    throw error;
+  }
+}
+
 export async function getWarehouseRequests() {
   try {
     const response = await axiosInstance.get("/requests");
