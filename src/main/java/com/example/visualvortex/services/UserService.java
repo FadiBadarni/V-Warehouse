@@ -3,7 +3,6 @@ package com.example.visualvortex.services;
 import com.example.visualvortex.entities.User;
 import com.example.visualvortex.entities.UserRole;
 import com.example.visualvortex.errors.FileParsingException;
-import com.example.visualvortex.errors.UserAlreadyExists;
 import com.example.visualvortex.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -53,7 +52,6 @@ public class UserService implements UserDetailsService {
     public User findUserByUsername(String username) {
         return repository.findByUsername(username);
     }
-
 
     public Optional<User> findUserByEmail(String email) {
         return repository.findByEmail(email);
