@@ -1,7 +1,12 @@
 import React from "react";
 import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 
-const RequestsTableHeaders = ({ orderBy, order, handleSortRequestDate }) => {
+const RequestsTableHeaders = ({
+  orderBy,
+  order,
+  handleSortRequestDate,
+  actionsHeaderTitle,
+}) => {
   return (
     <TableHead>
       <TableRow>
@@ -21,7 +26,7 @@ const RequestsTableHeaders = ({ orderBy, order, handleSortRequestDate }) => {
             Request Date
           </TableSortLabel>
         </TableCell>
-        <TableCell>Actions</TableCell>
+        <TableCell>{actionsHeaderTitle || "Actions"}</TableCell>
       </TableRow>
     </TableHead>
   );

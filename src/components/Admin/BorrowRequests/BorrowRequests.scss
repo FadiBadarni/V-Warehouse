@@ -13,15 +13,17 @@
         flex-direction: column;
 
         .MuiTable-root {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Add a box shadow to the table
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
 
             .MuiTableHead-root {
-                background-color: #f7f7f7; // Set a background color for the table header
+                background-color: #f7f7f7;
 
                 th {
                     font-weight: bold;
                     font-size: 0.9rem;
                     text-align: center;
+
                 }
             }
 
@@ -39,6 +41,7 @@
                 td {
                     padding: 16px 8px; // Add padding to table cells for better spacing
                     text-align: center;
+
                 }
             }
 
@@ -60,7 +63,7 @@
     &__expanded-row {
         margin: 20px 0;
         padding: 10px;
-        background-color: #ffffff;
+        background-color: $sce-background-color;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
@@ -70,14 +73,14 @@
         .more-details-title {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #444444;
+            color: $sce-text-color4;
             margin-bottom: 10px;
         }
 
         p {
             margin: 0;
             font-size: 0.9rem;
-            color: #555555;
+            color: $secondary-color;
         }
 
         span {

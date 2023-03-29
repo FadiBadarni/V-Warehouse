@@ -9,16 +9,26 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import RowDetails from "./RowDetails";
+import customStatus from "./Utils/CustomStatus";
 
 const RequestsTableRow = ({
   request,
   index,
+  handleAccept,
+  handleReject,
+  handlePickupConfirm,
+  handlePickupCancel,
+  handleReturn,
+  handleOverDue,
   expandedRow,
   itemDetails,
   user,
   handleRowClick,
   setExpandedRow,
+  showState,
 }) => {
+  const customized = customStatus(request.status);
+
   return (
     <React.Fragment>
       <TableRow
@@ -54,27 +64,87 @@ const RequestsTableRow = ({
         <TableCell>
           {request.sentRequestTime.replace("T", " ").slice(0, 19)}
         </TableCell>
-        <TableCell>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mr: 1 }}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            Approve
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            Reject
-          </Button>
-        </TableCell>
+
+        {handleAccept && handleReject && (
+          <TableCell>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 1 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleAccept(request);
+              }}
+            >
+              Approve
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleReject(request);
+              }}
+            >
+              Reject
+            </Button>
+          </TableCell>
+        )}
+
+        {handlePickupConfirm && (
+          <TableCell>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 1 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handlePickupConfirm(request);
+              }}
+            >
+              Confirm
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ mr: 1 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handlePickupCancel(request);
+              }}
+            >
+              Cancel
+            </Button>
+          </TableCell>
+        )}
+        {handleReturn && handleOverDue && (
+          <TableCell>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 1 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleReturn(request);
+              }}
+            >
+              confirm
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOverDue(request);
+              }}
+            >
+              OverDue
+            </Button>
+          </TableCell>
+        )}
+        {showState && (
+          <TableCell style={customized.style}>{customized.text}</TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>

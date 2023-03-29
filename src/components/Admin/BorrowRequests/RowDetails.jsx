@@ -7,7 +7,7 @@ const RowDetails = ({ request, user, itemDetails }) => {
       <Typography className="more-details-title" variant="h6">
         More Details
       </Typography>
-      <Typography>Request ID: {request.id}</Typography>
+      <Typography>Request ID: {request.requestId}</Typography>
       <Typography>Item Name: {itemDetails.name}</Typography>
       <Typography>Item Description: {itemDetails.description}</Typography>
       <Typography>Item Type: {itemDetails.type}</Typography>

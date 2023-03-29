@@ -39,6 +39,21 @@ export const importUsers = async (formData) => {
   }
 };
 
+export async function getWarehouseRequests() {
+  try {
+    const response = await axiosInstance.get("/requests");
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.log("Failed to fetch warehouse REQUESTS");
+      return [];
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching warehouse items:", error);
+    return [];
+  }
+}
+
 export async function getUserById(userId) {
   try {
     const response = await axiosInstance.get(`/userInfo/${userId}`);
@@ -54,18 +69,26 @@ export async function getUserById(userId) {
   }
 }
 
-export async function getWarehouseRequests() {
+export async function updateRequestStatus(requestId, newStatus) {
   try {
-    const response = await axiosInstance.get("/requests");
+    const response = await axiosInstance.put(
+      `/requests/${requestId}?status=${newStatus}`
+    );
+
+    console.log(response);
     if (response.status === 200) {
       return response.data;
     } else {
-      console.log("Failed to fetch warehouse items");
-      return [];
+      throw new Error(
+        `Failed to update borrow request status: Status ${response.status}`
+      );
     }
   } catch (error) {
-    console.error("An error occurred while fetching warehouse items:", error);
-    return [];
+    console.error(
+      "An error occurred while updating borrow request status:",
+      error
+    );
+    throw error;
   }
 }
 

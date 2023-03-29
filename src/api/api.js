@@ -146,7 +146,6 @@ export async function getUserNotifications(userId) {
   try {
     const response = await axiosInstance.get(`/notifications/${userId}`);
     if (response.status === 200) {
-      console.log("User notifications fetched successfully");
       return response.data;
     } else {
       console.log("Failed to fetch user notifications");

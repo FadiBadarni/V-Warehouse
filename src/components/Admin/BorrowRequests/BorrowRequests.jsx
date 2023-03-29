@@ -1,81 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { getUserById } from "../../../api/admin";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
-import { useTranslation } from "react-i18next";
-import { getWarehouseRequests, getUserById } from "../../../api/admin";
-import { getWarehouseItemById, translateText } from "../../../api/api";
-import { Typography, Box } from "@mui/material";
-import RequestsTable from "./RequestsTable";
+import useBorrowRequests from "../../../hooks/useBorrowRequests";
+import PendingRequests from "./PendingRequests";
+import AwaitingPickupRequests from "./AwaitingPickupRequests";
+import ClosedRequests from "./ClosedRequests";
+import PendingReturnRequests from "./PendingReturnRequests";
 import "./BorrowRequests.scss";
+import useItemDetails from "../../../hooks/useItemDetails";
 
 const BorrowRequests = () => {
   useAdminRole();
   const { t, i18n } = useTranslation();
-  const direction = i18n.language === "he" ? "rtl" : "ltr";
-
-  const [requests, setRequests] = useState([]);
-  const [expandedRow, setExpandedRow] = useState(-1);
-  const [itemDetails, setItemDetails] = useState({});
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const requests = await getWarehouseRequests();
-        setRequests(requests);
-      } catch (error) {
-        console.error("Error fetching warehouse items:", error);
-      }
-    };
-
-    fetchRequests();
-  }, []);
+  const direction = i18n.language === "he" ? "rtl" : "ltr";
+  const [activeTab, setActiveTab] = useState(0);
+  const [expandedPendingRow, setExpandedPendingRow] = useState(-1);
+  const [expandedWaitingRow, setExpandedWaitingRow] = useState(-1);
+  const [expandedRejectedRow, setExpandedRejectedRow] = useState(-1);
+  const [expandedClosedRow, setExpandedClosedRow] = useState(-1);
+  const { itemDetails, fetchItemDetails } = useItemDetails();
+  const {
+    pendingRequests,
+    awaitingPickupRequests,
+    pendingReturnRequests,
+    closedRequests,
+    handleAccept,
+    handleReject,
+    handlePickupConfirm,
+    handlePickupCancel,
+    handleReturn,
+    handleOverDue,
+  } = useBorrowRequests();
 
   const handleRowClick = async (index, itemId, request) => {
-    setExpandedRow(expandedRow === index ? -1 : index);
+    if (activeTab === 0) {
+      setExpandedPendingRow(expandedPendingRow === index ? -1 : index);
+    } else if (activeTab === 1) {
+      setExpandedWaitingRow(expandedWaitingRow === index ? -1 : index);
+    } else if (activeTab === 2) {
+      setExpandedRejectedRow(expandedRejectedRow === index ? -1 : index);
+    } else if (activeTab === 3) {
+      setExpandedClosedRow(expandedClosedRow === index ? -1 : index);
+    }
+
     await fetchItemDetails(itemId, request.userId);
     const user = await getUserById(request.userId);
     setUser(user);
-  };
-
-  const fetchItemDetails = async (itemId, userId) => {
-    try {
-      const itemDetails = await getWarehouseItemById(itemId);
-      if (i18n.language !== "en") {
-        const translatedName = await translateText(
-          itemDetails.name,
-          i18n.language
-        );
-        const translatedDescription = await translateText(
-          itemDetails.description,
-          i18n.language
-        );
-        const translatedType = await translateText(
-          itemDetails.type,
-          i18n.language
-        );
-        const translatedAccompanyingEquipment = await translateText(
-          itemDetails.accompanyingEquipment,
-          i18n.language
-        );
-        const translatedSafetyInstructions = await translateText(
-          itemDetails.safetyInstructions,
-          i18n.language
-        );
-        setItemDetails({
-          ...itemDetails,
-          name: translatedName,
-          description: translatedDescription,
-          type: translatedType,
-          accompanyingEquipment: translatedAccompanyingEquipment,
-          safetyInstructions: translatedSafetyInstructions,
-        });
-      } else {
-        setItemDetails(itemDetails);
-      }
-    } catch (error) {
-      console.error("Error fetching item details:", error);
-    }
   };
 
   return (
@@ -89,21 +63,61 @@ const BorrowRequests = () => {
         >
           {t("borrowRequests.title")}
         </Typography>
-        <Typography
-          className="borrow-requests__pending-title"
-          variant="h5"
-          gutterBottom
+        <Tabs
+          value={activeTab}
+          onChange={(_, newValue) => setActiveTab(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
         >
-          {t("borrowRequests.pendingTitle")}
-        </Typography>
-        <RequestsTable
-          requests={requests}
-          expandedRow={expandedRow}
-          itemDetails={itemDetails}
-          user={user}
-          handleRowClick={handleRowClick}
-          setExpandedRow={setExpandedRow}
-        />
+          <Tab label="Pending Requests" />
+          <Tab label="Waiting For Pickup Requests" />
+          <Tab label="Return Pending Requests" />
+          <Tab label="Closed Requests" />
+        </Tabs>
+        {activeTab === 0 && (
+          <PendingRequests
+            requests={pendingRequests}
+            handleAccept={handleAccept}
+            handleReject={handleReject}
+            handleRowClick={handleRowClick}
+            expandedRow={expandedPendingRow}
+            itemDetails={itemDetails}
+            user={user}
+          />
+        )}
+        {activeTab === 1 && (
+          <AwaitingPickupRequests
+            requests={awaitingPickupRequests}
+            handleRowClick={handleRowClick}
+            handlePickupConfirm={handlePickupConfirm}
+            handlePickupCancel={handlePickupCancel}
+            expandedRow={expandedWaitingRow}
+            itemDetails={itemDetails}
+            user={user}
+          />
+        )}
+        {activeTab === 2 && (
+          <PendingReturnRequests
+            requests={pendingReturnRequests}
+            handleRowClick={handleRowClick}
+            handleReturn={handleReturn}
+            handleOverDue={handleOverDue}
+            expandedRow={expandedRejectedRow}
+            itemDetails={itemDetails}
+            user={user}
+          />
+        )}
+        {activeTab === 3 && (
+          <ClosedRequests
+            requests={closedRequests}
+            handleRowClick={handleRowClick}
+            expandedRow={expandedClosedRow}
+            itemDetails={itemDetails}
+            user={user}
+            actionsHeaderTitle="State"
+          />
+        )}
       </Box>
     </Box>
   );

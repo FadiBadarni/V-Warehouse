@@ -13,6 +13,17 @@
     .sidebar-link {
         text-decoration: none;
         color: inherit;
+
+        .MuiListItem-root {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        &:hover {
+            .MuiListItem-root {
+                background-color: rgba(0, 0, 0, 0.08);
+            }
+        }
     }
 
     .MuiDrawer-paper {
