@@ -4,16 +4,16 @@ import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.InventoryItemDTO;
 import com.example.visualvortex.entities.BorrowRequest;
 import com.example.visualvortex.entities.InventoryItem;
+import com.example.visualvortex.entities.RequestStatus;
 import com.example.visualvortex.services.BorrowRequestService;
 import com.example.visualvortex.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,9 +30,15 @@ public class RequestsController {
         return new ResponseEntity<>(requestDTOS, HttpStatus.OK);
     }
 
+    @PutMapping("/requests/{requestId}")
+    public ResponseEntity<BorrowRequestDTO> updateRequestStatus(@PathVariable UUID requestId, @RequestParam RequestStatus status) {
+        BorrowRequestDTO updatedRequest = borrowRequestService.updateRequestStatus(requestId, status);
+        return ResponseEntity.ok(updatedRequest);
+    }
 
     private BorrowRequestDTO toDTO(BorrowRequest request) {
         return BorrowRequestDTO.builder()
+                .requestId(request.getRequestId())
                 .userId(request.getUserId())
                 .itemId(request.getItemId())
                 .intendedStartDate(request.getIntendedStartDate())
@@ -40,6 +46,7 @@ public class RequestsController {
                 .borrowingReason(request.getBorrowingReason())
                 .quantity(request.getQuantity())
                 .sentRequestTime(request.getSentRequestTime())
+                .status(request.getStatus())
                 .build();
     }
 

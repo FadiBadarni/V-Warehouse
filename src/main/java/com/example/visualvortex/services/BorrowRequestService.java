@@ -4,26 +4,26 @@ import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.BorrowRequest;
 import com.example.visualvortex.entities.InventoryItem;
+import com.example.visualvortex.entities.RequestStatus;
+import com.example.visualvortex.errors.ResourceNotFoundException;
 import com.example.visualvortex.repositories.BorrowRequestRepository;
 import com.example.visualvortex.repositories.NotificationsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class BorrowRequestService {
-
-    @Autowired
-    private BorrowRequestRepository borrowRequestRepository;
-
-    @Autowired
-    private NotificationsService notificationsService;
-
-    @Autowired
-    private NotificationsRepository notificationsRepository;
+    private final BorrowRequestRepository borrowRequestRepository;
+    private final NotificationsService notificationsService;
+    private final NotificationsRepository notificationsRepository;
 
 
     public List<BorrowRequest> getAllRequests() {
@@ -31,63 +31,54 @@ public class BorrowRequestService {
     }
 
 
-    public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO borrowRequestDTO) {
+    public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO dto) {
+        UUID requestId = UUID.randomUUID();
         BorrowRequest borrowRequest = BorrowRequest.builder()
-                .userId(borrowRequestDTO.getUserId())
-                .itemId(borrowRequestDTO.getItemId())
-                .intendedStartDate(borrowRequestDTO.getIntendedStartDate())
-                .intendedReturnDate(borrowRequestDTO.getIntendedReturnDate())
-                .borrowingReason(borrowRequestDTO.getBorrowingReason())
-                .quantity(borrowRequestDTO.getQuantity())
+                .requestId(requestId)
+                .userId(dto.getUserId())
+                .itemId(dto.getItemId())
+                .intendedStartDate(dto.getIntendedStartDate())
+                .intendedReturnDate(dto.getIntendedReturnDate())
+                .borrowingReason(dto.getBorrowingReason())
+                .quantity(dto.getQuantity())
                 .sentRequestTime(LocalDateTime.now())
+                .status(RequestStatus.PENDING)
                 .build();
-
-//        System.out.println("signatureData before decoding: " + borrowRequestDTO.getSignatureData());
-//        try {
-//            byte[] signatureBytes = Base64.getMimeDecoder().decode(borrowRequestDTO.getSignatureData());
-//            borrowRequest.setSignatureData(signatureBytes);
-//        } catch (IllegalArgumentException e) {
-//            e.printStackTrace();
-//        }
 
         BorrowRequest savedBorrowRequest = borrowRequestRepository.save(borrowRequest);
 
         NotificationDTO notificationDTO = new NotificationDTO();
         notificationDTO.setDate(LocalDateTime.now());
-        notificationDTO.setUserId(borrowRequestDTO.getUserId());
+        notificationDTO.setUserId(dto.getUserId());
         notificationDTO.setMessage("Your Request Was Sent.");
         notificationsService.createNotification(notificationDTO);
 
-
-
-
-
-        BorrowRequestDTO resultDTO = new BorrowRequestDTO();
-        resultDTO.setUserId(savedBorrowRequest.getUserId());
-        resultDTO.setItemId(savedBorrowRequest.getItemId());
-        resultDTO.setIntendedStartDate(savedBorrowRequest.getIntendedStartDate());
-        resultDTO.setIntendedReturnDate(savedBorrowRequest.getIntendedReturnDate());
-        resultDTO.setBorrowingReason(savedBorrowRequest.getBorrowingReason());
-        resultDTO.setQuantity(savedBorrowRequest.getQuantity());
-//        resultDTO.setSignatureData(Base64.getEncoder().encodeToString(savedBorrowRequest.getSignatureData()));
-
-        return resultDTO;
+        return convertToBorrowRequestDTO(savedBorrowRequest);
     }
 
-//    public void updateBorrowRequest(Long requestId, String status) {
-//        Optional<BorrowRequest> borrowRequestOpt = borrowRequestRepository.findById(requestId);
-//        if (borrowRequestOpt.isPresent()) {
-//            BorrowRequest borrowRequest = borrowRequestOpt.get();
-//
-//            borrowRequestRepository.save(borrowRequest);
-//
-//            // Create a notification for the user
-//            NotificationDTO notificationDTO = new NotificationDTO();
-//            notificationDTO.setId(borrowRequest.getId());
-//            notificationDTO.setMessage(borrowRequest.getBorrowingReason());
-//            notificationDTO.setDate(borrowRequest.getIntendedStartDate());
-//            notificationDTO.setUserId(borrowRequest.getUserId());
-//            notificationsService.createNotification(notificationDTO);
-//        }
-//    }
+    public BorrowRequestDTO updateRequestStatus(UUID requestId, RequestStatus status) {
+        Optional<BorrowRequest> borrowRequestOpt = borrowRequestRepository.findById(requestId);
+        if (borrowRequestOpt.isPresent()) {
+            BorrowRequest borrowRequest = borrowRequestOpt.get();
+            borrowRequest.setStatus(status);
+            BorrowRequest updatedBorrowRequest = borrowRequestRepository.save(borrowRequest);
+            return convertToBorrowRequestDTO(updatedBorrowRequest);
+        } else {
+            throw new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId);
+        }
+    }
+
+    private BorrowRequestDTO convertToBorrowRequestDTO(BorrowRequest borrowRequest) {
+        return BorrowRequestDTO.builder()
+                .userId(borrowRequest.getUserId())
+                .itemId(borrowRequest.getItemId())
+                .intendedStartDate(borrowRequest.getIntendedStartDate())
+                .intendedReturnDate(borrowRequest.getIntendedReturnDate())
+                .borrowingReason(borrowRequest.getBorrowingReason())
+                .quantity(borrowRequest.getQuantity())
+                .status(borrowRequest.getStatus())
+                .sentRequestTime(borrowRequest.getSentRequestTime())
+                .requestId(borrowRequest.getRequestId())
+                .build();
+    }
 }

@@ -7,17 +7,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "borrow_requests") // users is already used by postgresql
+@Table(name = "borrow_requests")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class BorrowRequest {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Column(nullable = false, columnDefinition = "uuid default gen_random_uuid()")
+    private UUID requestId;
+
     private Long userId;
     private Long itemId;
 
@@ -33,5 +36,11 @@ public class BorrowRequest {
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
     private LocalDateTime sentRequestTime;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
+
+
 
 }
