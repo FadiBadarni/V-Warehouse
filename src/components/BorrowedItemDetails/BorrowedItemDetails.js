@@ -8,13 +8,10 @@ import BorrowForm from "./BorrowForm";
 import SignatureModal from "./SignatureModal";
 import SignatureBackdrop from "./SignatureBackdrop";
 import { useTranslation } from "react-i18next";
-import { translateText } from "../../api/api";
-import {
-  getWarehouseItemById,
-  sendBorrowRequest,
-  getUserIdFromLocalStorage,
-} from "../../api/api";
-
+import { getUserIdFromLocalStorage } from "../../api/UserService";
+import { translateText } from "../../api/TranslationService";
+import { sendBorrowRequest } from "../../api/BorrowService";
+import { getWarehouseItemById } from "../../api/WarehouseService";
 import "./BorrowedItemDetails.scss";
 
 const BorrowedItemDetails = () => {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { getUserInfo } from "../../api/api";
 import { Modal, Button } from "semantic-ui-react";
-import { logoutUser } from "../../api/api";
+import { logoutUser, getUserInfo } from "../../api/UserService";
 import "semantic-ui-css/semantic.min.css";
 
 import "./Dashboard.scss";

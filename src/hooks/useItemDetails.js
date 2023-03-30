@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getWarehouseItemById, translateText } from "../api/api";
+import { getWarehouseItemById } from "../api/WarehouseService";
+import { translateText } from "../api/TranslationService";
 import { useTranslation } from "react-i18next";
 
 const useItemDetails = () => {

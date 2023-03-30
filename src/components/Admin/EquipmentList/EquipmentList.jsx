@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getWarehouseItems } from "../../../api/api";
+import { getWarehouseItems } from "../../../api/WarehouseService";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import TextField from "@mui/material/TextField";

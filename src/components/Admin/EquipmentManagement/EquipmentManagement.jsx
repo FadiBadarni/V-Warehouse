@@ -1,23 +1,35 @@
 import React, { useState } from "react";
 import AdminLayout from "../AdminLayout";
 import { TextField, Button, Grid, Box, Typography } from "@mui/material";
-import { addEquipmentItem } from "../../../api/admin";
+import { addEquipmentItem } from "../../../api/AdminService";
 import "./EquipmentManagement.scss";
 import useAdminRole from "../../../hooks/useAdminRole";
 import { useTranslation } from "react-i18next";
 import CheckMark from "./CheckMark";
+
 const EquipmentManagement = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
+  const [showCheckMark, setShowCheckMark] = useState(false);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [type, setType] = useState("");
-  const [safetyInstructions, setSafetyInstructions] = useState("");
-  const [accompanyingEquipment, setAccompanyingEquipment] = useState("");
-  const [showCheckMark, setShowCheckMark] = useState(false);
+  const [itemType, setItemType] = useState("");
+  const [attributes, setAttributes] = useState([
+    { attributeName: "", attributeValue: "" },
+  ]);
+
+  const handleAttributeChange = (index, field, value) => {
+    const newAttributes = [...attributes];
+    newAttributes[index][field] = value;
+    setAttributes(newAttributes);
+  };
+
+  const addAttributeField = () => {
+    setAttributes([...attributes, { attributeName: "", attributeValue: "" }]);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,9 +37,7 @@ const EquipmentManagement = () => {
       name,
       description,
       quantity,
-      type,
-      safetyInstructions,
-      accompanyingEquipment,
+      itemType: { name: itemType, attributes },
     };
     const result = await addEquipmentItem(item);
     if (result) {
@@ -35,9 +45,8 @@ const EquipmentManagement = () => {
       setName("");
       setDescription("");
       setQuantity("");
-      setType("");
-      setSafetyInstructions("");
-      setAccompanyingEquipment("");
+      setItemType("");
+      setAttributes([{ attributeName: "", attributeValue: "" }]);
 
       setShowCheckMark(true);
       setTimeout(() => setShowCheckMark(false), 3000);
@@ -89,39 +98,53 @@ const EquipmentManagement = () => {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                id="type"
-                label="Type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
+                id="item-type"
+                label="Item Type"
+                value={itemType}
+                onChange={(e) => setItemType(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                id="safety-instructions"
-                label="Safety Instructions"
-                multiline
-                rows={3}
-                value={safetyInstructions}
-                onChange={(e) => setSafetyInstructions(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                id="accompanying-equipment"
-                label="Accompanying Equipment"
-                multiline
-                rows={3}
-                value={accompanyingEquipment}
-                onChange={(e) => setAccompanyingEquipment(e.target.value)}
-              />
-            </Grid>
+            {attributes.map((attribute, index) => (
+              <React.Fragment key={index}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label={`Attribute Name ${index + 1}`}
+                    value={attribute.attributeName}
+                    onChange={(e) =>
+                      handleAttributeChange(
+                        index,
+                        "attributeName",
+                        e.target.value
+                      )
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label={`Attribute Value ${index + 1}`}
+                    value={attribute.attributeValue}
+                    onChange={(e) =>
+                      handleAttributeChange(
+                        index,
+                        "attributeValue",
+                        e.target.value
+                      )
+                    }
+                  />
+                </Grid>
+              </React.Fragment>
+            ))}
             <Grid item xs={12}>
-              <Typography variant="h6" component="h3" gutterBottom>
-                QR Code
-              </Typography>
-              {/* <QRCode value={name} /> */}
+              <Button
+                onClick={addAttributeField}
+                variant="outlined"
+                color="primary"
+                fullWidth
+              >
+                Add Attribute
+              </Button>
             </Grid>
             <Grid item xs={12} className="equipment-management__checkmark">
               <CheckMark show={showCheckMark} />

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import { getUserById } from "../../../api/admin";
+import { getUserById } from "../../../api/AdminService";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import useBorrowRequests from "../../../hooks/useBorrowRequests";

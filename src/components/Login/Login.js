@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginUser } from "../../api/api";
+import { loginUser } from "../../api/UserService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";

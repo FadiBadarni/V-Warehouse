@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getWarehouseRequests, updateRequestStatus } from "../api/admin";
+import { getBorrowRequests, updateRequestStatus } from "../api/AdminService";
 
 const useBorrowRequests = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -10,7 +10,7 @@ const useBorrowRequests = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const requests = await getWarehouseRequests();
+        const requests = await getBorrowRequests();
 
         // Separate the requests based on their status
         const pending = [];

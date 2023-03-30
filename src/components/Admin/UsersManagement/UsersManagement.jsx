@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useDropzone } from "react-dropzone";
-import { importUsers } from "../../../api/admin";
+import { importUsers } from "../../../api/AdminService";
 import { useTranslation } from "react-i18next";
 import "./UsersManagement.scss";
 

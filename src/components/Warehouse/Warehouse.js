@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getWarehouseItems } from "../../api/api";
+import { getWarehouseItems } from "../../api/WarehouseService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { translateText } from "../../api/api";
+import { translateText } from "../../api/TranslationService";
 import "./Warehouse.scss";
 
 const Warehouse = () => {

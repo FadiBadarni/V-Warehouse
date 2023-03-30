@@ -9,7 +9,7 @@ import {
   getUserNotifications,
   clearUserNotifications,
   markNotificationsAsRead,
-} from "../../api/api";
+} from "../../api/NotificationService";
 import { motion, AnimatePresence } from "framer-motion";
 
 const getLanguageDirection = (language) => {

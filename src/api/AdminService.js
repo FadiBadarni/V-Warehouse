@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 export const addEquipmentItem = async (item) => {
   try {
+    console.log(item);
     const response = await axiosInstance.post("/add-item", item);
     return response.data;
   } catch (error) {
@@ -39,9 +40,9 @@ export const importUsers = async (formData) => {
   }
 };
 
-export async function getWarehouseRequests() {
+export async function getBorrowRequests() {
   try {
-    const response = await axiosInstance.get("/requests");
+    const response = await axiosInstance.get("/borrow-requests");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -72,7 +73,7 @@ export async function getUserById(userId) {
 export async function updateRequestStatus(requestId, newStatus) {
   try {
     const response = await axiosInstance.put(
-      `/requests/${requestId}?status=${newStatus}`
+      `/borrow-requests/${requestId}?status=${newStatus}`
     );
 
     console.log(response);
