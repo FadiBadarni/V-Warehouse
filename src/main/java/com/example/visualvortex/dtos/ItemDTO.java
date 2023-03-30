@@ -9,12 +9,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class InventoryItemDTO {
+public class ItemDTO {
     private long id;
     private String name;
     private String description;
     private int quantity;
-    private String type;
-    private String safetyInstructions;
-    private String accompanyingEquipment;
+    private boolean isAvailable;
+    private ItemTypeAttributeDTO itemType;
 }

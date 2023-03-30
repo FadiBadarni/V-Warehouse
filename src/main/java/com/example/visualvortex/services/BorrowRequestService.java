@@ -3,13 +3,11 @@ package com.example.visualvortex.services;
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.BorrowRequest;
-import com.example.visualvortex.entities.InventoryItem;
 import com.example.visualvortex.entities.RequestStatus;
 import com.example.visualvortex.errors.ResourceNotFoundException;
 import com.example.visualvortex.repositories.BorrowRequestRepository;
 import com.example.visualvortex.repositories.NotificationsRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
