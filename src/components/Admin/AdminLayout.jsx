@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Toolbar,
-} from "@mui/material";
-import { Link } from "react-router-dom";
+import { Drawer, List, Toolbar, Hidden } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ListIcon from "@mui/icons-material/List";
@@ -16,15 +8,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import "./Admin.scss";
-
-const SidebarLink = ({ text, path, icon }) => (
-  <Link to={path} className="sidebar-link">
-    <ListItem button>
-      <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={text} />
-    </ListItem>
-  </Link>
-);
+import SidebarLink from "./SidebarLink";
 
 const AdminLayout = ({ direction }) => {
   const drawerWidth = 240;
@@ -33,13 +17,13 @@ const AdminLayout = ({ direction }) => {
   const sidebarLinks = [
     { text: t("sidebar.home"), path: "/admin", icon: <DashboardIcon /> },
     {
-      text: t("sidebar.equipmentList"),
-      path: "/admin/equipment-list",
+      text: t("sidebar.itemList"),
+      path: "/admin/item-list",
       icon: <ListIcon />,
     },
     {
-      text: t("sidebar.equipmentManagement"),
-      path: "/admin/equipment-management",
+      text: t("sidebar.itemManagement"),
+      path: "/admin/item-management",
       icon: <BuildIcon />,
     },
     {
@@ -58,27 +42,56 @@ const AdminLayout = ({ direction }) => {
       icon: <BarChartIcon />,
     },
   ];
+
+  const drawer = (
+    <div>
+      <Toolbar />
+      <List>
+        {sidebarLinks.map((link) => (
+          <SidebarLink key={link.text} {...link} />
+        ))}
+      </List>
+    </div>
+  );
+
   return (
-    <div className="admin-page">
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+    <div className="sidebar">
+      <Hidden smDown implementation="css">
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor={direction === "rtl" ? "right" : "left"}
-      >
-        <Toolbar />
-        <List>
-          {sidebarLinks.map((link) => (
-            <SidebarLink key={link.text} {...link} />
-          ))}
-        </List>
-      </Drawer>
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          variant="permanent"
+          anchor={direction === "rtl" ? "right" : "left"}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <Hidden mdUp implementation="css">
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          variant="temporary"
+          anchor={direction === "rtl" ? "right" : "left"}
+          ModalProps={{
+            keepMounted: true, // Better performance on mobile devices
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
     </div>
   );
 };

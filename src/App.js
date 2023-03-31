@@ -11,8 +11,8 @@ import Home from "./components/Home/Home";
 import BorrowedItemDetails from "./components/BorrowedItemDetails/BorrowedItemDetails";
 import Unauthorized from "./components/ErrorPages/Unauthorized";
 
-import EquipmentList from "./components/Admin/EquipmentList/EquipmentList";
-import EquipmentManagement from "./components/Admin/EquipmentManagement/EquipmentManagement";
+import ItemList from "./components/Admin/ItemList/ItemList";
+import ItemManagement from "./components/Admin/ItemManagement/ItemManagement";
 import BorrowRequests from "./components/Admin/BorrowRequests/BorrowRequests";
 import Statistics from "./components/Admin/Statistics/Statistics";
 import UsersManagement from "./components/Admin/UsersManagement/UsersManagement";
@@ -49,12 +49,9 @@ function App() {
           <Route path="/warehouse/item/:id" element={<BorrowedItemDetails />} />
 
           <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/equipment-list" element={<EquipmentList />} />
+          <Route path="/admin/item-list" element={<ItemList />} />
           <Route path="/admin/borrow-requests" element={<BorrowRequests />} />
-          <Route
-            path="/admin/equipment-management"
-            element={<EquipmentManagement />}
-          />
+          <Route path="/admin/item-management" element={<ItemManagement />} />
 
           <Route path="/admin/users-management" element={<UsersManagement />} />
           <Route path="/admin/statistics" element={<Statistics />} />

@@ -65,8 +65,8 @@
       },
       "sidebar": {
         "home": "בית",
-        "equipmentList": "רשימת ציוד",
-        "equipmentManagement": "ניהול ציוד",
+        "itemList": "רשימת ציוד",
+        "itemManagement": "ניהול ציוד",
         "usersManagement": "ניהול משתמשים",
         "borrowRequests": "בקשות השאלה",
         "statistics": "סטטיסטיקה"

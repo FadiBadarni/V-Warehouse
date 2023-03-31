@@ -4,7 +4,7 @@ export async function getWarehouseItems() {
   try {
     const response = await axiosInstance.get("/warehouseItems");
     if (response.status === 200) {
-      console.log("Warehouse items fetched successfully");
+      console.log("Warehouse itemss fetched successfully");
       return response.data;
     } else {
       console.log("Failed to fetch warehouse items");

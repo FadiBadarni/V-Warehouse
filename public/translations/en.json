@@ -65,8 +65,8 @@
       },
       "sidebar": {
         "home": "Home",
-        "equipmentList": "Equipment List",
-        "equipmentManagement": "Equipment Management",
+        "itemList": "Item List",
+        "itemManagement": "Item Management",
         "usersManagement": "Users Management",
         "borrowRequests": "Borrow Requests",
         "statistics": "Statistics"

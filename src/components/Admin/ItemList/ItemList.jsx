@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 import "./EquipmentList.scss";
 
-const EquipmentList = () => {
+const ItemList = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
@@ -57,4 +57,4 @@ const EquipmentList = () => {
   );
 };
 
-export default EquipmentList;
+export default ItemList;

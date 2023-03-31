@@ -1,64 +1,87 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useTranslation } from "react-i18next";
+import {
+  Box,
+  Typography,
+  Table,
+  TableContainer,
+  Paper,
+  Tab,
+  Tabs,
+} from "@mui/material";
+import InstancesTableHeaders from "./InstancesTableHeaders";
+import InstancesTableBody from "./InstancesTableBody";
+import { getAllItemInstances } from "../../../api/AdminService";
 
 import "./Statistics.scss";
+
+const DummyPage = () => (
+  <Box>
+    <Typography variant="h4" gutterBottom>
+      Dummy Page
+    </Typography>
+    <Typography variant="body1">This is a dummy page.</Typography>
+  </Box>
+);
 
 const Statistics = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
 
+  const [activeTab, setActiveTab] = useState(0);
+  const [expandedRow, setExpandedRow] = useState(-1);
+  const [itemInstances, setItemInstances] = useState([]);
+
+  const handleRowClick = (index) => {
+    setExpandedRow(expandedRow === index ? -1 : index);
+  };
+
+  useEffect(() => {
+    const fetchItemInstances = async () => {
+      const instances = await getAllItemInstances();
+      setItemInstances(instances);
+    };
+
+    fetchItemInstances();
+  }, []);
+
   return (
-    <div className="statistics" id="statistics">
+    <Box className="statistics">
       <AdminLayout direction={direction}></AdminLayout>
-      <div className="hero-section">
-        <h2>Statistics</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Equipment</th>
-              <th>Total</th>
-              <th>Loaned</th>
-              <th>Available</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Camera</td>
-              <td>25</td>
-              <td>5</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td>Microphone</td>
-              <td>15</td>
-              <td>3</td>
-              <td>12</td>
-            </tr>
-            <tr>
-              <td>Laptop</td>
-              <td>30</td>
-              <td>10</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td>Projector</td>
-              <td>10</td>
-              <td>2</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <td>Headphones</td>
-              <td>20</td>
-              <td>5</td>
-              <td>15</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <Box className="statistics__content">
+        <Tabs
+          value={activeTab}
+          onChange={(_, newValue) => setActiveTab(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+        >
+          <Tab label="Dummy Page" />
+          <Tab label="Statistics" />
+        </Tabs>
+        {activeTab === 0 && <DummyPage />}
+        {activeTab === 1 && (
+          <>
+            <Typography className="statistics__title" variant="h4" gutterBottom>
+              Statistics
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <InstancesTableHeaders />
+                <InstancesTableBody
+                  itemInstances={itemInstances}
+                  handleRowClick={handleRowClick}
+                  expandedRow={expandedRow}
+                />
+              </Table>
+            </TableContainer>
+          </>
+        )}
+      </Box>
+    </Box>
   );
 };
 
