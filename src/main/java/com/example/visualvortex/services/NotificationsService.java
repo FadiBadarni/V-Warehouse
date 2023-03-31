@@ -2,7 +2,7 @@ package com.example.visualvortex.services;
 
 import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.Notifications;
-import com.example.visualvortex.entities.User;
+import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.repositories.NotificationsRepository;
 import com.example.visualvortex.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

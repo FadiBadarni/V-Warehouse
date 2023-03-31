@@ -2,8 +2,8 @@ package com.example.visualvortex.services;
 
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.NotificationDTO;
-import com.example.visualvortex.entities.BorrowRequest;
-import com.example.visualvortex.entities.RequestStatus;
+import com.example.visualvortex.entities.Request.BorrowRequest;
+import com.example.visualvortex.entities.Request.RequestStatus;
 import com.example.visualvortex.errors.ResourceNotFoundException;
 import com.example.visualvortex.repositories.BorrowRequestRepository;
 import com.example.visualvortex.repositories.NotificationsRepository;
@@ -39,7 +39,7 @@ public class BorrowRequestService {
                 .intendedReturnDate(dto.getIntendedReturnDate())
                 .borrowingReason(dto.getBorrowingReason())
                 .quantity(dto.getQuantity())
-                .sentRequestTime(LocalDateTime.now())
+                .requestTime(LocalDateTime.now())
                 .status(RequestStatus.PENDING)
                 .build();
 
@@ -75,7 +75,7 @@ public class BorrowRequestService {
                 .borrowingReason(borrowRequest.getBorrowingReason())
                 .quantity(borrowRequest.getQuantity())
                 .status(borrowRequest.getStatus())
-                .sentRequestTime(borrowRequest.getSentRequestTime())
+                .requestTime(borrowRequest.getRequestTime())
                 .requestId(borrowRequest.getRequestId())
                 .build();
     }

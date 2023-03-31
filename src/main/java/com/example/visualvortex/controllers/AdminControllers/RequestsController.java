@@ -1,8 +1,8 @@
 package com.example.visualvortex.controllers.AdminControllers;
 
 import com.example.visualvortex.dtos.BorrowRequestDTO;
-import com.example.visualvortex.entities.BorrowRequest;
-import com.example.visualvortex.entities.RequestStatus;
+import com.example.visualvortex.entities.Request.BorrowRequest;
+import com.example.visualvortex.entities.Request.RequestStatus;
 import com.example.visualvortex.services.BorrowRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class RequestsController {
                 .intendedReturnDate(request.getIntendedReturnDate())
                 .borrowingReason(request.getBorrowingReason())
                 .quantity(request.getQuantity())
-                .sentRequestTime(request.getSentRequestTime())
+                .requestTime(request.getRequestTime())
                 .status(request.getStatus())
                 .build();
     }

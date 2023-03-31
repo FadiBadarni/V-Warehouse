@@ -1,7 +1,7 @@
 package com.example.visualvortex.repositories;
 
 import com.example.visualvortex.entities.Notifications;
-import com.example.visualvortex.entities.User;
+import com.example.visualvortex.entities.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

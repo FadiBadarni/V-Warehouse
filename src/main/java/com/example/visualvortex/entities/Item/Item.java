@@ -1,10 +1,11 @@
-package com.example.visualvortex.entities;
+package com.example.visualvortex.entities.Item;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "items")
@@ -19,12 +20,11 @@ public class Item {
     private long id;
     private String name;
     private String description;
-    private boolean isAvailable;
 
     @ManyToOne
     @JoinColumn(name = "item_type_id")
-    private ItemTypeAttribute itemType;
+    private ItemType itemType;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private Set<ItemAttribute> attributes;
+    @OneToMany(mappedBy = "item")
+    private List<ItemInstance> itemInstances = new ArrayList<>();;
 }

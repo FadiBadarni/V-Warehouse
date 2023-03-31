@@ -1,7 +1,7 @@
 package com.example.visualvortex.security;
 
-import com.example.visualvortex.services.JwtUtil;
-import com.example.visualvortex.services.UserService;
+import com.example.visualvortex.services.User.JwtUtil;
+import com.example.visualvortex.services.User.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

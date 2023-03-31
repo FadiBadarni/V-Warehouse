@@ -1,8 +1,8 @@
 package com.example.visualvortex.controllers.UserControllers;
 
-import com.example.visualvortex.dtos.UserDTO;
-import com.example.visualvortex.entities.User;
-import com.example.visualvortex.services.UserService;
+import com.example.visualvortex.dtos.UserDTOS.UserDTO;
+import com.example.visualvortex.entities.User.User;
+import com.example.visualvortex.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

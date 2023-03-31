@@ -1,7 +1,7 @@
 package com.example.visualvortex.controllers;
 
-import com.example.visualvortex.dtos.ItemDTO;
-import com.example.visualvortex.services.ItemService;
+import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
+import com.example.visualvortex.services.Item.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddItemControllerTest {
+public class ItemManagementControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

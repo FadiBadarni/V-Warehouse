@@ -1,4 +1,4 @@
-package com.example.visualvortex.dtos;
+package com.example.visualvortex.dtos.UserDTOS;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

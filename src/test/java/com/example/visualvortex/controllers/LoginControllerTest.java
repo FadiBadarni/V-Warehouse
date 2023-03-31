@@ -1,9 +1,9 @@
 package com.example.visualvortex.controllers;
 
-import com.example.visualvortex.entities.User;
-import com.example.visualvortex.entities.UserRole;
-import com.example.visualvortex.services.UserService;
-import com.example.visualvortex.services.JwtUtil;
+import com.example.visualvortex.entities.User.User;
+import com.example.visualvortex.entities.User.UserRole;
+import com.example.visualvortex.services.User.UserService;
+import com.example.visualvortex.services.User.JwtUtil;
 import com.example.visualvortex.repositories.UserRepository;
 
 import org.junit.jupiter.api.Test;

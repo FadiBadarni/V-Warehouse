@@ -1,6 +1,6 @@
-package com.example.visualvortex.dtos;
+package com.example.visualvortex.dtos.UserDTOS;
 
-import com.example.visualvortex.entities.UserRole;
+import com.example.visualvortex.entities.User.UserRole;
 import lombok.*;
 
 @Data

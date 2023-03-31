@@ -1,6 +1,6 @@
 package com.example.visualvortex.repositories;
 
-import com.example.visualvortex.entities.User;
+import com.example.visualvortex.entities.User.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,10 +1,10 @@
 package com.example.visualvortex.controllers.WarehouseControllers;
 
-import com.example.visualvortex.dtos.ItemDTO;
-import com.example.visualvortex.dtos.ItemTypeAttributeDTO;
-import com.example.visualvortex.entities.Item;
-import com.example.visualvortex.repositories.ItemTypeAttributeRepository;
-import com.example.visualvortex.services.ItemService;
+import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
+import com.example.visualvortex.entities.Item.ItemState;
+import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
+import com.example.visualvortex.entities.Item.Item;
+import com.example.visualvortex.services.Item.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class ItemController {
     }
 
     private ItemDTO toDTO(Item item) {
-        ItemTypeAttributeDTO itemTypeDTO = ItemTypeAttributeDTO.builder()
+        ItemTypeDTO itemTypeDTO = ItemTypeDTO.builder()
                 .id(item.getItemType().getId())
                 .name(item.getItemType().getName())
                 .build();
@@ -43,8 +43,10 @@ public class ItemController {
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
-                .isAvailable(true)
+//                .state(ItemState.AVAILABLE)
                 .itemType(itemTypeDTO)
                 .build();
     }
+
+
 }

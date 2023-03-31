@@ -1,6 +1,6 @@
-package com.example.visualvortex.services;
+package com.example.visualvortex.services.Item;
 
-import com.example.visualvortex.entities.ItemAttribute;
+import com.example.visualvortex.entities.Item.ItemAttribute;
 import com.example.visualvortex.repositories.ItemAttributeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,4 +29,6 @@ public class ItemAttributeService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+
 }

@@ -1,11 +1,11 @@
 package com.example.visualvortex.controllers.AuthControllers;
 
-import com.example.visualvortex.dtos.LoginDto;
-import com.example.visualvortex.dtos.UserDTO;
-import com.example.visualvortex.entities.User;
+import com.example.visualvortex.dtos.UserDTOS.LoginDto;
+import com.example.visualvortex.dtos.UserDTOS.UserDTO;
+import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.repositories.UserRepository;
-import com.example.visualvortex.services.JwtUtil;
-import com.example.visualvortex.services.UserService;
+import com.example.visualvortex.services.User.JwtUtil;
+import com.example.visualvortex.services.User.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

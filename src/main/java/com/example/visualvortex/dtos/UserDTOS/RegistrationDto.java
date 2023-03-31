@@ -1,4 +1,4 @@
-package com.example.visualvortex.dtos;
+package com.example.visualvortex.dtos.UserDTOS;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package com.example.visualvortex;
 
-import com.example.visualvortex.entities.User;
-import com.example.visualvortex.entities.UserRole;
+import com.example.visualvortex.entities.User.User;
+import com.example.visualvortex.entities.User.UserRole;
 import com.example.visualvortex.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

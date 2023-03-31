@@ -1,6 +1,6 @@
 package com.example.visualvortex.config;
 
-import com.example.visualvortex.services.CustomerUserdetailsService;
+import com.example.visualvortex.services.User.CustomerUserdetailsService;
 import com.example.visualvortex.security.JwtFilter;
 import com.example.visualvortex.security.LoginSuccessHandler;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,6 +1,7 @@
 package com.example.visualvortex.entities;
 
 
+import com.example.visualvortex.entities.User.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;

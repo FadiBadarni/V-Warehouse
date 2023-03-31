@@ -1,6 +1,6 @@
 package com.example.visualvortex.controllers.AdminControllers;
 
-import com.example.visualvortex.services.UserService;
+import com.example.visualvortex.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

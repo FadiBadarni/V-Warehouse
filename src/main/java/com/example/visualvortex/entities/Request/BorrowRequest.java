@@ -1,10 +1,8 @@
-package com.example.visualvortex.entities;
+package com.example.visualvortex.entities.Request;
 
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -35,7 +33,7 @@ public class BorrowRequest {
     private Integer quantity;
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
-    private LocalDateTime sentRequestTime;
+    private LocalDateTime requestTime;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

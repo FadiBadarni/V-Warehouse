@@ -1,6 +1,6 @@
-package com.example.visualvortex.services;
+package com.example.visualvortex.services.User;
 
-import com.example.visualvortex.entities.User;
+import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

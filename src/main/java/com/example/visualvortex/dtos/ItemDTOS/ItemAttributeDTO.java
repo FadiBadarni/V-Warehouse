@@ -1,4 +1,4 @@
-package com.example.visualvortex.dtos;
+package com.example.visualvortex.dtos.ItemDTOS;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +13,4 @@ public class ItemAttributeDTO {
     private long id;
     private String attributeName;
     private String attributeValue;
-    private ItemTypeAttributeDTO itemType;
 }

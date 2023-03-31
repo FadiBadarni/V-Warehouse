@@ -1,4 +1,4 @@
-package com.example.visualvortex.services;
+package com.example.visualvortex.services.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

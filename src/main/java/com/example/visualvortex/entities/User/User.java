@@ -1,4 +1,4 @@
-package com.example.visualvortex.entities;
+package com.example.visualvortex.entities.User;
 
 import jakarta.persistence.*;
 import lombok.*;

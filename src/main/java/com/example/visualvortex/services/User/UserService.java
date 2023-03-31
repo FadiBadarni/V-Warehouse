@@ -1,7 +1,7 @@
-package com.example.visualvortex.services;
+package com.example.visualvortex.services.User;
 
-import com.example.visualvortex.entities.User;
-import com.example.visualvortex.entities.UserRole;
+import com.example.visualvortex.entities.User.User;
+import com.example.visualvortex.entities.User.UserRole;
 import com.example.visualvortex.errors.FileParsingException;
 import com.example.visualvortex.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;

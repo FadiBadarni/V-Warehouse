@@ -1,6 +1,6 @@
 package com.example.visualvortex.repositories;
 
-import com.example.visualvortex.entities.BorrowRequest;
+import com.example.visualvortex.entities.Request.BorrowRequest;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

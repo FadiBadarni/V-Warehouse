@@ -1,4 +1,4 @@
-package com.example.visualvortex.entities;
+package com.example.visualvortex.entities.Request;
 
 public enum RequestStatus {
     PENDING,

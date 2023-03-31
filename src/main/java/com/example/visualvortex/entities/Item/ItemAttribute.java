@@ -1,16 +1,15 @@
-package com.example.visualvortex.entities;
+package com.example.visualvortex.entities.Item;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "item_attributes")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class ItemAttribute {
 
@@ -22,16 +21,11 @@ public class ItemAttribute {
 
     @ManyToOne
     @JoinColumn(name = "item_type_id")
-    private ItemTypeAttribute itemType;
+    private ItemType itemType;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
-
-    public ItemAttribute(String attributeName, String attributeValue, ItemTypeAttribute itemType, Item item) {
+    public ItemAttribute(String attributeName, String attributeValue, ItemType itemType) {
         this.attributeName = attributeName;
         this.attributeValue = attributeValue;
         this.itemType = itemType;
-        this.item = item;
     }
 }

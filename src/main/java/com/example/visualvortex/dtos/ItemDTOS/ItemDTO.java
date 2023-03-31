@@ -1,7 +1,10 @@
-package com.example.visualvortex.dtos;
+package com.example.visualvortex.dtos.ItemDTOS;
 
 
+import com.example.visualvortex.entities.Item.ItemState;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +17,6 @@ public class ItemDTO {
     private String name;
     private String description;
     private int quantity;
-    private boolean isAvailable;
-    private ItemTypeAttributeDTO itemType;
+    private ItemTypeDTO itemType;
+
 }
