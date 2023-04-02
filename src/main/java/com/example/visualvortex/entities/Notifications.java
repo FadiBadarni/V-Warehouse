@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notifications") // users is already used by postgresql
+@Table(name = "notifications")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

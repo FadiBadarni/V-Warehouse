@@ -5,30 +5,31 @@ import com.example.visualvortex.entities.Notifications;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.repositories.NotificationsRepository;
 import com.example.visualvortex.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationsService {
 
-    @Autowired
-    private NotificationsRepository notificationsRepository;
+    private final NotificationsRepository notificationsRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public NotificationDTO createNotification(NotificationDTO notificationDTO) {
-        User user = userRepository.findById(notificationDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + notificationDTO.getUserId()));
+    public void createNotification(Long userId, String message) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         Notifications notification = new Notifications();
-        notification.setMessage(notificationDTO.getMessage());
-        notification.setDate(notificationDTO.getDate());
+        notification.setMessage(message);
+        notification.setDate(LocalDateTime.now());
         notification.setUser(user);
+        notification.setRead(false);
         Notifications savedNotification = notificationsRepository.save(notification);
-        return toNotificationDTO(savedNotification);
+        toNotificationDTO(savedNotification);
     }
 
     public List<NotificationDTO> getUserNotifications(Long userId) {

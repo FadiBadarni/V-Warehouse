@@ -1,6 +1,8 @@
 package com.example.visualvortex.entities.User;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,15 +23,20 @@ public class User implements Serializable, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(unique = true, nullable = false)
+    @Email
+    @NotBlank
     private String email;
 
     @Column(unique = true, nullable = false)
+    @NotBlank
     private String username;
 
     private Integer year;
 
     @Column(nullable = false)
+    @NotBlank
     private String password;
 
     @Enumerated(EnumType.STRING)

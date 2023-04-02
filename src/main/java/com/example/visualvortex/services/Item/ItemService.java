@@ -10,22 +10,19 @@ import com.example.visualvortex.repositories.ItemAttributeRepository;
 import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ItemRepository;
 import com.example.visualvortex.repositories.ItemTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ItemService {
-    @Autowired
-    private ItemRepository itemRepository;
-    @Autowired
-    private ItemTypeRepository itemTypeRepository;
-    @Autowired
-    private ItemAttributeRepository itemAttributeRepository;
-    @Autowired
-    private ItemInstanceRepository itemInstanceRepository;
+    private final ItemRepository itemRepository;
+    private final ItemTypeRepository itemTypeRepository;
+    private final ItemAttributeRepository itemAttributeRepository;
+    private final ItemInstanceRepository itemInstanceRepository;
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();
@@ -122,7 +119,7 @@ public class ItemService {
         return itemToItemDTO(item);
     }
 
-    private ItemDTO itemToItemDTO(Item item) {
+    public ItemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
         Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
                 .map(attribute -> new ItemAttributeDTO(
@@ -137,12 +134,6 @@ public class ItemService {
                 itemTypeAttributeDTOs
         );
 
-        List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()
-                .map(instance -> new ItemInstanceDTO(
-                        instance.getId(),
-                        instance.getState(),
-                        instance.getItem().getId())).toList();
-
         return ItemDTO.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -152,27 +143,7 @@ public class ItemService {
                 .build();
     }
 
-    public ItemInstance getAvailableItemInstance(String name) {
-        Item item = itemRepository.findByName(name)
-                .orElseThrow(() -> new NoSuchElementException("Inventory item not found with name: " + name));
 
-        return item.getItemInstances().stream()
-                .filter(instance -> instance.getState() == ItemState.AVAILABLE)
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No available instances of item: " + name));
-    }
-
-    // Add this method to the ItemService class
-    public List<ItemInstanceDTO> getAllItemInstances() {
-        List<ItemInstance> itemInstances = itemInstanceRepository.findAll();
-
-        return itemInstances.stream()
-                .map(instance -> new ItemInstanceDTO(
-                        instance.getId(),
-                        instance.getState(),
-                        instance.getItem().getId()))
-                .collect(Collectors.toList());
-    }
 
 
 }

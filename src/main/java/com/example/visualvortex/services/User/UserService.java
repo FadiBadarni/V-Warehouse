@@ -1,26 +1,26 @@
 package com.example.visualvortex.services.User;
 
+import com.example.visualvortex.dtos.UserDTOS.UserDTO;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.entities.User.UserRole;
 import com.example.visualvortex.errors.FileParsingException;
 import com.example.visualvortex.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,18 +28,9 @@ public class UserService implements UserDetailsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    private UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-        this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-
-    public UserService() {
-        this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
     public boolean authenticateUser(String username, String password) {
         User user = repository.findByUsername(username);
@@ -70,11 +61,25 @@ public class UserService implements UserDetailsService {
         }
         return user;
  }
+    public UserDTO getUserById(Long id) {
+        Optional<User> user = repository.findById(id);
+        return user.map(this::toDTO).orElse(null);
+    }
+
+    private UserDTO toDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .year(user.getYear())
+                .role(user.getRole())
+                .build();
+    }
 
     public void registerUser(String email, String username, int year, String password) {
         Optional<User> user = repository.findByEmail(email);
         if (user.isPresent()) {
-            System.err.println("User already exists: " + email);
+            LOGGER.error("User already exists: {}", email);
             return;
         }
 
@@ -104,31 +109,36 @@ public class UserService implements UserDetailsService {
             LOGGER.info("Total rows in the sheet: {}", sheet.getPhysicalNumberOfRows());
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 Row row = sheet.getRow(i);
-                if (row == null) {
-                    System.err.println("Row " + i + " is empty");
-                    continue;
-                }
-                Cell emailCell = row.getCell(0);
-                Cell usernameCell = row.getCell(1);
-                Cell yearCell = row.getCell(2);
-                Cell passwordCell = row.getCell(3);
-                if (emailCell != null && passwordCell != null && usernameCell != null && yearCell != null) {
-                    String email = emailCell.getStringCellValue();
-                    String username = usernameCell.getStringCellValue();
-                    int year = Integer.parseInt(String.valueOf((int) yearCell.getNumericCellValue()));
-                    String password = "";
-                    if (passwordCell.getCellType() == CellType.NUMERIC) {
-                        password = Integer.toString((int) passwordCell.getNumericCellValue());
-                    } else if (passwordCell.getCellType() == CellType.STRING) {
-                        password = passwordCell.getStringCellValue();
-                    }
-                    registerUser(email, username, year, password);
+                if (row != null) {
+                    processRow(row);
                 } else {
-                    System.err.println("Row " + i + " has missing data");
+                    LOGGER.error("Row {} is empty", i);
                 }
+
             }
         } catch (IOException e) {
             throw new FileParsingException("Failed to parse Excel file", e);
+        }
+    }
+
+    private void processRow(Row row) {
+        Cell emailCell = row.getCell(0);
+        Cell usernameCell = row.getCell(1);
+        Cell yearCell = row.getCell(2);
+        Cell passwordCell = row.getCell(3);
+        if (emailCell != null && passwordCell != null && usernameCell != null && yearCell != null) {
+            String email = emailCell.getStringCellValue();
+            String username = usernameCell.getStringCellValue();
+            int year = Integer.parseInt(String.valueOf((int) yearCell.getNumericCellValue()));
+            String password = "";
+            if (passwordCell.getCellType() == CellType.NUMERIC) {
+                password = Integer.toString((int) passwordCell.getNumericCellValue());
+            } else if (passwordCell.getCellType() == CellType.STRING) {
+                password = passwordCell.getStringCellValue();
+            }
+            registerUser(email, username, year, password);
+        } else {
+            LOGGER.error("Missing data in row {}", row.getRowNum());
         }
     }
 

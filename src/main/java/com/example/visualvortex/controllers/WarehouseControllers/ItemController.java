@@ -5,6 +5,7 @@ import com.example.visualvortex.entities.Item.ItemState;
 import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
 import com.example.visualvortex.entities.Item.Item;
 import com.example.visualvortex.services.Item.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,38 +15,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class ItemController {
-    @Autowired
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @GetMapping("/warehouseItems")
-    public ResponseEntity<List<ItemDTO>> getAllItems() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemDTO> getAllItems() {
         List<Item> items = itemService.getAllItems();
-        List<ItemDTO> itemDTOs = items.stream().map(this::toDTO).collect(Collectors.toList());
-        return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
+        return items.stream()
+                .map(itemService::itemToItemDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/warehouseItems/{id}")
-    public ResponseEntity<ItemDTO> getItemById(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public ItemDTO getItemById(@PathVariable Long id) {
         Item item = itemService.getItemById(id);
-        ItemDTO itemDTO = toDTO(item);
-        return new ResponseEntity<>(itemDTO, HttpStatus.OK);
-    }
-
-    private ItemDTO toDTO(Item item) {
-        ItemTypeDTO itemTypeDTO = ItemTypeDTO.builder()
-                .id(item.getItemType().getId())
-                .name(item.getItemType().getName())
-                .build();
-
-        return ItemDTO.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-//                .state(ItemState.AVAILABLE)
-                .itemType(itemTypeDTO)
-                .build();
+        return itemService.itemToItemDTO(item);
     }
 
 

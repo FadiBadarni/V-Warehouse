@@ -1,10 +1,11 @@
 package com.example.visualvortex.config;
 
-import com.example.visualvortex.services.User.CustomerUserdetailsService;
 import com.example.visualvortex.security.JwtFilter;
 import com.example.visualvortex.security.LoginSuccessHandler;
+import com.example.visualvortex.services.User.CustomerUserdetailsService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,19 +22,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    @Value("${app.cors.allowed-origins}")
+    private String allowedOrigins;
+    private final JwtFilter jwtFilter;
+    private final CustomerUserdetailsService customerUserdetailsService;
 
-    @Autowired
-    private CustomerUserdetailsService customerUserdetailsService;
-
-    private String[] PUBLIC_ENDPOINTS = new String[]{
+    private final String[] PUBLIC_ENDPOINTS = new String[]{
             "/",
             "/api/login",
-            "/api/register",
             "/api/logout"
     };
 
@@ -72,8 +72,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(List.of(allowedOrigins));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 

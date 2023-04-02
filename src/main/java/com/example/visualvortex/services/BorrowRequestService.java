@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,11 +22,12 @@ import java.util.UUID;
 public class BorrowRequestService {
     private final BorrowRequestRepository borrowRequestRepository;
     private final NotificationsService notificationsService;
-    private final NotificationsRepository notificationsRepository;
 
 
-    public List<BorrowRequest> getAllRequests() {
-        return borrowRequestRepository.findAll();
+    public List<BorrowRequestDTO> getAllRequests() {
+        return borrowRequestRepository.findAll().stream()
+                .map(this::convertToBorrowRequestDTO)
+                .collect(Collectors.toList());
     }
 
 
@@ -45,25 +47,20 @@ public class BorrowRequestService {
 
         BorrowRequest savedBorrowRequest = borrowRequestRepository.save(borrowRequest);
 
-        NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setDate(LocalDateTime.now());
-        notificationDTO.setUserId(dto.getUserId());
-        notificationDTO.setMessage("Your Request Was Sent.");
-        notificationsService.createNotification(notificationDTO);
+        notificationsService.createNotification(dto.getUserId(), "Your Request Was Sent.");
+
 
         return convertToBorrowRequestDTO(savedBorrowRequest);
     }
 
     public BorrowRequestDTO updateRequestStatus(UUID requestId, RequestStatus status) {
-        Optional<BorrowRequest> borrowRequestOpt = borrowRequestRepository.findById(requestId);
-        if (borrowRequestOpt.isPresent()) {
-            BorrowRequest borrowRequest = borrowRequestOpt.get();
-            borrowRequest.setStatus(status);
-            BorrowRequest updatedBorrowRequest = borrowRequestRepository.save(borrowRequest);
-            return convertToBorrowRequestDTO(updatedBorrowRequest);
-        } else {
-            throw new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId);
-        }
+        BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
+
+        borrowRequest.setStatus(status);
+        BorrowRequest updatedBorrowRequest = borrowRequestRepository.save(borrowRequest);
+
+        return convertToBorrowRequestDTO(updatedBorrowRequest);
     }
 
     private BorrowRequestDTO convertToBorrowRequestDTO(BorrowRequest borrowRequest) {

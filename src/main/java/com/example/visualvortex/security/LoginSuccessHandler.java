@@ -1,6 +1,5 @@
 package com.example.visualvortex.security;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -14,10 +13,10 @@ import java.util.Collection;
 
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         request.getSession().setAttribute("roles", authorities);
 
@@ -25,6 +24,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     }
 
     private boolean isAdminUser(Authentication authentication) {
-        return authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).toList().contains("ADMIN");
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ADMIN");
     }
 }
