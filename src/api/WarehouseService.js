@@ -1,35 +1,18 @@
 import { axiosInstance } from "./Service";
+import { apiWrapper } from "./Service";
 
 export async function getWarehouseItems() {
-  try {
-    const response = await axiosInstance.get("/warehouseItems");
-    if (response.status === 200) {
-      console.log("Warehouse itemss fetched successfully");
-      return response.data;
-    } else {
-      console.log("Failed to fetch warehouse items");
-      return [];
-    }
-  } catch (error) {
-    console.error("An error occurred while fetching warehouse items:", error);
-    return [];
-  }
+  return apiWrapper(
+    async () => await axiosInstance.get("/warehouseItems"),
+    "Warehouse items fetched successfully",
+    "An error occurred while fetching warehouse items:"
+  );
 }
 
 export async function getWarehouseItemById(id) {
-  try {
-    const response = await axiosInstance.get(`/warehouseItems/${id}`);
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      console.log("Failed to fetch warehouse item");
-      return null;
-    }
-  } catch (error) {
-    console.error(
-      "An error occurred while fetching warehouse item by ID:",
-      error
-    );
-    return null;
-  }
+  return apiWrapper(
+    async () => await axiosInstance.get(`/warehouseItems/${id}`),
+    "Warehouse item fetched successfully",
+    "An error occurred while fetching warehouse item by ID:"
+  );
 }

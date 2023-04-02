@@ -4,25 +4,33 @@ const ItemInfo = ({ item }) => {
   const { t } = useTranslation();
   return (
     <div className="item-info">
-      <h2 className="item-info__title">{t("borrowPage.itemInfoTitle")}</h2>
-      <p className="item-info__description">{item.description}</p>
+      <h2 className="item-info__title">
+        {t("borrowPage.itemInfoTitle")}
+        {item.name}
+      </h2>
+      <p className="item-info__description">
+        {t("borrowPage.itemDescription")}
+        {item.description}
+      </p>
       <div className="item-info__details">
         <p>
-          <span className="item-info__label">{t("borrowPage.type")}:</span>{" "}
-          <span className="item-info__value">{item.type}</span>
+          <span className="item-info__label">{t("borrowPage.Itemtype")}:</span>{" "}
+          <span className="item-info__value">{item.itemType.name}</span>
         </p>
         <p>
           <span className="item-info__label">
             {t("borrowPage.accompanyingEquipment")}:
           </span>{" "}
-          <span className="item-info__value">{item.accompanyingEquipment}</span>
         </p>
-        <p>
-          <span className="item-info__label">
-            {t("borrowPage.safetyInstructions")}:{" "}
-          </span>
-          <span className="item-info__value">{item.safetyInstructions}</span>
-        </p>
+        <span className="item-info__value">
+          <ul>
+            {item.itemType.attributes.map((attr) => (
+              <li key={attr.id}>
+                {`${attr.attributeName}: ${attr.attributeValue}`}
+              </li>
+            ))}
+          </ul>
+        </span>
       </div>
     </div>
   );

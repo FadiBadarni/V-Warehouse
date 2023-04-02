@@ -46,7 +46,8 @@
       "borrowPage" :{
         "title": "Gear Up for Your Journey",
         "itemInfoTitle": "Your Choice: ",
-        "type":"Type: ",
+        "itemDescription": "Item Description",
+        "Itemtype":"Type: ",
         "accompanyingEquipment": "Accompanying Equipment: ",
         "safetyInstructions": "Safety Instructions:",
         "policyTitle": "Late Return Policy",

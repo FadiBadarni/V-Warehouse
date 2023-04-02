@@ -46,7 +46,8 @@
       "borrowPage" :{
         "title": "התכוננו למסע שלכם",
         "itemInfoTitle": "הבחירה שלך: ",
-        "type": "סוג: ",
+        "itemDescription": "תיאור מוצר: ",
+        "Itemtype": "סוג: ",
         "accompanyingEquipment": "ציוד מלווה: ",
         "safetyInstructions": "הוראות בטיחות:",
         "policyTitle": "מדיניות החזרה מאוחרת",

@@ -1,0 +1,27 @@
+{
+    "id": 2202,
+    "name": "Iphone 13 pro max",
+    "description": "apply newest iphone",
+    "quantity": 7,
+    "itemType": {
+        "id": 2302,
+        "name": "Phone",
+        "attributes": [
+            {
+                "id": 2003,
+                "attributeName": "Battery",
+                "attributeValue": "4500MB"
+            },
+            {
+                "id": 2004,
+                "attributeName": "SIM",
+                "attributeValue": "N/A"
+            },
+            {
+                "id": 2002,
+                "attributeName": "Cable",
+                "attributeValue": "Charger"
+            }
+        ]
+    }
+}

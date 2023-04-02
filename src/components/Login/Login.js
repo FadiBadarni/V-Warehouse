@@ -20,14 +20,14 @@ function Login() {
       if (result.token) {
         window.localStorage.setItem("token", result.token);
         login(result.token);
-        navigate("/dashboard"); // Redirect to the dashboard page
+        navigate("/dashboard");
       } else {
-        navigate("/auth/login-failed"); // Redirect to a login failed page
+        navigate("/auth/login-failed");
         console.log("Login failed");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      navigate("/auth/error"); // Redirect to an error page
+      navigate("/auth/error");
     }
   };
 

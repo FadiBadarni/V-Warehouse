@@ -28,7 +28,6 @@ const RequestsTableRow = ({
   showState,
 }) => {
   const customized = customStatus(request.status);
-
   return (
     <React.Fragment>
       <TableRow
@@ -54,15 +53,15 @@ const RequestsTableRow = ({
         <TableCell>{request.userId}</TableCell>
         <TableCell>{request.itemId}</TableCell>
         <TableCell>
-          {request.intendedStartDate.replace("T", " ").slice(0, 16)}
+          {request.intendedStartDate?.replace("T", " ").slice(0, 16)}
         </TableCell>
         <TableCell>
-          {request.intendedReturnDate.replace("T", " ").slice(0, 16)}
+          {request.intendedReturnDate?.replace("T", " ").slice(0, 16)}
         </TableCell>
         <TableCell>{request.borrowingReason}</TableCell>
         <TableCell>{request.quantity}</TableCell>
         <TableCell>
-          {request.sentRequestTime.replace("T", " ").slice(0, 19)}
+          {request.requestTime?.replace("T", " ").slice(0, 19)}
         </TableCell>
 
         {handleAccept && handleReject && (

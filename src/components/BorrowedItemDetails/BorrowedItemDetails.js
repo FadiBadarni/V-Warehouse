@@ -9,16 +9,14 @@ import SignatureModal from "./SignatureModal";
 import SignatureBackdrop from "./SignatureBackdrop";
 import { useTranslation } from "react-i18next";
 import { getUserIdFromLocalStorage } from "../../api/UserService";
-import { translateText } from "../../api/TranslationService";
 import { sendBorrowRequest } from "../../api/BorrowService";
-import { getWarehouseItemById } from "../../api/WarehouseService";
+import useItemDetails from "../../hooks/useItemDetails";
 import "./BorrowedItemDetails.scss";
 
 const BorrowedItemDetails = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { id } = useParams();
-  const [item, setItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [signaturePad, setSignaturePad] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
@@ -28,49 +26,10 @@ const BorrowedItemDetails = () => {
   const [quantityNeeded, setQuantityNeeded] = useState("");
   const navigate = useNavigate();
 
+  const { itemDetails, fetchItemDetails } = useItemDetails();
   useEffect(() => {
-    const fetchItemDetails = async (itemId) => {
-      try {
-        const itemDetails = await getWarehouseItemById(itemId);
-        if (i18n.language !== "en") {
-          const translatedName = await translateText(
-            itemDetails.name,
-            i18n.language
-          );
-          const translatedDescription = await translateText(
-            itemDetails.description,
-            i18n.language
-          );
-          const translatedType = await translateText(
-            itemDetails.type,
-            i18n.language
-          );
-          const translatedAccompanyingEquipment = await translateText(
-            itemDetails.accompanyingEquipment,
-            i18n.language
-          );
-          const translatedSafetyInstructions = await translateText(
-            itemDetails.safetyInstructions,
-            i18n.language
-          );
-          setItem({
-            ...itemDetails,
-            name: translatedName,
-            description: translatedDescription,
-            type: translatedType,
-            accompanyingEquipment: translatedAccompanyingEquipment,
-            safetyInstructions: translatedSafetyInstructions,
-          });
-        } else {
-          setItem(itemDetails);
-        }
-      } catch (error) {
-        console.error("Error fetching item details:", error);
-      }
-    };
-
     fetchItemDetails(id);
-  }, [id, i18n.language]);
+  }, [id, fetchItemDetails]);
 
   const handleSendRequest = () => {
     setShowModal(true);
@@ -119,14 +78,15 @@ const BorrowedItemDetails = () => {
     );
   };
 
-  if (!item) {
+  if (!itemDetails || Object.keys(itemDetails).length === 0) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="item-details-container">
       <h1 className="page-title">{t("borrowPage.title")}</h1>
-      <ItemInfo item={item}></ItemInfo>
+      <ItemInfo item={itemDetails}></ItemInfo>
+
       <LatePolicy></LatePolicy>
       <BorrowForm
         intendedStartDate={intendedStartDate}

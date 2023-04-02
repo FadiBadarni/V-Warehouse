@@ -51,7 +51,6 @@ const BorrowRequests = () => {
     const user = await getUserById(request.userId);
     setUser(user);
   };
-
   return (
     <Box className="borrow-requests">
       <AdminLayout direction={direction}></AdminLayout>

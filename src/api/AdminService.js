@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getWarehouseItemById } from "./WarehouseService";
+import { apiWrapper } from "./Service";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/admin",
   headers: {
@@ -15,24 +16,30 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+// export const addEquipmentItem = async (item) => {
+//   try {
+//     const response = await axiosInstance.post("/add-item", item);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error adding equipment item:", error);
+//     return null;
+//   }
+// };
+
 export const addEquipmentItem = async (item) => {
-  try {
-    const response = await axiosInstance.post("/add-item", item);
-    return response.data;
-  } catch (error) {
-    console.error("Error adding equipment item:", error);
-    return null;
-  }
+  return apiWrapper(
+    async () => await axiosInstance.post("/add-item", item),
+    "Equipment item added successfully",
+    "Error adding equipment item:"
+  );
 };
 
 export const fetchItemNames = async () => {
-  try {
-    const response = await axiosInstance.get("/item-names");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching item names:", error);
-    return null;
-  }
+  return apiWrapper(
+    async () => await axiosInstance.get("/item-names"),
+    "Item names fetched successfully",
+    "Error fetching item names:"
+  );
 };
 
 export const getItemByName = async (name) => {
@@ -52,7 +59,7 @@ export const getAllItemInstances = async () => {
 
     const instancesWithDetails = await Promise.all(
       instances.map(async (instance) => {
-        const item = await getWarehouseItemById(instance.itemId); // Use the getWarehouseItemById function here
+        const item = await getWarehouseItemById(instance.itemId);
         return {
           ...instance,
           instanceId: instance.id,
