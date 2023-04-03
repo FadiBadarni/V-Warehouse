@@ -11,7 +11,9 @@ import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ItemRepository;
 import com.example.visualvortex.repositories.ItemTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +33,7 @@ public class ItemService {
 
     public Item getItemById(Long id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Inventory item not found with ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory item not found with ID: " + id));
     }
 
     public List<ItemInstanceDTO> saveItem(ItemDTO itemDTO) {

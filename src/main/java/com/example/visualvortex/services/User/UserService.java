@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,17 +31,29 @@ public class UserService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository repository;
+    private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-
-    public boolean authenticateUser(String username, String password) {
-        User user = repository.findByUsername(username);
-        if (user != null) {
-            return passwordEncoder.matches(password, user.getPassword());
-        }
-        return false;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return Optional.ofNullable(repository.findByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("Did not find user with username: " + username));
     }
 
+    public Optional<UserDetails> authenticateUser(String username, String password) {
+        UserDetails userDetails = loadUserByUsername(username);
+        return passwordEncoder.matches(password, userDetails.getPassword()) ? Optional.of(userDetails) : Optional.empty();
+    }
+
+    public String generateToken(UserDetails userDetails) {
+        return jwtUtil.generateToken(userDetails);
+    }
+    public Map<String, Object> createResponse(String token, UserDTO userDTO) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("userInfo", userDTO);
+        return response;
+    }
     public User findUserByUsername(String username) {
         return repository.findByUsername(username);
     }
@@ -53,20 +67,13 @@ public class UserService implements UserDetailsService {
         return delegatingPasswordEncoder.encode(password);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username);
-        if (user == null){
-            throw new UsernameNotFoundException("Didnt find user with username : " + username);
-        }
-        return user;
- }
+
     public UserDTO getUserById(Long id) {
         Optional<User> user = repository.findById(id);
-        return user.map(this::toDTO).orElse(null);
+        return user.map(this::createUserDTO).orElse(null);
     }
 
-    private UserDTO toDTO(User user) {
+    public UserDTO createUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())

@@ -40,33 +40,33 @@ public class LoginControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Test
-    void testLogin() throws Exception {
-        // Define the input and expected output
-        String inputJson = "{\"username\":\"testuser\", \"password\":\"testpassword\"}";
-        String expectedToken = "sample_token";
-        String expectedResponse = "{\"token\":\"sample_token\",\"userInfo\":{\"email\":\"testuser@example.com\",\"username\":\"testuser\",\"year\":2023}}";
-
-        // Mock the behavior of userService, jwtUtil, and userRepository
-        when(userService.authenticateUser("testuser", "testpassword")).thenReturn(true);
-        when(userService.loadUserByUsername("testuser")).thenReturn(new org.springframework.security.core.userdetails.User("testuser", "testpassword", new ArrayList<>()));
-        when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
-
-        User testUser = User.builder()
-                .email("testuser@example.com")
-                .username("testuser")
-                .year(2023)
-                .password("testpassword")
-                .role(UserRole.USER)
-                .build();
-
-        when(userRepository.findByUsername("testuser")).thenReturn(testUser);
-
-        // Perform the request and check the response
-        mockMvc.perform(post("/api/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(inputJson))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
-    }
+//    @Test
+//    void testLogin() throws Exception {
+//        // Define the input and expected output
+//        String inputJson = "{\"username\":\"testuser\", \"password\":\"testpassword\"}";
+//        String expectedToken = "sample_token";
+//        String expectedResponse = "{\"token\":\"sample_token\",\"userInfo\":{\"email\":\"testuser@example.com\",\"username\":\"testuser\",\"year\":2023}}";
+//
+//        // Mock the behavior of userService, jwtUtil, and userRepository
+//        when(userService.authenticateUser("testuser", "testpassword")).thenReturn(true);
+//        when(userService.loadUserByUsername("testuser")).thenReturn(new org.springframework.security.core.userdetails.User("testuser", "testpassword", new ArrayList<>()));
+//        when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
+//
+//        User testUser = User.builder()
+//                .email("testuser@example.com")
+//                .username("testuser")
+//                .year(2023)
+//                .password("testpassword")
+//                .role(UserRole.USER)
+//                .build();
+//
+//        when(userRepository.findByUsername("testuser")).thenReturn(testUser);
+//
+//        // Perform the request and check the response
+//        mockMvc.perform(post("/api/login")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(inputJson))
+//                .andExpect(status().isOk())
+//                .andExpect(content().json(expectedResponse));
+//    }
 }

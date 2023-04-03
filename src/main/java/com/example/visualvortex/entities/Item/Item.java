@@ -27,4 +27,6 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     private List<ItemInstance> itemInstances = new ArrayList<>();;
+
+
 }
