@@ -1,13 +1,13 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const useAdminRole = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
+  const checkAdminRole = useCallback(() => {
     if (!loading) {
       if (user && user.role === "ADMIN") {
         setIsAdmin(true);
@@ -17,6 +17,10 @@ const useAdminRole = () => {
       }
     }
   }, [user, navigate, loading]);
+
+  useEffect(() => {
+    checkAdminRole();
+  }, [user, navigate, loading, checkAdminRole]);
 
   return isAdmin;
 };

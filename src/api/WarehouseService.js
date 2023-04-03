@@ -1,5 +1,4 @@
-import { axiosInstance } from "./Service";
-import { apiWrapper } from "./Service";
+import { axiosInstance, apiWrapper } from "./Service";
 
 export async function getWarehouseItems() {
   return apiWrapper(

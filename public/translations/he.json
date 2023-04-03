@@ -27,7 +27,12 @@
         "dashboard": "אזור אישי",
         "login": "התחברות",
         "logout": "התנתקות",
-        "notifications": "התראות"
+        "notifications": "התראות",
+        "languageSelector":{
+          "title":"שפה",
+          "hebrew":"עברית",
+          "english":"אנגלית"
+        }
       },
       "footer":{
         "hero": "כל הזכויות שמורות"

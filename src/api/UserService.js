@@ -1,4 +1,4 @@
-import { axiosInstance } from "./Service";
+import { axiosInstance, apiWrapper } from "./Service";
 
 function handleResponse(response, successMessage, errorMessage) {
   if (response.status >= 200 && response.status < 300) {
@@ -17,24 +17,19 @@ export async function registerUser(
   password,
   confirmPassword
 ) {
-  try {
-    const response = await axiosInstance.post("/register", {
-      email,
-      username,
-      year,
-      password,
-      confirmPassword,
-    });
-
-    return handleResponse(
-      response,
-      "Registration successful",
-      "Registration failed"
-    );
-  } catch (error) {
-    console.error("An error occurred during registration:", error);
-    return false;
-  }
+  const response = await apiWrapper(
+    () =>
+      axiosInstance.post("/register", {
+        email,
+        username,
+        year,
+        password,
+        confirmPassword,
+      }),
+    "Registration successful",
+    "Registration failed"
+  );
+  return response !== null;
 }
 
 export async function loginUser(username, password) {

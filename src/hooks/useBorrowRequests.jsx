@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getBorrowRequests, updateRequestStatus } from "../api/AdminService";
 
 const useBorrowRequests = () => {
@@ -7,65 +7,60 @@ const useBorrowRequests = () => {
   const [pendingReturnRequests, setPendingReturnRequests] = useState([]);
   const [closedRequests, setClosedRequests] = useState([]);
 
-  useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const requests = await getBorrowRequests();
-
-        // Separate the requests based on their status
-        const pending = [];
-        const waitingForPickup = [];
-        const pendingReturn = [];
-        const closed = [];
-
-        requests.forEach((request) => {
-          switch (request.status) {
-            case "PENDING":
-              pending.push(request);
-              break;
-            case "AWAITING_PICKUP":
-              waitingForPickup.push(request);
-              break;
-            case "AWAITING_RETURN":
-              pendingReturn.push(request);
-              break;
-            case "CANCELLED":
-            case "RETURNED":
-            case "OVERDUE_RETURN":
-            case "REJECTED":
-              closed.push(request);
-              break;
-            default:
-              break;
-          }
-        });
-
-        setPendingRequests(pending);
-        setAwaitingPickupRequests(waitingForPickup);
-        setPendingReturnRequests(pendingReturn);
-        setClosedRequests(closed);
-      } catch (error) {
-        console.error("Error fetching warehouse items:", error);
-      }
-    };
-
-    fetchRequests();
+  const fetchRequests = useCallback(async () => {
+    try {
+      const requests = await getBorrowRequests();
+      sortRequestsByStatus(requests);
+    } catch (error) {
+      console.error("Error fetching warehouse items:", error);
+    }
   }, []);
 
-  const handleAccept = async (request) => {
+  useEffect(() => {
+    fetchRequests();
+  }, [fetchRequests]);
+
+  const sortRequestsByStatus = (requests) => {
+    const pending = [];
+    const waitingForPickup = [];
+    const pendingReturn = [];
+    const closed = [];
+
+    requests.forEach((request) => {
+      switch (request.status) {
+        case "PENDING":
+          pending.push(request);
+          break;
+        case "AWAITING_PICKUP":
+          waitingForPickup.push(request);
+          break;
+        case "AWAITING_RETURN":
+          pendingReturn.push(request);
+          break;
+        case "CANCELLED":
+        case "RETURNED":
+        case "OVERDUE_RETURN":
+        case "REJECTED":
+          closed.push(request);
+          break;
+        default:
+          break;
+      }
+    });
+
+    setPendingRequests(pending);
+    setAwaitingPickupRequests(waitingForPickup);
+    setPendingReturnRequests(pendingReturn);
+    setClosedRequests(closed);
+  };
+
+  const updateRequestStatusAndState = async (request, newStatus) => {
     try {
       const updatedRequest = await updateRequestStatus(
         request.requestId,
-        "AWAITING_PICKUP"
+        newStatus
       );
-
-      setPendingRequests((prevPendingRequests) =>
-        prevPendingRequests.filter((req) => req.requestId !== request.requestId)
-      );
-      setAwaitingPickupRequests((prevWaitingForPickupRequests) => [
-        ...prevWaitingForPickupRequests,
-        updatedRequest,
-      ]);
+      updateRequestStates(request, updatedRequest, newStatus);
     } catch (error) {
       console.error(
         "An error occurred while updating borrow request status:",
@@ -75,128 +70,54 @@ const useBorrowRequests = () => {
     }
   };
 
-  const handlePickupConfirm = async (request) => {
-    try {
-      const updatedRequest = await updateRequestStatus(
-        request.requestId,
-        "AWAITING_RETURN"
-      );
+  const updateRequestStates = (request, updatedRequest, newStatus) => {
+    const statusUpdateMap = {
+      AWAITING_PICKUP: {
+        removeFrom: setPendingRequests,
+        addTo: setAwaitingPickupRequests,
+      },
+      AWAITING_RETURN: {
+        removeFrom: setAwaitingPickupRequests,
+        addTo: setPendingReturnRequests,
+      },
+      CANCELLED: {
+        removeFrom: setAwaitingPickupRequests,
+        addTo: setClosedRequests,
+      },
+      RETURNED: {
+        removeFrom: setPendingReturnRequests,
+        addTo: setClosedRequests,
+      },
+      OVERDUE_RETURN: {
+        removeFrom: setPendingReturnRequests,
+        addTo: setClosedRequests,
+      },
+      REJECTED: {
+        removeFrom: setPendingRequests,
+        addTo: setClosedRequests,
+      },
+    };
 
-      setAwaitingPickupRequests((prevWaitingForPickupRequests) =>
-        prevWaitingForPickupRequests.filter(
-          (req) => req.requestId !== request.requestId
-        )
-      );
-      setPendingReturnRequests((prevPendingReturnRequests) => [
-        ...prevPendingReturnRequests,
-        updatedRequest,
-      ]);
-    } catch (error) {
-      console.error(
-        "An error occurred while updating borrow request status:",
-        error
-      );
-      // Handle the error here, e.g. show an error message to the user
-    }
+    const { removeFrom, addTo } = statusUpdateMap[newStatus];
+
+    removeFrom((prevRequests) =>
+      prevRequests.filter((req) => req.requestId !== request.requestId)
+    );
+    addTo((prevRequests) => [...prevRequests, updatedRequest]);
   };
 
-  const handlePickupCancel = async (request) => {
-    try {
-      const updatedRequest = await updateRequestStatus(
-        request.requestId,
-        "CANCELLED"
-      );
-
-      setAwaitingPickupRequests((prevWaitingForPickupRequests) =>
-        prevWaitingForPickupRequests.filter(
-          (req) => req.requestId !== request.requestId
-        )
-      );
-      setClosedRequests((prevClosedRequests) => [
-        ...prevClosedRequests,
-        updatedRequest,
-      ]);
-    } catch (error) {
-      console.error(
-        "An error occurred while updating borrow request status:",
-        error
-      );
-      // Handle the error here, e.g. show an error message to the user
-    }
-  };
-
-  const handleReturn = async (request) => {
-    try {
-      const updatedRequest = await updateRequestStatus(
-        request.requestId,
-        "RETURNED"
-      );
-
-      setPendingReturnRequests((prevPendingReturnRequests) =>
-        prevPendingReturnRequests.filter(
-          (req) => req.requestId !== request.requestId
-        )
-      );
-      setClosedRequests((prevClosedRequests) => [
-        ...prevClosedRequests,
-        updatedRequest,
-      ]);
-    } catch (error) {
-      console.error(
-        "An error occurred while updating borrow request status:",
-        error
-      );
-      // Handle the error here, e.g. show an error message to the user
-    }
-  };
-
-  const handleOverDue = async (request) => {
-    try {
-      const updatedRequest = await updateRequestStatus(
-        request.requestId,
-        "OVERDUE_RETURN"
-      );
-
-      setPendingReturnRequests((prevPendingReturnRequests) =>
-        prevPendingReturnRequests.filter(
-          (req) => req.requestId !== request.requestId
-        )
-      );
-      setClosedRequests((prevClosedRequests) => [
-        ...prevClosedRequests,
-        updatedRequest,
-      ]);
-    } catch (error) {
-      console.error(
-        "An error occurred while updating borrow request status:",
-        error
-      );
-      // Handle the error here, e.g. show an error message to the user
-    }
-  };
-
-  const handleReject = async (request) => {
-    try {
-      const updatedRequest = await updateRequestStatus(
-        request.requestId,
-        "REJECTED"
-      );
-
-      setPendingRequests((prevPendingRequests) =>
-        prevPendingRequests.filter((req) => req.requestId !== request.requestId)
-      );
-      setClosedRequests((prevClosedRequests) => [
-        ...prevClosedRequests,
-        updatedRequest,
-      ]);
-    } catch (error) {
-      console.error(
-        "An error occurred while updating borrow request status:",
-        error
-      );
-      // Handle the error here, e.g. show an error message to the user
-    }
-  };
+  const handleAccept = (request) =>
+    updateRequestStatusAndState(request, "AWAITING_PICKUP");
+  const handlePickupConfirm = (request) =>
+    updateRequestStatusAndState(request, "AWAITING_RETURN");
+  const handlePickupCancel = (request) =>
+    updateRequestStatusAndState(request, "CANCELLED");
+  const handleReturn = (request) =>
+    updateRequestStatusAndState(request, "RETURNED");
+  const handleOverDue = (request) =>
+    updateRequestStatusAndState(request, "OVERDUE_RETURN");
+  const handleReject = (request) =>
+    updateRequestStatusAndState(request, "REJECTED");
 
   return {
     pendingRequests,

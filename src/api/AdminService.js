@@ -2,7 +2,7 @@ import axios from "axios";
 import { getWarehouseItemById } from "./WarehouseService";
 import { apiWrapper } from "./Service";
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/admin",
+  baseURL: process.env.REACT_APP_ADMIN_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,16 +15,6 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config;
 });
-
-// export const addEquipmentItem = async (item) => {
-//   try {
-//     const response = await axiosInstance.post("/add-item", item);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error adding equipment item:", error);
-//     return null;
-//   }
-// };
 
 export const addEquipmentItem = async (item) => {
   return apiWrapper(
@@ -43,13 +33,11 @@ export const fetchItemNames = async () => {
 };
 
 export const getItemByName = async (name) => {
-  try {
-    const response = await axiosInstance.get(`/item-by-name/${name}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching item by name:", error);
-    return null;
-  }
+  return apiWrapper(
+    () => axiosInstance.get(`/item-by-name/${name}`),
+    "Item fetched successfully",
+    "Error fetching item by name:"
+  );
 };
 
 export const getAllItemInstances = async () => {
@@ -79,70 +67,41 @@ export const getAllItemInstances = async () => {
 };
 
 export const importUsers = async (formData) => {
-  try {
-    const response = await axiosInstance.post("/importUsers", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error importing users:", error);
-    return null;
-  }
+  return apiWrapper(
+    () =>
+      axiosInstance.post("/importUsers", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    "Users imported successfully",
+    "Error importing users:"
+  );
 };
 
 export async function getBorrowRequests() {
-  try {
-    const response = await axiosInstance.get("/borrow-requests");
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      console.log("Failed to fetch warehouse REQUESTS");
-      return [];
-    }
-  } catch (error) {
-    console.error("An error occurred while fetching warehouse items:", error);
-    return [];
-  }
+  return apiWrapper(
+    () => axiosInstance.get("/borrow-requests"),
+    "Borrow requests fetched successfully",
+    "Failed to fetch borrow requests"
+  );
 }
 
 export async function getUserById(userId) {
-  try {
-    const response = await axiosInstance.get(`/userInfo/${userId}`);
-    if (response.status === 200) {
-      console.log("User data fetched successfully");
-      return response.data;
-    } else {
-      throw new Error(`Failed to fetch user data: Status ${response.status}`);
-    }
-  } catch (error) {
-    console.error("An error occurred while fetching user data:", error);
-    throw error;
-  }
+  return apiWrapper(
+    () => axiosInstance.get(`/userInfo/${userId}`),
+    "User data fetched successfully",
+    "An error occurred while fetching user data:"
+  );
 }
 
 export async function updateRequestStatus(requestId, newStatus) {
-  try {
-    const response = await axiosInstance.put(
-      `/borrow-requests/${requestId}?status=${newStatus}`
-    );
-
-    console.log(response);
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error(
-        `Failed to update borrow request status: Status ${response.status}`
-      );
-    }
-  } catch (error) {
-    console.error(
-      "An error occurred while updating borrow request status:",
-      error
-    );
-    throw error;
-  }
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/borrow-requests/${requestId}?status=${newStatus}`),
+    "Borrow request status updated successfully",
+    "An error occurred while updating borrow request status:"
+  );
 }
 
 export { axiosInstance };

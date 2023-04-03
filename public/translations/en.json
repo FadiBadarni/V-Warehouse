@@ -27,7 +27,11 @@
       "dashboard": "Dashboard",
       "login": "Login",
       "logout": "Logout",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "languageSelector":{
+        "english": "English",
+        "hebrew": "Hebrew"
+      }
     },
     "footer":{
       "hero": "All rights reserved."
