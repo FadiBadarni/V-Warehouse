@@ -27,8 +27,8 @@ public class BorrowRequest {
 
     @Column(nullable = false)
     private String borrowingReason;
-    @Column(nullable = true, columnDefinition = "bytea")
-    private byte[] signatureData;
+//    @Column(nullable = true, columnDefinition = "bytea")
+    private String signatureData;
     @Column(nullable = false)
     private Integer quantity;
 

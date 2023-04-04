@@ -5,6 +5,7 @@ import com.example.visualvortex.repositories.ItemTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,10 @@ public class ItemTypeService {
 
     public Optional<ItemType> findById(Long id) {
         return repository.findById(id);
+    }
+
+    public List<String> listType(){
+      return repository.getAllTypes();
     }
 
     public void deleteById(Long id) {

@@ -26,4 +26,9 @@ public class ItemInstanceService {
                         instance.getItem().getId()))
                 .collect(Collectors.toList());
     }
+
+    public int quantityItemsBy(Long id) {
+        return itemInstanceRepository.quantityItemsBy(id);
+
+    }
 }

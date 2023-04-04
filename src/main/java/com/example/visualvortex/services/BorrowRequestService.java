@@ -41,6 +41,7 @@ public class BorrowRequestService {
                 .intendedReturnDate(dto.getIntendedReturnDate())
                 .borrowingReason(dto.getBorrowingReason())
                 .quantity(dto.getQuantity())
+                .signatureData(dto.getSignatureData())
                 .requestTime(LocalDateTime.now())
                 .status(RequestStatus.PENDING)
                 .build();
