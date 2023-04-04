@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import { getWarehouseItems } from "../../api/WarehouseService";
 import { useNavigate } from "react-router-dom";
@@ -5,6 +7,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { translateText } from "../../api/TranslationService";
+import{fetchedItemTypes} from "../../api/WarehouseService"
+
 import "./Warehouse.scss";
 
 const Warehouse = () => {
@@ -12,8 +16,14 @@ const Warehouse = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
-  const tags = ["All", "Audio", "Cameras", "Lighting", "iPads", "Printers"];
+
+  const [tags, setag] = useState(['All']);
+
+  //remove
+  // const tags = ["All", "Audio", "Cameras", "Lighting", "iPads", "Printers"];
   const { t, i18n } = useTranslation();
+
+
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -23,6 +33,11 @@ const Warehouse = () => {
         if (isAuthenticated) {
           try {
             const warehouseItems = await getWarehouseItems();
+           
+            const  newtags = await fetchedItemTypes();
+            setag(['All', ... newtags]);
+       
+      
             const translatedItems = await Promise.all(
               warehouseItems.map(async (item) => {
                 if (i18n.language !== "en") {
@@ -81,17 +96,21 @@ const Warehouse = () => {
         </div>
         <div className="warehouse__items">
           {items
-            .filter((item) => !selectedTag || item.type === selectedTag)
+            .filter((item) => !selectedTag || item.itemType.name === selectedTag)
             .map((item) => (
+              <Link  key={item.id} to={`/warehouse/item/${item.id}`}>
+               
               <div key={item.id} className="warehouse__item">
                 <div className="warehouse__item-details">
                   <h3>
-                    <Link to={`/warehouse/item/${item.id}`}>{item.name}</Link>
+                    {item.name}
+                    
                   </h3>
                   <p>{item.description}</p>
                 </div>
-                <div className="warehouse__item-tag">{item.type}</div>
+                <div className="warehouse__item-tag">{item.itemType.name}</div>
               </div>
+              </Link>
             ))}
         </div>
       </div>

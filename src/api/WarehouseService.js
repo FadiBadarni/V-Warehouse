@@ -15,3 +15,23 @@ export async function getWarehouseItemById(id) {
     "An error occurred while fetching warehouse item by ID:"
   );
 }
+export async function fetchedItemTypes() {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/itemTypes`),
+    "Warehouse item fetched successfully",
+    "An error occurred while fetching warehouse item by ID:"
+  );
+}
+
+  export async function fetchedQuantityItemsByTypeId(id) {
+    return apiWrapper(
+      async () => await axiosInstance.get(`/quantityItemsByType/${id}`),
+      "Warehouse item fetched successfully",
+      "An error occurred while fetching warehouse item by ID:"
+    );
+
+}
+
+
+
+
