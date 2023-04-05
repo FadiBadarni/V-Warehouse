@@ -66,6 +66,16 @@ export const getAllItemInstances = async () => {
   }
 };
 
+
+
+export const getAllUsers  = async (formData) => {
+  return apiWrapper(
+    () => axiosInstance.get("/all-users"),
+    "All Users requests fetched successfully",
+    "All Users to fetch users requests"
+  );
+};
+
 export const importUsers = async (formData) => {
   return apiWrapper(
     () =>
@@ -74,6 +84,39 @@ export const importUsers = async (formData) => {
           "Content-Type": "multipart/form-data",
         },
       }),
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export const updateRoleUser = async (id,role) => {
+  
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/${id}/role`, {role})
+      ,
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export const createUser = async (recipient,role,year) => {
+  
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/create-user`, {recipient,role,year})
+      ,
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export const deleteUser = async (id) => {
+  
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/delete-user/${id}`)
+      ,
     "Users imported successfully",
     "Error importing users:"
   );
@@ -103,5 +146,7 @@ export async function updateRequestStatus(requestId, newStatus) {
     "An error occurred while updating borrow request status:"
   );
 }
+
+
 
 export { axiosInstance };
