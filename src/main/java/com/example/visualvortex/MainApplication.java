@@ -18,6 +18,9 @@ public class MainApplication {
 
 
 	public static void main(String[] args) throws IOException {
+
+
+
 		ClassLoader classLoader=SpringApplication.class.getClassLoader();
 //		File file=new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
 		FileInputStream serviceAccount=new FileInputStream("C:\\Users\\abada\\OneDrive\\שולחן העבודה\\update\\SB-Backend\\src\\main\\resources\\serviceAccountKey.json");

@@ -28,7 +28,7 @@ public class Notifications {
     @DateTimeFormat(pattern = "yyyy-MM-dd' 'HH:mm")
     private LocalDateTime date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
