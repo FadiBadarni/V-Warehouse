@@ -79,7 +79,23 @@
       },
       "borrowRequests": {
         "title": "בקשות השאלה",
-        "pendingTitle": "הזמנות ממתינות:"
+        "pendingTitle": "הזמנות ממתינות",
+        "awaitingTitle": "בקשות ממתינות לאישור",
+        "returnedTitle": "בקשות ממתינות להחזרה",
+        "closedTitle": "בקשות סגורות",
+        "tableHeaders":{
+          "id": "מספר זיהוי",
+          "itemName": "שם הפריט",
+          "startDate": "תאריך התחלה",
+          "returnDate": "תאריך החזרה",
+          "quantity": "כמות",
+          "requestDate": "תאריך הבקשה",
+          "actions": "פעולות"
+        },
+        "pendingRequests":{
+          "approve": "אשר",
+          "reject": "דחה"
+        }
       }
   }
   

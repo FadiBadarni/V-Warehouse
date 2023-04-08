@@ -65,14 +65,13 @@ const BorrowRequests = () => {
         <Tabs
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
-          indicatorColor="primary"
-          textColor="primary"
+          className="custom-tab-indicator custom-tab-text-color"
           variant="fullWidth"
         >
-          <Tab label="Pending Requests" />
-          <Tab label="Waiting For Pickup Requests" />
-          <Tab label="Return Pending Requests" />
-          <Tab label="Closed Requests" />
+          <Tab label={t("borrowRequests.pendingTitle")} id="tab-title" />
+          <Tab label={t("borrowRequests.awaitingTitle")} id="tab-title" />
+          <Tab label={t("borrowRequests.returnedTitle")} id="tab-title" />
+          <Tab label={t("borrowRequests.closedTitle")} id="tab-title" />
         </Tabs>
         {activeTab === 0 && (
           <PendingRequests

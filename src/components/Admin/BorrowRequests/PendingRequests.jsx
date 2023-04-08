@@ -1,6 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { Typography, Box } from "@mui/material";
 import RequestsTable from "./RequestsTable";
+import { useTranslation } from "react-i18next";
 
 const PendingRequests = ({
   requests,
@@ -11,10 +12,12 @@ const PendingRequests = ({
   itemDetails,
   user,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Box>
-      <Typography className="pending-requests-title" variant="h5" gutterBottom>
-        Requests Pending
+      <Typography className="requests-title" variant="h5" gutterBottom>
+        {t("borrowRequests.pendingTitle")}
       </Typography>
       <RequestsTable
         requests={requests}
@@ -29,4 +32,4 @@ const PendingRequests = ({
   );
 };
 
-export default PendingRequests;
+export default memo(PendingRequests);

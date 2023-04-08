@@ -13,7 +13,7 @@ const PendingReturnRequests = ({
 }) => {
   return (
     <Box>
-      <Typography className="pending-requests-title" variant="h5" gutterBottom>
+      <Typography className="requests-title" variant="h5" gutterBottom>
         Requests Pending Return
       </Typography>
       <RequestsTable

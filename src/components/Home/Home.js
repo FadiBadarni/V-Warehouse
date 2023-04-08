@@ -3,47 +3,55 @@ import { useTranslation } from "react-i18next";
 import images from "../../constants/images";
 import Footer from "../Footer/Footer";
 import "./Home.scss";
-
+import FeatureCard from "./FeatureCard";
 const Home = () => {
   const { t } = useTranslation();
 
   return (
     <div className="home">
       <header className="home__header">
+        <div className="home__header-bg"></div>
+        <div className="home__header-camera-frame top-left"></div>
+        <div className="home__header-camera-frame top-right">
+          <div className="home__header-recording-dot"></div>
+        </div>
+
         <div className="home__header-content">
           <div className="home__title">
             <div>{t("home.title")}</div>
             <p>{t("home.subtitle")}</p>
           </div>
-          <div className="home__img">
-            <img src={images.action} alt="" />
-          </div>
         </div>
         <div className="home__subheader">
           <p className="home__subheader-subtitle">{t("home.browsetitle")}</p>
-          <button className="home__subheader-button">{t("home.cta")}</button>
+          <button className="home__subheader-button">
+            <span>{t("home.cta")}</span>
+          </button>
         </div>
       </header>
 
       <section className="features">
         <div className="features__content">
-          <h2>{t("home.services")}</h2>
+          <div className="features__title">
+            <span>{t("home.services")}</span>
+          </div>
           <div className="features__grid">
-            <div className="features__grid-item">
-              <h3>{t("home.equipmentRentals")}</h3>
-              <p>{t("home.equipmentRentalsDesc")}</p>
-            </div>
-            <div className="features__grid-item">
-              <h3>{t("home.equipmentManagement")}</h3>
-              <p>{t("home.equipmentManagementDesc")}</p>
-            </div>
-            <div className="features__grid-item">
-              <h3>{t("home.procurement")}</h3>
-              <p>{t("home.procurementDesc")}</p>
-            </div>
+            <FeatureCard
+              title={t("home.equipmentRentals")}
+              description={t("home.equipmentRentalsDesc")}
+            />
+            <FeatureCard
+              title={t("home.equipmentManagement")}
+              description={t("home.equipmentManagementDesc")}
+            />
+            <FeatureCard
+              title={t("home.procurement")}
+              description={t("home.procurementDesc")}
+            />
           </div>
         </div>
       </section>
+
       <section className="equipment-catalog-section">
         <div className="equipment-catalog-content">
           <h2>{t("home.equipmentCatalog")}</h2>

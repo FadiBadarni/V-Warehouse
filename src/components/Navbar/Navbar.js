@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import { motion } from "framer-motion";
 import { useNotification } from "../../hooks/useNotification";
 import NotificationDropdown from "./NotificationDropdown";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { markNotificationsAsRead } from "../../api/NotificationService";
+import Badge from "@mui/material/Badge";
 
 const getLanguageDirection = (language) => {
   const rtlLanguages = ["he"];
@@ -19,14 +22,32 @@ const Navbar = ({ children }) => {
   const [notifications, setNotifications] = useNotification(user?.id);
   const { t } = useTranslation();
   const direction = getLanguageDirection(i18n.language);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] =
+    useState(false);
 
   const handleLogout = (event) => {
     event.preventDefault();
     logout();
   };
 
+  const handleNotificationClick = async () => {
+    if (!notificationDropdownOpen) {
+      await markNotificationsAsRead(user.id);
+    }
+    setNotificationDropdownOpen(!notificationDropdownOpen);
+  };
+
   const handleClearNotifications = () => {
     setNotifications([]);
+  };
+
+  const handleHamburgerClick = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileMenuItemClick = () => {
+    setMobileMenuOpen(false);
   };
 
   const navItemVariant = {
@@ -38,10 +59,67 @@ const Navbar = ({ children }) => {
   return (
     <div id="navigation-bar" className={direction}>
       <nav className="navbar">
+        <button className="hamburger-menu" onClick={handleHamburgerClick}>
+          &#9776;
+        </button>
+        <div className={`mobile-menu${mobileMenuOpen ? " open" : ""}`}>
+          <ul>
+            <motion.li
+              onClick={handleMobileMenuItemClick}
+              variants={navItemVariant}
+            >
+              <Link to="/">{t("navbar.home")}</Link>
+            </motion.li>
+            <motion.li
+              onClick={handleMobileMenuItemClick}
+              variants={navItemVariant}
+            >
+              <Link to="/warehouse">{t("navbar.warehouse")}</Link>
+            </motion.li>
+            <motion.li
+              onClick={handleMobileMenuItemClick}
+              variants={navItemVariant}
+            >
+              <Link to="/dashboard">{t("navbar.dashboard")}</Link>
+            </motion.li>
+            {!isAuthenticated && (
+              <motion.li
+                onClick={handleMobileMenuItemClick}
+                variants={navItemVariant}
+              >
+                <Link to="/auth/login">{t("navbar.login")}</Link>
+              </motion.li>
+            )}
+            {isAuthenticated && (
+              <>
+                <motion.li
+                  onClick={handleMobileMenuItemClick}
+                  variants={navItemVariant}
+                >
+                  <NotificationDropdown
+                    notifications={notifications}
+                    onClearNotifications={handleClearNotifications}
+                  />
+                </motion.li>
+                <motion.li
+                  onClick={handleMobileMenuItemClick}
+                  variants={navItemVariant}
+                >
+                  <LanguageSelector />
+                </motion.li>
+                <motion.li
+                  onClick={handleMobileMenuItemClick}
+                  variants={navItemVariant}
+                >
+                  <Link to="/auth/logout" onClick={handleLogout}>
+                    {t("navbar.logout")}
+                  </Link>
+                </motion.li>
+              </>
+            )}
+          </ul>
+        </div>
         <ul className="navbar-menu">
-          <motion.li variants={navItemVariant}>
-            <LanguageSelector />
-          </motion.li>
           <motion.li variants={navItemVariant}>
             <Link to="/">{t("navbar.home")}</Link>
           </motion.li>
@@ -60,11 +138,30 @@ const Navbar = ({ children }) => {
           )}
           {isAuthenticated && (
             <>
-              <motion.li variants={navItemVariant}>
+              <motion.li
+                className="notification-icon"
+                variants={navItemVariant}
+              >
+                <Badge
+                  color="error"
+                  badgeContent={notifications.length}
+                  max={99}
+                  onClick={handleNotificationClick}
+                >
+                  <NotificationsIcon
+                    className={`bell-icon${
+                      notifications.length ? " active" : ""
+                    }`}
+                  />
+                </Badge>
                 <NotificationDropdown
+                  isOpen={notificationDropdownOpen}
                   notifications={notifications}
                   onClearNotifications={handleClearNotifications}
                 />
+              </motion.li>
+              <motion.li variants={navItemVariant}>
+                <LanguageSelector />
               </motion.li>
               <motion.li variants={navItemVariant}>
                 <Link to="/auth/logout" onClick={handleLogout}>

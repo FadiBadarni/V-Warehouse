@@ -1,24 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import {
-  clearUserNotifications,
-  markNotificationsAsRead,
-} from "../../api/NotificationService";
+import { clearUserNotifications } from "../../api/NotificationService";
 
-const NotificationDropdown = ({ notifications, onClearNotifications }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const NotificationDropdown = ({
+  notifications,
+  onClearNotifications,
+  isOpen,
+}) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
-
-  const toggleDropdown = async () => {
-    if (!isOpen) {
-      await markNotificationsAsRead(user.id);
-    }
-    setIsOpen(!isOpen);
+  const { i18n } = useTranslation();
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const options = {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Intl.DateTimeFormat(i18n.language, options).format(date);
   };
-
   const handleClearNotifications = async () => {
     await clearUserNotifications(user.id);
     onClearNotifications();
@@ -27,12 +29,10 @@ const NotificationDropdown = ({ notifications, onClearNotifications }) => {
   return (
     <motion.div
       className={`notification-dropdown ${isOpen ? "open" : ""}`}
-      onClick={toggleDropdown}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
-      <span id="notification-span">{t("navbar.notifications")}</span>
       <AnimatePresence>
         {isOpen && (
           <motion.ul
@@ -48,8 +48,10 @@ const NotificationDropdown = ({ notifications, onClearNotifications }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <span>{notification.message}</span>
-                <span>{notification.date}</span>
+                <span className="notification-msg">{notification.message}</span>
+                <span className="notification-date">
+                  {formatDate(notification.date)}
+                </span>
               </motion.li>
             ))}
             <motion.li

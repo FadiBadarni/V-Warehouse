@@ -1,32 +1,34 @@
 import React from "react";
 import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
-
+import { useTranslation } from "react-i18next";
 const RequestsTableHeaders = ({
   orderBy,
   order,
   handleSortRequestDate,
   actionsHeaderTitle,
 }) => {
+  const { t } = useTranslation();
   return (
     <TableHead>
       <TableRow>
         <TableCell />
-        <TableCell>Student ID</TableCell>
-        <TableCell>Item ID</TableCell>
-        <TableCell>Borrowing Start</TableCell>
-        <TableCell>Borrowing End</TableCell>
-        <TableCell>Borrowing Reason</TableCell>
-        <TableCell>Quantity</TableCell>
+        <TableCell>{t("borrowRequests.tableHeaders.id")}</TableCell>
+        <TableCell>{t("borrowRequests.tableHeaders.startDate")}</TableCell>
+        <TableCell>{t("borrowRequests.tableHeaders.returnDate")}</TableCell>
+        <TableCell>{t("borrowRequests.tableHeaders.startDate")}</TableCell>
+        <TableCell>{t("borrowRequests.tableHeaders.quantity")}</TableCell>
         <TableCell>
           <TableSortLabel
             active={orderBy === "sentRequestTime"}
             direction={order}
             onClick={handleSortRequestDate}
           >
-            Request Date
+            {t("borrowRequests.tableHeaders.requestDate")}
           </TableSortLabel>
         </TableCell>
-        <TableCell>{actionsHeaderTitle || "Actions"}</TableCell>
+        <TableCell>
+          {actionsHeaderTitle || `${t("borrowRequests.tableHeaders.actions")}`}
+        </TableCell>
       </TableRow>
     </TableHead>
   );

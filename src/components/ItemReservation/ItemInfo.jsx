@@ -2,6 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 const ItemInfo = ({ item }) => {
   const { t } = useTranslation();
+  if (!item || !item.id) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="item-info">
       <h2 className="item-info__title">

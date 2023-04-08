@@ -79,14 +79,6 @@ export const importUsers = async (formData) => {
   );
 };
 
-export async function getBorrowRequests() {
-  return apiWrapper(
-    () => axiosInstance.get("/borrow-requests"),
-    "Borrow requests fetched successfully",
-    "Failed to fetch borrow requests"
-  );
-}
-
 export async function getUserById(userId) {
   return apiWrapper(
     () => axiosInstance.get(`/userInfo/${userId}`),

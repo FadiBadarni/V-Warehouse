@@ -4,13 +4,13 @@
       "subtitle": "The Virtual Warehouse for Visual Mavericks.",
       "cta": "Browse Equipment",
       "browsetitle": "The ultimate resource for equipment rentals and management, designed for the visual communication Department.",
-      "services": "Our Services",
+      "services": "Experience Our Expertise",
       "equipmentRentals": "Equipment Rentals",
-      "equipmentRentalsDesc": "From cameras to podcast rooms, we have everything you need to bring your visual communication projects to life.",
+      "equipmentRentalsDesc": "From cameras to lights, we have everything you need to bring your visual communication projects to life.",
       "equipmentManagement": "Equipment Management",
       "equipmentManagementDesc": "Our system allows you to track and manage equipment usage, repairs, and inventory with ease.",
-      "procurement": "Procurement",
-      "procurementDesc": "Need to order new equipment or request repairs? Our procurement system has got you covered.",
+      "procurement": "Rooms Booking",
+      "procurementDesc": "Need to book a room? Our procurement system has got you covered.",
       "equipmentCatalog": "Equipment Catalog",
       "dummyEquipment": "Dummy Equipment",
       "helpSupport": "Help and Support",
@@ -78,7 +78,23 @@
       },
       "borrowRequests": {
         "title": "Borrow Requests",
-        "pendingTitle": "Pending Orders:"
+        "pendingTitle": "Pending Orders",
+        "awaitingTitle": "Requests Awaiting Pickup",
+        "returnedTitle": "Requests Pending Return",
+        "closedTitle": "Closed Requests",
+        "tableHeaders":{
+          "id":"ID Number",
+          "itemName": "Item Name",
+          "startDate": "Start Date",
+          "returnDate": "Return Date",
+          "quantity": "Quantity",
+          "requestDate": "Request Date",
+          "actions": "Actions"
+        },
+        "pendingRequests":{
+          "approve": "Approve",
+          "reject": "Reject"
+        }
       }
   }
   

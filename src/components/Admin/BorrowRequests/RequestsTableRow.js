@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   TableRow,
   TableCell,
@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import RowDetails from "./RowDetails";
+import { useTranslation } from "react-i18next";
 import customStatus from "./Utils/CustomStatus";
+import { getItemInstancesByRequestId } from "../../../api/BorrowService";
 
 const RequestsTableRow = ({
   request,
@@ -28,6 +30,30 @@ const RequestsTableRow = ({
   showState,
 }) => {
   const customized = customStatus(request.status);
+  const [itemInstances, setItemInstances] = useState([]);
+  const { i18n, t } = useTranslation();
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const options = {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Intl.DateTimeFormat(i18n.language, options).format(date);
+  };
+
+  useEffect(() => {
+    if (expandedRow === index) {
+      getItemInstancesByRequestId(request.requestId)
+        .then((instances) => setItemInstances(instances))
+        .catch((error) =>
+          console.error("Error fetching item instances:", error)
+        );
+    }
+  }, [expandedRow, index, request.requestId]);
+
   return (
     <React.Fragment>
       <TableRow
@@ -51,18 +77,11 @@ const RequestsTableRow = ({
           </IconButton>
         </TableCell>
         <TableCell>{request.userId}</TableCell>
-        <TableCell>{request.itemId}</TableCell>
-        <TableCell>
-          {request.intendedStartDate?.replace("T", " ").slice(0, 16)}
-        </TableCell>
-        <TableCell>
-          {request.intendedReturnDate?.replace("T", " ").slice(0, 16)}
-        </TableCell>
+        <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
+        <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
         <TableCell>{request.borrowingReason}</TableCell>
         <TableCell>{request.quantity}</TableCell>
-        <TableCell>
-          {request.requestTime?.replace("T", " ").slice(0, 19)}
-        </TableCell>
+        <TableCell>{formatDate(request.requestTime)}</TableCell>
 
         {handleAccept && handleReject && (
           <TableCell>
@@ -75,7 +94,7 @@ const RequestsTableRow = ({
                 handleAccept(request);
               }}
             >
-              Approve
+              {t("borrowRequests.pendingRequests.approve")}
             </Button>
             <Button
               variant="contained"
@@ -85,7 +104,7 @@ const RequestsTableRow = ({
                 handleReject(request);
               }}
             >
-              Reject
+              {t("borrowRequests.pendingRequests.reject")}
             </Button>
           </TableCell>
         )}
@@ -152,7 +171,7 @@ const RequestsTableRow = ({
               <RowDetails
                 request={request}
                 user={user}
-                itemDetails={itemDetails}
+                itemInstances={itemInstances}
               />
             </Box>
           </Collapse>

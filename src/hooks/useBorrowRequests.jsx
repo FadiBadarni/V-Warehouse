@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { getBorrowRequests, updateRequestStatus } from "../api/AdminService";
-
+import { updateRequestStatus } from "../api/AdminService";
+import { getBorrowRequests } from "../api/BorrowService";
 const useBorrowRequests = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [awaitingPickupRequests, setAwaitingPickupRequests] = useState([]);

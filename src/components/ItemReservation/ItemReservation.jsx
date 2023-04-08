@@ -11,7 +11,9 @@ import { useTranslation } from "react-i18next";
 import { getUserIdFromLocalStorage } from "../../api/UserService";
 import { sendBorrowRequest } from "../../api/BorrowService";
 import useItemDetails from "../../hooks/useItemDetails";
-import "./BorrowedItemDetails.scss";
+
+import dayjs from "dayjs";
+import "./ItemReservation.scss";
 
 const BorrowedItemDetails = () => {
   const { t } = useTranslation();
@@ -23,7 +25,8 @@ const BorrowedItemDetails = () => {
   const [intendedStartDate, setIntendedStartDate] = useState("");
   const [intendedReturnDate, setIntendedReturnDate] = useState("");
   const [borrowReason, setBorrowReason] = useState("");
-  const [quantityNeeded, setQuantityNeeded] = useState("");
+  const [selectedInstanceIds, setSelectedInstanceIds] = useState([]);
+
   const navigate = useNavigate();
 
   const { itemDetails, fetchItemDetails } = useItemDetails();
@@ -49,7 +52,7 @@ const BorrowedItemDetails = () => {
       alert("Please provide a signature.");
     } else {
       const base64Signature = signaturePad.toDataURL();
-
+      console.log(selectedInstanceIds);
       const userId = getUserIdFromLocalStorage();
       const borrowRequestData = {
         userId,
@@ -57,7 +60,7 @@ const BorrowedItemDetails = () => {
         intendedStartDate,
         intendedReturnDate,
         borrowingReason: borrowReason,
-        quantity: quantityNeeded,
+        itemInstanceIds: selectedInstanceIds,
         signatureData: base64Signature,
       };
       const result = await sendBorrowRequest(borrowRequestData);
@@ -73,9 +76,27 @@ const BorrowedItemDetails = () => {
   };
 
   const isFormValid = () => {
-    return (
-      intendedStartDate && intendedReturnDate && borrowReason && quantityNeeded
-    );
+    // Check if all fields have values
+    if (!intendedStartDate || !intendedReturnDate || !borrowReason) {
+      return false;
+    }
+
+    // Check if start date is before return date
+    if (dayjs(intendedStartDate).isAfter(intendedReturnDate)) {
+      return false;
+    }
+
+    // Check if the interval between start date and return date is at most 7 days
+    if (dayjs(intendedReturnDate).diff(intendedStartDate, "day") > 7) {
+      return false;
+    }
+
+    // Check if the interval between start date and return date is at least half an hour (30 minutes)
+    if (dayjs(intendedReturnDate).diff(intendedStartDate, "minute") < 30) {
+      return false;
+    }
+    // All validations passed
+    return true;
   };
 
   if (!itemDetails || Object.keys(itemDetails).length === 0) {
@@ -95,10 +116,10 @@ const BorrowedItemDetails = () => {
         setIntendedReturnDate={setIntendedReturnDate}
         borrowReason={borrowReason}
         setBorrowReason={setBorrowReason}
-        quantityNeeded={quantityNeeded}
-        setQuantityNeeded={setQuantityNeeded}
         handleSendRequest={handleSendRequest}
         isFormValid={isFormValid}
+        itemInstances={itemDetails.itemInstances}
+        setSelectedInstanceIds={setSelectedInstanceIds}
       />
       <AnimatePresence>
         {showModal && (

@@ -4,7 +4,9 @@ import { translateText } from "../api/TranslationService";
 import { useTranslation } from "react-i18next";
 
 const useItemDetails = () => {
-  const [itemDetails, setItemDetails] = useState({});
+  const [itemDetails, setItemDetails] = useState({
+    itemInstances: [],
+  });
   const { i18n } = useTranslation();
 
   const translateItemDetails = useCallback(async (itemDetails, language) => {

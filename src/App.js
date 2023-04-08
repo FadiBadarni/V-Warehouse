@@ -8,7 +8,7 @@ import Admin from "./components/Admin/Admin";
 import Warehouse from "./components/Warehouse/Warehouse";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Home/Home";
-import BorrowedItemDetails from "./components/BorrowedItemDetails/BorrowedItemDetails";
+import ItemReservation from "./components/ItemReservation/ItemReservation";
 import Unauthorized from "./components/ErrorPages/Unauthorized";
 
 import ItemList from "./components/Admin/ItemList/ItemList";
@@ -46,7 +46,7 @@ function App() {
           <Route path="/auth/login-failed" element={<LoginFailed />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/warehouse" element={<Warehouse />} />
-          <Route path="/warehouse/item/:id" element={<BorrowedItemDetails />} />
+          <Route path="/warehouse/item/:id" element={<ItemReservation />} />
 
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/item-list" element={<ItemList />} />

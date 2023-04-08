@@ -12,7 +12,7 @@ const ClosedRequests = ({
 }) => {
   return (
     <Box>
-      <Typography className="rejected-requests-title" variant="h5" gutterBottom>
+      <Typography className="requests-title" variant="h5" gutterBottom>
         Closed Requests
       </Typography>
       <RequestsTable

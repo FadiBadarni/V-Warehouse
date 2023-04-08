@@ -1,0 +1,117 @@
+@import '../../variables';
+@import '../../directions';
+
+.features {
+    margin-top: 4rem;
+    text-align: center;
+
+    &__title {
+        width: 100%;
+        margin-bottom: 4rem;
+
+        span {
+            font-size: 3.5rem;
+            font-weight: 600;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 2rem;
+        align-items: center;
+        perspective: 1000px;
+
+        @media only screen and (min-width: $breakpoint-large) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media only screen and (max-width: $breakpoint-medium) {
+            grid-gap: 1rem;
+        }
+
+        &-item {
+            background-color: $third-color;
+            color: $primary-color;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s, box-shadow 0.5s;
+            transform-style: preserve-3d;
+
+            &:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+            }
+
+            h3 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 1.5rem;
+                }
+            }
+
+            p {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+
+
+
+
+}
+
+
+.feature-card {
+    background-color: $third-color;
+    color: $primary-color;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s, box-shadow 0.5s;
+    transform-style: preserve-3d;
+    text-align: center;
+
+    &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    &__title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+
+        @media only screen and (max-width: 768px) {
+            font-size: 1.5rem;
+        }
+    }
+
+    &__description {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+
+        @media only screen and (max-width: 768px) {
+            font-size: 1rem;
+        }
+    }
+}

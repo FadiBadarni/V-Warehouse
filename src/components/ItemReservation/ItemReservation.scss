@@ -1,12 +1,13 @@
 @import "../../variables";
 @import '../../directions';
+@import "./BorrowForm.scss";
 
 .item-details-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -24,7 +25,6 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 800px;
     margin: 0 auto;
     margin-bottom: 30px;
 
@@ -79,117 +79,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     margin-bottom: 30px;
     width: 100%;
-    max-width: 800px;
     margin: 0 auto;
 }
 
 
 
-.borrow-form {
-    background-color: $sce-background-color;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 30px;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: url(../../assets/sceBg1.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-
-    &__title {
-        color: $sce-primary-color;
-        font-size: 1.6rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-
-    }
-
-    &__request {
-        width: 70%;
-        padding: 30px 0;
-        background: #18222e7c;
-        border-radius: 1rem;
-        color: white;
-        transition: .2s;
-        display: flex;
-        flex-direction: column;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-
-    &__field {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 2rem;
-    }
-
-    &__label {
-        font-weight: 700;
-        margin: 0 auto;
 
 
-        .ltr & {
-            font-size: 1.3rem;
-
-        }
-
-        .rtl & {
-            font-size: 1.4rem;
-        }
-    }
-
-
-
-    &__datetime-picker {
-        padding: 10px;
-        width: 250px;
-        border: 1px solid $sce-primary-color;
-        border-radius: 5px;
-    }
-
-    &__input {
-        padding: 10px;
-        width: 250px;
-        border: 1px solid $sce-primary-color;
-        border-radius: 5px;
-    }
-
-    &__textarea {
-        max-height: 200px;
-        min-height: 50px;
-        width: 250px;
-        max-width: 250px;
-        min-width: 250px;
-
-        overflow-y: scroll;
-        overflow-x: scroll;
-        border: 1px solid $sce-primary-color;
-        border-radius: 5px;
-    }
-
-    &__button {
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: $sce-primary-color;
-        color: $sce-text-color;
-        border: none;
-        margin: 0 auto;
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-    }
-}
 
 
 .signature-modal {

@@ -15,11 +15,7 @@ const AwaitingPickupRequests = ({
 }) => {
   return (
     <Box>
-      <Typography
-        className="waiting-for-pickup-requests-title"
-        variant="h5"
-        gutterBottom
-      >
+      <Typography className="requests-title" variant="h5" gutterBottom>
         Requests Awaiting Pickup
       </Typography>
       <RequestsTable
