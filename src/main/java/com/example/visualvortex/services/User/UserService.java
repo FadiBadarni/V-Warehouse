@@ -67,12 +67,9 @@ public class UserService implements UserDetailsService {
         return delegatingPasswordEncoder.encode(password);
     }
 
-
-    public UserDTO getUserById(Long id) {
-        Optional<User> user = repository.findById(id);
-        return user.map(this::createUserDTO).orElse(null);
+    public User getUserById(Long id) {
+        return repository.findById(id).orElse(null);
     }
-
     public UserDTO createUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())

@@ -1,6 +1,6 @@
 package com.example.visualvortex.controllers.AdminControllers;
 
-import com.example.visualvortex.dtos.UserDTOS.UserDTO;
+import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.services.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ public class AdminController {
 
     @GetMapping("/userInfo/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUserById(@PathVariable Long id) {
+    public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 }

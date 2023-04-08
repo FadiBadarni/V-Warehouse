@@ -18,5 +18,5 @@ public class ItemDTO {
     private String description;
     private int quantity;
     private ItemTypeDTO itemType;
-
+    private List<ItemInstanceDTO> itemInstances;
 }

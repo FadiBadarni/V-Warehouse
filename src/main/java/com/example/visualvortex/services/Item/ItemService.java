@@ -136,12 +136,20 @@ public class ItemService {
                 itemTypeAttributeDTOs
         );
 
+        List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()
+                .map(instance -> new ItemInstanceDTO(
+                        instance.getId(),
+                        instance.getState(),
+                        instance.getItem().getId()))
+                .toList();
+
         return ItemDTO.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .quantity(item.getItemInstances().size())
                 .itemType(itemTypeDTO)
+                .itemInstances(itemInstanceDTOs)
                 .build();
     }
 

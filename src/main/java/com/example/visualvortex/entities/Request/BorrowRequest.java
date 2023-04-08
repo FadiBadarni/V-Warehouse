@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -29,8 +30,11 @@ public class BorrowRequest {
     private String borrowingReason;
     @Column(nullable = true, columnDefinition = "bytea")
     private byte[] signatureData;
-    @Column(nullable = false)
-    private Integer quantity;
+
+    @Column
+    @ElementCollection
+    @CollectionTable(name="requests_instances")
+    private List<Long> itemInstanceIds;
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
     private LocalDateTime requestTime;
