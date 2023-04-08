@@ -66,6 +66,14 @@ export const getAllItemInstances = async () => {
   }
 };
 
+export const getAllUsers = async (formData) => {
+  return apiWrapper(
+    () => axiosInstance.get("/all-users"),
+    "All Users requests fetched successfully",
+    "All Users to fetch users requests"
+  );
+};
+
 export const importUsers = async (formData) => {
   return apiWrapper(
     () =>
