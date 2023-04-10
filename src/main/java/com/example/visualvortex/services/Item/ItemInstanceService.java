@@ -66,4 +66,9 @@ public class ItemInstanceService {
         return itemInstanceRepository.findAllById(instanceIds);
     }
 
+
+    public int quantityItemsBy(Long id) {
+        return itemInstanceRepository.quantityItemsBy(id);
+
+    }
 }

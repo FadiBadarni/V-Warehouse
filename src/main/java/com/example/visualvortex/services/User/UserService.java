@@ -1,15 +1,19 @@
 package com.example.visualvortex.services.User;
 
+import com.example.visualvortex.dtos.UserDTOS.RegistrationDto;
 import com.example.visualvortex.dtos.UserDTOS.UserDTO;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.entities.User.UserRole;
 import com.example.visualvortex.errors.FileParsingException;
+import com.example.visualvortex.errors.ResourceNotFoundException;
 import com.example.visualvortex.repositories.UserRepository;
+import com.example.visualvortex.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,10 +27,13 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+    @Autowired
+    private EmailService emailService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -146,4 +153,66 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public Iterable<User> findAll() {
+        return repository.findAll();
+    }
+
+    public void updateRoleInUserId(Long id,String Role) {
+        User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setRole(UserRole.valueOf(Role));
+        repository.save(user);
+    }
+
+
+
+
+    private String createPassword(){
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 7;
+        for(int i = 0; i < length; i++) {
+            int index = random.nextInt(alphabet.length());
+            char randomChar = alphabet.charAt(index);
+            sb.append(randomChar);
+        }
+        String randomString = sb.toString();
+        return randomString;
+    }
+
+    public void createUser(String recipient, String role, int year) {
+
+        String body="your Username is:";
+        User user=null;
+        String username=recipient.split("@")[0];
+        if(repository.findByEmail(recipient).isPresent())
+        {
+            return;
+        }
+        user=repository.findByUsername(username);
+        int i=0;
+        while (user!=null)
+        {
+            i++;
+            user=repository.findByUsername(username+i);
+        }
+        if(i!=0)
+         username=username+i;
+
+      String  password =createPassword();
+        body=body+username+"\n your password is:"+password;
+         try {
+             emailService.sendEmail(recipient,"You have new Account",body);
+         }catch (Exception e) {}
+
+         User newUser= User.builder().email(recipient).role(UserRole.valueOf(role))
+                 .password(encodePassword(password)).year(year).username(username).build();
+         repository.save(newUser);
+
+
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }

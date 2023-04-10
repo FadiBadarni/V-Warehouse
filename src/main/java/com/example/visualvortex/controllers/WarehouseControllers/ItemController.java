@@ -4,7 +4,9 @@ import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
 import com.example.visualvortex.entities.Item.ItemState;
 import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
 import com.example.visualvortex.entities.Item.Item;
+import com.example.visualvortex.services.Item.ItemInstanceService;
 import com.example.visualvortex.services.Item.ItemService;
+import com.example.visualvortex.services.Item.ItemTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class ItemController {
     private final ItemService itemService;
+
+    private final ItemTypeService itemTypeService;
+
+    private final ItemInstanceService itemInstanceService;
 
     @GetMapping("/warehouseItems")
     @ResponseStatus(HttpStatus.OK)
@@ -36,5 +42,18 @@ public class ItemController {
         return itemService.itemToItemDTO(item);
     }
 
+    @GetMapping("itemTypes")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getItemById() {
+        return itemTypeService.listType();
+    }
+
+    @GetMapping("/quantityItemsByType/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public int quantityItemsByType(@PathVariable Long id) {
+
+        int x= itemInstanceService.quantityItemsBy(id);
+        return  x;
+    }
 
 }
