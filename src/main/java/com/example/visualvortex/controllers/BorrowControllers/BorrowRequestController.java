@@ -5,16 +5,15 @@ import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
 import com.example.visualvortex.dtos.ScheduleDTO;
 import com.example.visualvortex.services.BorrowRequestService;
 import lombok.RequiredArgsConstructor;
-import com.example.visualvortex.services.FirbaseService;
+import com.example.visualvortex.services.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class BorrowRequestController {
 
     private final BorrowRequestService borrowRequestService;
-
+    private final FirebaseService firebaseService;
     @GetMapping("/borrow-requests")
     @ResponseStatus(HttpStatus.OK)
     public List<BorrowRequestDTO> getAllRequests() {
@@ -35,15 +34,18 @@ public class BorrowRequestController {
         return borrowRequestService.getPendingRequestsByItemInstance(itemInstanceId);
     }
 
-    @Autowired
-    private FirbaseService firbaseService;
-
     @PostMapping("/borrow-requests")
     public ResponseEntity<BorrowRequestDTO> createBorrowRequest(@RequestBody BorrowRequestDTO borrowRequestDTO) {
-            String id=firbaseService.Save(borrowRequestDTO.getSignatureData());
-        borrowRequestDTO.setSignatureData(id);
-        BorrowRequestDTO newBorrowRequestDTO = borrowRequestService.createBorrowRequest(borrowRequestDTO);
-        return new ResponseEntity<>(newBorrowRequestDTO, HttpStatus.CREATED);
+        Optional<String> idOptional = firebaseService.save(borrowRequestDTO.getSignatureData());
+
+        if (idOptional.isPresent()) {
+            String id = idOptional.get();
+            borrowRequestDTO.setSignatureData(id);
+            BorrowRequestDTO newBorrowRequestDTO = borrowRequestService.createBorrowRequest(borrowRequestDTO);
+            return new ResponseEntity<>(newBorrowRequestDTO, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/borrow-requests/occupied-dates")

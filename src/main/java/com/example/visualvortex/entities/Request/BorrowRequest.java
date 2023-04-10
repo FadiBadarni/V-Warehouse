@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,9 +36,6 @@ public class BorrowRequest {
 
 //    @Column(nullable = true, columnDefinition = "bytea")
     private String signatureData;
-
-    @Column(nullable = false)
-    private Integer quantity;
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
     private LocalDateTime requestTime;

@@ -25,4 +25,3 @@ public class ItemInstance {
     @JsonIgnore
     private Item item;
 }
-

@@ -5,35 +5,25 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
 
 @SpringBootApplication
 public class MainApplication {
 
-
-
 	public static void main(String[] args) throws IOException {
+		initFirebase();
+		SpringApplication.run(MainApplication.class, args);
+	}
 
-
-
-		ClassLoader classLoader=SpringApplication.class.getClassLoader();
-//		File file=new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
-		FileInputStream serviceAccount=new FileInputStream("C:\\Users\\abada\\OneDrive\\שולחן העבודה\\update\\SB-Backend\\src\\main\\resources\\serviceAccountKey.json");
-
-
-
-		FirebaseOptions options = new FirebaseOptions.Builder()
+	private static void initFirebase() throws IOException {
+		InputStream serviceAccount = new ClassPathResource("AccountKey.json").getInputStream();
+		FirebaseOptions options = FirebaseOptions.builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 				.build();
-
 		FirebaseApp.initializeApp(options);
-
-		SpringApplication.run(MainApplication.class, args);
 	}
 
 }

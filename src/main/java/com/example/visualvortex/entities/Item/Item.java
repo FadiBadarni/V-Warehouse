@@ -25,7 +25,7 @@ public class Item {
     @JoinColumn(name = "item_type_id")
     private ItemType itemType;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private List<ItemInstance> itemInstances = new ArrayList<>();;
 
 
