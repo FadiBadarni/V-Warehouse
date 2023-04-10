@@ -79,6 +79,38 @@ export const importUsers = async (formData) => {
   );
 };
 
+export const updateRoleUser = async (id, role) => {
+  return apiWrapper(
+    () => axiosInstance.put(`/${id}/role`, { role }),
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export const createUser = async (recipient, role, year) => {
+  return apiWrapper(
+    () => axiosInstance.put(`/create-user`, { recipient, role, year }),
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export const deleteUser = async (id) => {
+  return apiWrapper(
+    () => axiosInstance.put(`/delete-user/${id}`),
+    "Users imported successfully",
+    "Error importing users:"
+  );
+};
+
+export async function getBorrowRequests() {
+  return apiWrapper(
+    () => axiosInstance.get("/borrow-requests"),
+    "Borrow requests fetched successfully",
+    "Failed to fetch borrow requests"
+  );
+}
+
 export async function getUserById(userId) {
   return apiWrapper(
     () => axiosInstance.get(`/userInfo/${userId}`),

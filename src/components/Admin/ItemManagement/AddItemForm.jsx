@@ -9,6 +9,7 @@ import CheckMark from "./CheckMark";
 import Autocomplete from "@mui/material/Autocomplete";
 import QRCode from "react-qr-code";
 import QRCodePrint from "./QRCodePrint";
+import { fetchedItemTypes } from "../../../api/WarehouseService" 
 
 import "./ItemManagement.scss";
 
@@ -23,6 +24,8 @@ const EquipmentForm = () => {
 
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
 
+
+   
   const [attributes, setAttributes] = useState([
     { attributeName: "", attributeValue: "" },
   ]);
@@ -45,7 +48,19 @@ const EquipmentForm = () => {
     }
   };
 
-  const handleSelectItem = async (selectedItemName) => {
+
+
+  const [itemTypes, setItemTypes] = useState([]);
+  const handleTypeInputClick = async () => {
+    const fetchedItemType = await  fetchedItemTypes();
+    if (fetchedItemType) {
+      setItemTypes(fetchedItemType);
+    }
+  };
+
+
+
+  const handleSelectNameItem = async (selectedItemName) => {
     if (selectedItemName) {
       const selectedItem = await getItemByName(selectedItemName);
       if (selectedItem) {
@@ -138,7 +153,7 @@ const EquipmentForm = () => {
             getOptionLabel={(option) => option}
             freeSolo
             onChange={async (event, selectedItemName) => {
-              handleSelectItem(selectedItemName);
+              handleSelectNameItem(selectedItemName);
             }}
             renderInput={(params) => (
               <TextField
@@ -151,7 +166,27 @@ const EquipmentForm = () => {
             )}
           />
         </Grid>
-
+        <Grid item xs={12} md={6}>
+          <Autocomplete
+            fullWidth
+            id="item-type"
+            options={itemTypes}
+            getOptionLabel={(option) => option}
+            freeSolo
+            disabled={isExistingItem}
+            value={itemType}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Equipment Type"
+                onFocus={handleTypeInputClick}
+             
+                onChange={(event) => setItemType(event.target.value)}
+                
+              />
+            )}
+          />
+        </Grid>
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
@@ -165,6 +200,7 @@ const EquipmentForm = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
+          <h3>df</h3>
           <TextField
             fullWidth
             id="quantity"
@@ -174,16 +210,7 @@ const EquipmentForm = () => {
             onChange={(e) => setQuantity(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            id="item-type"
-            label="Item Type"
-            value={itemType}
-            onChange={(e) => setItemType(e.target.value)}
-            disabled={isExistingItem}
-          />
-        </Grid>
+       
         {attributes.map((attribute, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} md={6}>

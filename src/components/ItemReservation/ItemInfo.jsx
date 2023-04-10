@@ -15,6 +15,10 @@ const ItemInfo = ({ item }) => {
         {t("borrowPage.itemDescription")}
         {item.description}
       </p>
+      <p className="item-info__quantity">
+        {t("quantity: ")}
+        {item.quantity}
+      </p>
       <div className="item-info__details">
         <p>
           <span className="item-info__label">{t("borrowPage.Itemtype")}:</span>{" "}

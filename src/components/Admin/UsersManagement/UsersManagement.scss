@@ -1,11 +1,92 @@
+@import "../../../variables";
+
 .users-management {
     display: flex;
     flex-direction: row;
 
     .users-section {
+                flex: 1;
+                height: 100vh;
+            }
+
+    &__content {
         flex: 1;
-        height: 100vh;
-        background-color: rgb(70, 70, 70);
+
+        background-color: #f2f2f2;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+
+        .MuiTable-root {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+            .MuiTableHead-root {
+                background-color: #f7f7f7;
+
+                th {
+                    font-weight: bold;
+                    font-size: 0.9rem;
+                    text-align: center;
+                }
+            }
+
+            .MuiTableBody-root {
+                tr {
+                    transition: all 0.2s ease-in-out; // Add transition for smooth hover effect
+
+                    &:hover {
+                        background-color: #f0f0f0; // Change the background color on hover
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Add a box shadow on hover
+                    }
+                }
+
+                td {
+                    padding: 16px 8px; // Add padding to table cells for better spacing
+                    text-align: center;
+                }
+            }
+
+            .MuiButton-root {
+                &:hover {
+                    transform: translateY(-1px); // Slightly lift the button on hover
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); // Add a box shadow on hover
+                }
+            }
+        }
+    }
+
+    &__title,
+    &__pending-title {
+        color: #444444;
+        margin-bottom: 10px;
+    }
+
+    &__expanded-row {
+        margin: 20px 0;
+        padding: 10px;
+        background-color: $sce-background-color;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+
+        .more-details-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: $sce-text-color4;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: $secondary-color;
+        }
+
+        span {
+            font-weight: bold;
+        }
     }
 }
 
@@ -22,3 +103,5 @@
     font-size: 1rem;
     margin-bottom: 20px;
 }
+
+
