@@ -1,10 +1,15 @@
-import React, {useEffect,useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useDropzone } from "react-dropzone";
 
-import { importUsers,getAllUsers,createUser,deleteUser  } from "../../../api/AdminService";
-import { updateRoleUser, } from "../../../api/AdminService";
+import {
+  importUsers,
+  getAllUsers,
+  createUser,
+  deleteUser,
+} from "../../../api/AdminService";
+import { updateRoleUser } from "../../../api/AdminService";
 import { useTranslation } from "react-i18next";
 import "./UsersManagement.scss";
 import {
@@ -21,8 +26,6 @@ import UsersTableHeaders from "./UsersTableHeaders";
 import UsersTableBody from "./UsersTableBody";
 import ExcelFile from "./AddInExcelUsers";
 import NewUser from "./AddNewUser";
-
-
 
 const UsersManagement = () => {
   useAdminRole();
@@ -56,22 +59,18 @@ const UsersManagement = () => {
     } catch (error) {
       alert("Failed to import users: " + error.message);
     }
-    
   };
   const [activeTab, setActiveTab] = useState(0);
   const [expandedRow, setExpandedRow] = useState(-1);
   const [users, setAllUsers] = useState([]);
 
-
-
   const handleRowClick = (index) => {
     setExpandedRow(expandedRow === index ? -1 : index);
   };
-  const handleAccept=(e,user)=>{
+  const handleAccept = (e, user) => {
     const newRole = e.target.value;
-    updateRoleUser(user.id,newRole)
-  }
-
+    updateRoleUser(user.id, newRole);
+  };
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -82,22 +81,20 @@ const UsersManagement = () => {
     fetchAllUsers();
   }, []);
 
-  const handleRoleChange =async (e, user) => {
+  const handleRoleChange = async (e, user) => {
     const newRole = e.target.value;
-    await updateRoleUser(user.id,newRole)
+    await updateRoleUser(user.id, newRole);
   };
 
-
-  const handleDelete =async (user) => {
-    await deleteUser(user.id)
+  const handleDelete = async (user) => {
+    await deleteUser(user.id);
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [ role, setRole] = useState("");
+  const [role, setRole] = useState("");
   const [username, setUserName] = useState("");
   const [year, setYear] = useState("");
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const user = {
@@ -105,28 +102,24 @@ const UsersManagement = () => {
       password,
       role,
       username,
-      year
+      year,
     };
-    const UserResult= await createUser(user.email,user.role,user.year);
+    const UserResult = await createUser(user.email, user.role, user.year);
     console.log(UserResult);
     if (UserResult) {
-
-       setEmail("");
+      setEmail("");
       setUserName("");
       setPassword("");
       setRole("");
       setYear("");
-     
-  }
-};
-  
+    }
+  };
 
- 
   return (
     <Box className="users-management">
       <AdminLayout direction={direction}></AdminLayout>
       <Box className="users-section">
-      <Tabs
+        <Tabs
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
           indicatorColor="primary"
@@ -137,17 +130,19 @@ const UsersManagement = () => {
           <Tab label="Show" />
           <Tab label="Add user" />
         </Tabs>
-        {activeTab === 0 && <ExcelFile
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-        saveStudents={saveStudents}
-        isDragActive={isDragActive}
-        files={files}
-         />}
+        {activeTab === 0 && (
+          <ExcelFile
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
+            saveStudents={saveStudents}
+            isDragActive={isDragActive}
+            files={files}
+          />
+        )}
         {activeTab === 1 && (
           <>
             <Typography className="Users__title" variant="h4" gutterBottom>
-            Users
+              Users
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -164,13 +159,13 @@ const UsersManagement = () => {
             </TableContainer>
           </>
         )}
-         {activeTab === 2 && (
-             <NewUser
-             handleSubmit={handleSubmit}
-             setRole={setRole}
-             setYear={setYear}
-             setEmail={setEmail}
-             />
+        {activeTab === 2 && (
+          <NewUser
+            handleSubmit={handleSubmit}
+            setRole={setRole}
+            setYear={setYear}
+            setEmail={setEmail}
+          />
         )}
       </Box>
     </Box>

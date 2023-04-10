@@ -1,0 +1,39 @@
+.faqs {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+
+    &__title {
+        margin-bottom: 2rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    &__content {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateY(-10px);
+        }
+    }
+
+    &__question {
+        margin-bottom: 1rem;
+    }
+
+    &__answer {
+        color: rgba(0, 0, 0, 0.7);
+    }
+}

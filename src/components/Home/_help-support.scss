@@ -8,13 +8,13 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.5s, box-shadow 0.5s;
     transform-style: preserve-3d;
+    height: 150px;
 
     &:hover {
-        transform: translateY(-10px);
         box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
     }
 
-    h3 {
+    &__title {
         font-size: 2rem;
         margin-bottom: 1rem;
 
@@ -23,7 +23,7 @@
         }
     }
 
-    p {
+    &__description {
         font-size: 1.2rem;
         margin-bottom: 1rem;
 
@@ -33,38 +33,6 @@
     }
 }
 
-
-
 .help-support-section {
     @extend .section;
-}
-
-.help-support-flex {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    padding: 0 2rem;
-
-    @media only screen and (max-width: $breakpoint-medium) {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .help-support-item {
-        width: 30%;
-        margin-bottom: 2rem;
-        position: relative;
-
-        @media only screen and (max-width: $breakpoint-large) {
-            width: 48%;
-        }
-
-        @media only screen and (max-width: $breakpoint-medium) {
-            width: 100%;
-        }
-
-        &:nth-child(odd) {
-            top: 2rem;
-        }
-    }
 }

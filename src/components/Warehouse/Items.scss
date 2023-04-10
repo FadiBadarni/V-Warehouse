@@ -1,0 +1,60 @@
+@import "../../variables";
+
+.warehouse {
+    &__items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 1rem;
+        padding: 1rem;
+    }
+
+    &__item {
+        background-color: transparent;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.384);
+        color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+        height: 150px;
+        position: relative;
+        max-width: 400px;
+
+        background-image: url("../../assets/gridbg.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    &__item-details {
+        margin-bottom: 10px;
+        height: 100%;
+        margin-top: 1.5rem;
+
+        h3 {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+    }
+
+    &__item-tag {
+        background-color: $sce-text-color4;
+        color: $sce-primary-color;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 5px;
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+}
