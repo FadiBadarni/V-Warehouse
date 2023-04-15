@@ -23,10 +23,6 @@ const useItemDetails = () => {
       itemDetails.itemType.name,
       language
     );
-    const translatedAttributes = await translateAttributes(
-      itemDetails.itemType.attributes,
-      language
-    );
 
     return {
       ...itemDetails,
@@ -35,7 +31,7 @@ const useItemDetails = () => {
       itemType: {
         ...itemDetails.itemType,
         name: translatedTypeName,
-        attributes: translatedAttributes,
+        attributes: itemDetails.itemType.attributes,
       },
     };
   }, []);
@@ -55,16 +51,6 @@ const useItemDetails = () => {
     },
     [i18n.language, translateItemDetails]
   );
-
-  const translateAttributes = async (attributes, language) => {
-    return await Promise.all(
-      attributes.map(async (attr) => ({
-        ...attr,
-        attributeName: await translateText(attr.attributeName, language),
-        attributeValue: await translateText(attr.attributeValue, language),
-      }))
-    );
-  };
 
   return { itemDetails, fetchItemDetails };
 };
