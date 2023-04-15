@@ -1,33 +1,43 @@
 import React from "react";
-import { TableBody, TableRow, TableCell } from "@mui/material";
+import { TableBody, TableCell, TableRow } from "@mui/material";
 import UsersTableRow from "./UsersTableRow";
-import RowDetails from "./UsersRowDetails";
+import RowDetails from "./RowDetails";
 
-const UsersTableBody = ({ users, handleRowClick, expandedRow,handleAccept,handleDelete ,   handleRoleChange}) => {
+const UsersTableBody = ({
+  users,
+  handleRowClick,
+  expandedRow,
+  handleUpdate,
+  handleDelete,
+  updateUser,
+}) => {
   return (
-    <TableBody>
+    <TableBody className="users-table__body">
       {users.length === 0 ? (
         <TableRow>
-          <TableCell colSpan={3} align="center">
-            No Item Instances
+          <TableCell colSpan={6} align="center">
+            No Users
           </TableCell>
         </TableRow>
       ) : (
         users.map((user, index) => (
           <React.Fragment key={user.id}>
             <UsersTableRow
-             user={user}
+              user={user}
               index={index}
               handleRowClick={handleRowClick}
-              handleAccept ={handleAccept}
-              handleDelete ={handleDelete}
-              handleRoleChange={handleRoleChange}
-               
+              updateUser={updateUser}
+              expandedRow={expandedRow}
             />
             {expandedRow === index && (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <RowDetails user={user} />
+              <TableRow className="users-table__expanded-row">
+                <TableCell colSpan={6}>
+                  <RowDetails
+                    user={user}
+                    handleUpdate={handleUpdate}
+                    handleDelete={handleDelete}
+                    updateUser={handleUpdate}
+                  />
                 </TableCell>
               </TableRow>
             )}

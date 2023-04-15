@@ -1,61 +1,37 @@
 import React from "react";
-import { TableRow, TableCell  ,Button,NativeSelect} from "@mui/material";
+import { TableCell, IconButton } from "@mui/material";
+import { motion } from "framer-motion";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import "./UsersManagement.scss";
-const UsersTableRow = ({ user, index, handleRowClick, handleAccept,
-  handleDelete,handleRoleChange }) => {
+
+const UsersTableRow = ({ user, index, handleRowClick, expandedRow }) => {
+  const isOpen = expandedRow === index;
 
   return (
-    <TableRow
+    <motion.tr
+      className="users-table__row"
       key={user.id}
-      onClick={() => handleRowClick(index, user.id)}
+      layout
+      initial={false}
+      animate={isOpen ? "open" : "closed"}
     >
+      <TableCell>
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          onClick={() => handleRowClick(index, user.id)}
+        >
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </TableCell>
       <TableCell>{user.id}</TableCell>
       <TableCell> {user.email}</TableCell>
       <TableCell>{user.username}</TableCell>
       <TableCell> {user.year}</TableCell>
-      <TableCell>
-        <NativeSelect
-          defaultValue={user.role}
-          inputProps={{
-            name: 'role',
-            id: 'uncontrolled-native',
-          }}
-          onChange={(e)=> handleRoleChange(e, user)}
-        >
-          <option value={"ADMIN"}>ADMIN</option>
-          <option value={"USER"}>USER</option>
-          <option value={"TEACHER"}>TEACHER</option>
-        </NativeSelect>
-      </TableCell>
-
-      {handleAccept &&  handleDelete && (
-          <TableCell>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mr: 1 }}
-              // onClick={(event) => {
-              //   event.stopPropagation();
-              //   handleAccept(user);
-              // }}
-            >
-              UPDATE
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ mr: 1 }}
-              onClick={(event) => {
-                event.stopPropagation();
-                handleDelete(user);
-              }}
-            >
-              Delete
-            </Button>
-          </TableCell>
-        )}
-    </TableRow>
+      <TableCell> {user.role}</TableCell>
+    </motion.tr>
   );
 };
 

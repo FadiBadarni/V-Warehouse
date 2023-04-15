@@ -1,31 +1,41 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  lazy,
+  Suspense,
+} from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useDropzone } from "react-dropzone";
+import { useTranslation } from "react-i18next";
+import "./UsersManagement.scss";
+import {
+  Box,
+  Table,
+  TableContainer,
+  Paper,
+  Tab,
+  Tabs,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
+import { InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 import {
   importUsers,
   getAllUsers,
   createUser,
   deleteUser,
+  updateUser,
 } from "../../../api/AdminService";
-import { updateRoleUser } from "../../../api/AdminService";
-import { useTranslation } from "react-i18next";
-import "./UsersManagement.scss";
-import {
-  Box,
-  Typography,
-  Table,
-  TableContainer,
-  Paper,
-  Tab,
-  Tabs,
-} from "@mui/material";
 
-import UsersTableHeaders from "./UsersTableHeaders";
-import UsersTableBody from "./UsersTableBody";
-import ExcelFile from "./AddInExcelUsers";
-import NewUser from "./AddNewUser";
+const UsersTableHeaders = lazy(() => import("./UsersTableHeaders"));
+const UsersTableBody = lazy(() => import("./UsersTableBody"));
+const Excel = lazy(() => import("./Excel"));
+const NewUser = lazy(() => import("./AddNewUser"));
 
 const UsersManagement = () => {
   useAdminRole();
@@ -67,9 +77,10 @@ const UsersManagement = () => {
   const handleRowClick = (index) => {
     setExpandedRow(expandedRow === index ? -1 : index);
   };
-  const handleAccept = (e, user) => {
-    const newRole = e.target.value;
-    updateRoleUser(user.id, newRole);
+
+  const handleUpdate = (updatedUser) => {
+    const { id, email, username, role, year } = updatedUser;
+    updateUser(id, email, username, role, year);
   };
 
   useEffect(() => {
@@ -81,11 +92,6 @@ const UsersManagement = () => {
     fetchAllUsers();
   }, []);
 
-  const handleRoleChange = async (e, user) => {
-    const newRole = e.target.value;
-    await updateRoleUser(user.id, newRole);
-  };
-
   const handleDelete = async (user) => {
     await deleteUser(user.id);
   };
@@ -94,6 +100,7 @@ const UsersManagement = () => {
   const [role, setRole] = useState("");
   const [username, setUserName] = useState("");
   const [year, setYear] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -105,7 +112,6 @@ const UsersManagement = () => {
       year,
     };
     const UserResult = await createUser(user.email, user.role, user.year);
-    console.log(UserResult);
     if (UserResult) {
       setEmail("");
       setUserName("");
@@ -114,6 +120,12 @@ const UsersManagement = () => {
       setYear("");
     }
   };
+  const handleSearchInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const filteredUsers = users.filter((user) =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Box className="users-management">
@@ -123,53 +135,68 @@ const UsersManagement = () => {
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
           indicatorColor="primary"
-          textColor="primary"
           variant="fullWidth"
+          className="custom-tab-indicator custom-tab-text-color"
         >
-          <Tab label="Excel" />
-          <Tab label="Show" />
-          <Tab label="Add user" />
+          <Tab label="Register Users" id="tab-title" />
+          <Tab label="Users List" id="tab-title" />
+          <Tab label="Add user" id="tab-title" />
         </Tabs>
-        {activeTab === 0 && (
-          <ExcelFile
-            getRootProps={getRootProps}
-            getInputProps={getInputProps}
-            saveStudents={saveStudents}
-            isDragActive={isDragActive}
-            files={files}
-          />
-        )}
-        {activeTab === 1 && (
-          <>
-            <Typography className="Users__title" variant="h4" gutterBottom>
-              Users
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <UsersTableHeaders />
-                <UsersTableBody
-                  users={users}
-                  handleRowClick={handleRowClick}
-                  expandedRow={expandedRow}
-                  handleAccept={handleAccept}
-                  handleDelete={handleDelete}
-                  handleRoleChange={handleRoleChange}
+        <Suspense fallback={<CircularProgress />}>
+          {activeTab === 0 && (
+            <Excel
+              getRootProps={getRootProps}
+              getInputProps={getInputProps}
+              saveStudents={saveStudents}
+              isDragActive={isDragActive}
+              files={files}
+            />
+          )}
+          {activeTab === 1 && (
+            <>
+              <Box className="search-container">
+                <TextField
+                  label="Search by email"
+                  value={searchTerm}
+                  onChange={handleSearchInputChange}
+                  margin="normal"
+                  variant="outlined"
+                  className="search-input"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </Table>
-            </TableContainer>
-          </>
-        )}
-        {activeTab === 2 && (
-          <NewUser
-            handleSubmit={handleSubmit}
-            setRole={setRole}
-            setYear={setYear}
-            setEmail={setEmail}
-          />
-        )}
+              </Box>
+              <TableContainer component={Paper}>
+                <Table>
+                  <UsersTableHeaders />
+                  <UsersTableBody
+                    users={filteredUsers}
+                    handleRowClick={handleRowClick}
+                    expandedRow={expandedRow}
+                    handleUpdate={handleUpdate}
+                    handleDelete={handleDelete}
+                  />
+                </Table>
+              </TableContainer>
+            </>
+          )}
+          {activeTab === 2 && (
+            <NewUser
+              handleSubmit={handleSubmit}
+              setRole={setRole}
+              setYear={setYear}
+              setEmail={setEmail}
+            />
+          )}
+        </Suspense>
       </Box>
     </Box>
   );
 };
 
-export default UsersManagement;
+export default memo(UsersManagement);
