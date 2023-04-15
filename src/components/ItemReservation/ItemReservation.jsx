@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import "./ItemReservation.scss";
 
 const BorrowedItemDetails = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("itemReservation");
 
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
@@ -105,7 +105,7 @@ const BorrowedItemDetails = () => {
 
   return (
     <div className="item-details-container">
-      <h1 className="page-title">{t("borrowPage.title")}</h1>
+      <h1 className="page-title">{t("itemReservation.title")}</h1>
       <ItemInfo item={itemDetails}></ItemInfo>
 
       <LatePolicy></LatePolicy>

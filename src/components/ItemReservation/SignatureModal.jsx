@@ -13,7 +13,7 @@ const SignatureModal = ({
   handleSubmit,
   handleClose,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("itemReservation");
 
   return (
     <motion.div
@@ -24,19 +24,23 @@ const SignatureModal = ({
       transition={{ duration: 0.3 }}
     >
       <div className="signature-modal-content">
-        <h3>{t("borrowPage.signatureTerms")}</h3>
-        <p>{t("borrowPage.signatureText")}</p>
+        <h3>{t("itemReservation.signatureTerms")}</h3>
+        <p>{t("itemReservation.signatureText")}</p>
         <SignaturePad
           ref={(ref) => setSignaturePad(ref)}
           canvasProps={{ className: "signature-canvas" }}
           onEnd={() => setCanSubmit(!signaturePad.isEmpty())}
         />
         <div className="buttons-container">
-          <button onClick={handleClear}>{t("borrowPage.clearButton")}</button>
-          <button onClick={handleSubmit} disabled={!canSubmit}>
-            {t("borrowPage.submitButton")}
+          <button onClick={handleClear}>
+            {t("itemReservation.clearButton")}
           </button>
-          <button onClick={handleClose}>{t("borrowPage.closeButton")}</button>
+          <button onClick={handleSubmit} disabled={!canSubmit}>
+            {t("itemReservation.submitButton")}
+          </button>
+          <button onClick={handleClose}>
+            {t("itemReservation.closeButton")}
+          </button>
         </div>
       </div>
     </motion.div>

@@ -24,7 +24,7 @@ const BorrowForm = ({
   itemInstances,
   setSelectedInstanceIds,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("itemReservation");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
   const [occupiedDates, setOccupiedDates] = useState([]);
@@ -131,7 +131,7 @@ const BorrowForm = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="borrow-form">
-        <h3 className="borrow-form__title">{t("borrowPage.request")}</h3>
+        <h3 className="borrow-form__title">{t("itemReservation.request")}</h3>
         <div className="borrow-form__request">
           <div className="borrow-form__field">
             <div className="borrow-form__field">
@@ -160,7 +160,9 @@ const BorrowForm = ({
               </FormControl>
             </div>
             <div className="borrow-form__inputName">
-              <p className="borrow-form__label">{t("borrowPage.startDate")}</p>
+              <p className="borrow-form__label">
+                {t("itemReservation.startDate")}
+              </p>
             </div>
             <DatePicker
               className="borrow-form__date-picker"
@@ -185,7 +187,7 @@ const BorrowForm = ({
               >
                 <Box mb={4}>
                   <Typography variant="h5">
-                    {t("borrowPage.timeSlots")}
+                    {t("itemReservation.timeSlots")}
                   </Typography>
                 </Box>
                 <Grid container spacing={2} alignItems="flex-start">
@@ -207,7 +209,9 @@ const BorrowForm = ({
           )}
           <div className="borrow-form__field">
             <div className="borrow-form__inputName">
-              <p className="borrow-form__label">{t("borrowPage.returnDate")}</p>
+              <p className="borrow-form__label">
+                {t("itemReservation.returnDate")}
+              </p>
             </div>
             <DatePicker
               className="borrow-form__datetime-picker"
@@ -222,7 +226,7 @@ const BorrowForm = ({
               <div className="borrow-form__field">
                 <div className="borrow-form__inputName">
                   <p className="borrow-form__label">
-                    {t("borrowPage.timeSlots")}
+                    {t("itemReservation.timeSlots")}
                   </p>
                 </div>
                 <TimeTable
@@ -243,7 +247,9 @@ const BorrowForm = ({
           </div>
           <div className="borrow-form__field">
             <div className="borrow-form__inputName">
-              <p className="borrow-form__label">{t("borrowPage.reason")}</p>
+              <p className="borrow-form__label">
+                {t("itemReservation.reason")}
+              </p>
             </div>
             <TextArea
               className="borrow-form__textarea"
@@ -258,7 +264,7 @@ const BorrowForm = ({
             onClick={handleSendRequest}
             disabled={!isFormValid()}
           >
-            {t("borrowPage.sendRequest")}
+            {t("itemReservation.sendRequest")}
           </button>
         </div>
       </div>

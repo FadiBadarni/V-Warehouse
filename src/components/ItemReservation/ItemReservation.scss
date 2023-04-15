@@ -1,6 +1,7 @@
 @import "../../variables";
 @import '../../directions';
 @import "./BorrowForm.scss";
+@import "./ItemInfo.scss";
 
 .item-details-container {
     display: flex;
@@ -18,60 +19,6 @@
     color: $sce-primary-color;
 }
 
-
-.item-info {
-    background-color: $sce-background-color;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    margin: 0 auto;
-    margin-bottom: 30px;
-
-    &__title {
-        color: $sce-primary-color;
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-
-    &__description {
-        color: $sce-text-color3;
-        margin-bottom: 1.5rem;
-
-        .ltr & {
-            font-size: 1.3rem;
-        }
-
-        .rtl & {
-            font-size: 1.4rem;
-        }
-    }
-
-    &__details {
-        &__label {
-            color: $sce-text-color;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        &__value {
-            color: $sce-text-color3;
-            font-size: 1rem;
-        }
-
-        p {
-            margin-bottom: 0.5rem;
-        }
-
-        span {
-            font-size: 1.1rem;
-        }
-
-
-    }
-}
-
 .late-policy {
     background-color: $sce-background-color;
     padding: 20px;
@@ -81,11 +28,6 @@
     width: 100%;
     margin: 0 auto;
 }
-
-
-
-
-
 
 
 .signature-modal {
