@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Modal, Button } from "semantic-ui-react";
 import { logoutUser, getUserInfo } from "../../api/UserService";
+import { motion } from "framer-motion";
 import "semantic-ui-css/semantic.min.css";
 
 import "./Dashboard.scss";
@@ -78,8 +79,15 @@ function Dashboard() {
             <div className="sub-section">
               <h2>Items On Loan</h2>
               <div className="items-container">
-                {/* Create a grid of loaned items */}
-                <div className="item-card">Item 1</div>
+                <motion.div
+                  className="item-card"
+                  whileHover={{
+                    y: -10,
+                    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  Item 1
+                </motion.div>
                 <div className="item-card">Item 2</div>
                 <div className="item-card">Item 3</div>
                 <div className="item-card">Item 4</div>

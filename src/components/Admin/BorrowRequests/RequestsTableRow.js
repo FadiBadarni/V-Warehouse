@@ -31,7 +31,7 @@ const RequestsTableRow = ({
 }) => {
   const customized = customStatus(request.status);
   const [itemInstances, setItemInstances] = useState([]);
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation("borrowRequests");
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);

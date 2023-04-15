@@ -7,7 +7,7 @@ const RequestsTableHeaders = ({
   handleSortRequestDate,
   actionsHeaderTitle,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("borrowRequests");
   return (
     <TableHead>
       <TableRow>

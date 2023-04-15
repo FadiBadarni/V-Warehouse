@@ -14,9 +14,11 @@
             font-size: 0.9rem;
             text-align: center;
         }
+
     }
 
     .MuiTableBody-root {
+
         tr {
             transition: all 0.2s ease-in-out;
 
@@ -24,11 +26,14 @@
                 background-color: #f0f0f0;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
+
         }
 
         td {
             padding: 16px 8px;
             text-align: center;
+
+
         }
     }
 

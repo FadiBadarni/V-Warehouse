@@ -12,7 +12,7 @@ const PendingRequests = ({
   itemDetails,
   user,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("borrowRequests");
 
   return (
     <Box>

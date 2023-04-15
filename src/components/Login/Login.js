@@ -17,7 +17,7 @@ function Login() {
   const { login } = useAuth();
 
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation("login");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

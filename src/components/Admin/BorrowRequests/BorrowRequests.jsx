@@ -14,7 +14,7 @@ import useItemDetails from "../../../hooks/useItemDetails";
 
 const BorrowRequests = () => {
   useAdminRole();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("borrowRequests");
   const [user, setUser] = useState(null);
   const direction = i18n.language === "he" ? "rtl" : "ltr";
   const [activeTab, setActiveTab] = useState(0);
