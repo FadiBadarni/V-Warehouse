@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import "./LanguageSelector.scss";
 
 const LanguageSelector = () => {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation("navbar");
   const [direction, setDirection] = useState("ltr");
 
   const changeLanguage = (newLanguage) => {
