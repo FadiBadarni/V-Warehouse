@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import images from "../../constants/images";
 import Footer from "../Footer/Footer";
 import { Link } from "react-router-dom";
 import "./Home.scss";
@@ -11,7 +10,7 @@ import { motion } from "framer-motion";
 import { Grid } from "@mui/material";
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("home");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,33 +72,6 @@ const Home = () => {
               </div>
             </section>
 
-            <section className="equipment-catalog-section">
-              <div className="equipment-catalog-content">
-                <h2>{t("home.equipmentCatalog")}</h2>
-                <div className="equipment-grid">
-                  <div className="equipment-item">
-                    <img src={images.audio} alt="Dummy Equipment 1" />
-                    <h3>{t("home.dummyEquipment")}</h3>
-                  </div>
-                  <div className="equipment-item">
-                    <img src={images.audio} alt="Dummy Equipment 2" />
-                    <h3>{t("home.dummyEquipment")}</h3>
-                  </div>
-                  <div className="equipment-item">
-                    <img src={images.audio} alt="Dummy Equipment 3" />
-                    <h3>{t("home.dummyEquipment")}</h3>
-                  </div>
-                  <div className="equipment-item">
-                    <img src={images.audio} alt="Dummy Equipment 4" />
-                    <h3>{t("home.dummyEquipment")}</h3>
-                  </div>
-                  <div className="equipment-item">
-                    <img src={images.audio} alt="Dummy Equipment 5" />
-                    <h3>{t("home.dummyEquipment")}</h3>
-                  </div>
-                </div>
-              </div>
-            </section>
             <section className="help-support-section">
               <div className="help-support-content">
                 <h2>{t("home.helpSupport")}</h2>
@@ -108,7 +80,10 @@ const Home = () => {
                     <Link key={t("home.faqs")} to={`/FAQS`}>
                       <motion.div
                         className="help-support-item"
-                        whileHover={{ y: -10 }}
+                        whileHover={{
+                          scale: 1.05,
+                          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                        }}
                       >
                         <h3>{t("home.faqs")}</h3>
                         <p>{t("home.faqsDesc")}</p>
