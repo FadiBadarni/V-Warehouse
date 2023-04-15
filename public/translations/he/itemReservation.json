@@ -1,0 +1,23 @@
+{
+    "itemReservation" :{
+        "title": "התכוננו למסע שלכם",
+        "itemInfoTitle": "הבחירה שלך: ",
+        "itemDescription": "תיאור מוצר: ",
+        "Itemtype": "סוג: ",
+        "attributes": "מאפיניים",
+        "safetyInstructions": "הוראות בטיחות:",
+        "policyTitle": "מדיניות החזרה מאוחרת",
+        "policy": "שליחת בקשה פירושה שקראת והסכמת לתנאים וההגבלות של השאלת הפריט.",
+        "request": "בקשה להשאלה",
+        "startDate": "תאריך התחלה מבוקש: ",
+        "returnDate": "תאריך החזרה מבוקש: ",
+        "reason": "סיבה להשאלה: ",
+        "quantity": "כמות הנדרשת: ",
+        "sendRequest": "שלח בקשה להשאלה",
+        "signatureTerms": "תנאי השאלה",
+        "signatureText": "בעת החתימה שלך מטה, אתה מסכים לתנאי השאלה של הפריט.",
+        "clearButton": "נקה",
+        "submitButton": "שלח",
+        "closeButton": "סגור"
+      }
+}

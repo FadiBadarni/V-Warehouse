@@ -1,0 +1,9 @@
+{
+    "login":{
+        "title":"דף התחברות",
+        "username":"שם משתמש",
+        "password":"סיסמה",
+        "forgotPassword":"שכחת סיסמה?",
+        "submit":"התחברות"
+      }
+}
