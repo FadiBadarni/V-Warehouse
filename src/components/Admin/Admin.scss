@@ -6,56 +6,68 @@
     box-sizing: border-box;
 }
 
-
 .sidebar {
     display: flex;
-
-    .sidebar-link {
-        text-decoration: none;
-        color: inherit;
-
-        .MuiListItem-root {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-        &:hover {
-            .MuiListItem-root {
-                background-color: rgba(0, 0, 0, 0.08);
-            }
-        }
-    }
+    height: 100%;
 
     .MuiDrawer-paper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         height: 100%;
-        background-color: #636d6e;
+        background-color: $sce-primary-color;
         position: fixed;
         z-index: 0;
+        transition: all 0.25s ease-in-out;
+    }
 
+    .badges-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        width: 100%;
+    }
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 1rem;
+
+    &.active {
+        .MuiListItem-root {
+            background-color: #263841;
+        }
     }
 
     .MuiListItem-root {
+        padding: 16px;
+        width: 100%;
+        justify-content: center;
+        transition: background-color 0.2s ease-in-out;
+
         &:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
+    }
 
-
-        .ltr & {
-            text-align: left;
-        }
-
-        .rtl & {
-            text-align: right;
-        }
-
+    .MuiListItemIcon-root {
+        color: $sce-background-color;
+        transition: color 0.2s ease-in-out;
+        min-width: 20px;
 
     }
 
-    .MuiListItemText-primary {
-        color: #fff;
+    &:hover {
+        .MuiListItemIcon-root {
+            color: rgba(255, 255, 255, 0.9);
+        }
     }
-
-
 }
 
 .admin-home {

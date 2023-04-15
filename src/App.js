@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Home/Home";
 import ItemReservation from "./components/ItemReservation/ItemReservation";
 import Unauthorized from "./components/ErrorPages/Unauthorized";
-
+import NotFound from "./components/ErrorPages/NotFound";
 import ItemList from "./components/Admin/ItemList/ItemList";
 import ItemManagement from "./components/Admin/ItemManagement/ItemManagement";
 import BorrowRequests from "./components/Admin/BorrowRequests/BorrowRequests";
@@ -59,6 +59,7 @@ function App() {
           <Route path="/admin/statistics" element={<Statistics />} />
 
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Navbar>
       <Modal

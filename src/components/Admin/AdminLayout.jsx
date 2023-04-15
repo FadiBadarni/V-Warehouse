@@ -11,8 +11,8 @@ import "./Admin.scss";
 import SidebarLink from "./SidebarLink";
 
 const AdminLayout = ({ direction }) => {
-  const drawerWidth = 240;
-  const { t } = useTranslation();
+  const drawerWidth = 60;
+  const { t } = useTranslation("sidebar");
 
   const sidebarLinks = [
     { text: t("sidebar.home"), path: "/admin", icon: <DashboardIcon /> },
@@ -44,7 +44,7 @@ const AdminLayout = ({ direction }) => {
   ];
 
   const drawer = (
-    <div>
+    <div className="badges-container">
       <Toolbar />
       <List>
         {sidebarLinks.map((link) => (
@@ -86,7 +86,7 @@ const AdminLayout = ({ direction }) => {
           variant="temporary"
           anchor={direction === "rtl" ? "right" : "left"}
           ModalProps={{
-            keepMounted: true, // Better performance on mobile devices
+            keepMounted: true,
           }}
         >
           {drawer}
