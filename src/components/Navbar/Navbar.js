@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ const getLanguageDirection = (language) => {
 const Navbar = ({ children }) => {
   const { isAuthenticated, logout, user } = useAuth();
   const [notifications, setNotifications] = useNotification(user?.id);
-  const { t } = useTranslation();
+  const { t } = useTranslation("navbar");
   const direction = getLanguageDirection(i18n.language);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] =
@@ -31,9 +31,17 @@ const Navbar = ({ children }) => {
     logout();
   };
 
+  const unreadNotifications = useMemo(
+    () => notifications.filter((notification) => !notification.read),
+    [notifications]
+  );
+
   const handleNotificationClick = async () => {
     if (!notificationDropdownOpen) {
       await markNotificationsAsRead(user.id);
+      setNotifications(
+        notifications.map((notification) => ({ ...notification, read: true }))
+      );
     }
     setNotificationDropdownOpen(!notificationDropdownOpen);
   };
@@ -49,7 +57,6 @@ const Navbar = ({ children }) => {
   const handleMobileMenuItemClick = () => {
     setMobileMenuOpen(false);
   };
-
   const navItemVariant = {
     initial: { opacity: 0, y: -20 },
     animate: { opacity: 1, y: 0 },
@@ -144,13 +151,13 @@ const Navbar = ({ children }) => {
               >
                 <Badge
                   color="error"
-                  badgeContent={notifications.length}
+                  badgeContent={unreadNotifications.length}
                   max={99}
                   onClick={handleNotificationClick}
                 >
                   <NotificationsIcon
                     className={`bell-icon${
-                      notifications.length ? " active" : ""
+                      unreadNotifications.length ? " active" : ""
                     }`}
                   />
                 </Badge>

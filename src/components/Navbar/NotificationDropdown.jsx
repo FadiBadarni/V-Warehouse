@@ -37,9 +37,21 @@ const NotificationDropdown = ({
         {isOpen && (
           <motion.ul
             className="notification-list"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{
+              opacity: 0,
+              y: -20,
+              scale: 0.8,
+              rotate: -5,
+              originX: "50%",
+            }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+            exit={{
+              opacity: 0,
+              y: -20,
+              scale: 0.8,
+              rotate: 5,
+              transition: { duration: 0.3 },
+            }}
           >
             {notifications.map((notification) => (
               <motion.li
