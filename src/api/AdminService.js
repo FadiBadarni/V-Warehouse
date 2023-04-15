@@ -87,19 +87,20 @@ export const importUsers = async (formData) => {
   );
 };
 
-export const updateRoleUser = async (id, role) => {
-  return apiWrapper(
-    () => axiosInstance.put(`/${id}/role`, { role }),
-    "Users imported successfully",
-    "Error importing users:"
-  );
-};
-
 export const createUser = async (recipient, role, year) => {
   return apiWrapper(
     () => axiosInstance.put(`/create-user`, { recipient, role, year }),
     "Users imported successfully",
     "Error importing users:"
+  );
+};
+
+export const updateUser = async (id, email, username, role, year) => {
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/update-user/${id}`, { email, username, role, year }),
+    "User updated successfully",
+    "Error updating user:"
   );
 };
 
