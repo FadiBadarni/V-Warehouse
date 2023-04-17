@@ -119,6 +119,21 @@ public class BorrowRequestService {
         borrowRequest.setStatus(status);
         BorrowRequest updatedBorrowRequest = borrowRequestRepository.save(borrowRequest);
 
+        // Send notification to the user after updating the request status
+        String notificationMessage;
+        if (status == RequestStatus.AWAITING_PICKUP) {
+            notificationMessage = "Your borrow request has been approved. Please pick up your item(s).";
+        } else if (status == RequestStatus.REJECTED) {
+            notificationMessage = "Your borrow request has been rejected. Please contact the admin for more information.";
+        } else if (status == RequestStatus.CANCELLED) {
+            notificationMessage = "Your borrow request has been cancelled.";
+        } else if (status == RequestStatus.RETURNED) {
+            notificationMessage = "Your item(s) have been successfully returned. Thank you!";
+        } else {
+            return convertToBorrowRequestDTO(updatedBorrowRequest);
+        }
+        notificationsService.createNotification(borrowRequest.getUserId(), notificationMessage);
+
         return convertToBorrowRequestDTO(updatedBorrowRequest);
     }
 
