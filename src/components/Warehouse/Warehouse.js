@@ -9,7 +9,7 @@ import Items from "./Items";
 import "./Warehouse.scss";
 
 const Warehouse = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, handleTokenExpired } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -45,10 +45,14 @@ const Warehouse = () => {
         );
         setItems(translatedItems);
       } catch (error) {
-        console.error("Error fetching warehouse items:", error);
+        if (error.message === "Unauthorized") {
+          handleTokenExpired();
+        } else {
+          console.error("Error fetching warehouse items:", error);
+        }
       }
     }
-  }, [isAuthenticated, i18n.language]);
+  }, [isAuthenticated, i18n.language, handleTokenExpired]);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {

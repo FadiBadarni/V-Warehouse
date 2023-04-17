@@ -16,6 +16,7 @@ const initialAuthContextValue = {
   loading: true,
   showTokenExpiredModal: false,
   setShowTokenExpiredModal: () => {},
+  handleTokenExpired: () => {},
 };
 
 export const AuthContext = createContext(initialAuthContextValue);
@@ -87,6 +88,7 @@ export function AuthProvider({ children }) {
     loading,
     showTokenExpiredModal,
     setShowTokenExpiredModal,
+    handleTokenExpired,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -10,6 +10,7 @@ import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../AdminLayout";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../../contexts/AuthContext";
 import "./UsersManagement.scss";
 import {
   Box,
@@ -41,6 +42,7 @@ const UsersManagement = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
+  const { handleTokenExpired } = useAuth();
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles(acceptedFiles);
@@ -85,12 +87,20 @@ const UsersManagement = () => {
 
   useEffect(() => {
     const fetchAllUsers = async () => {
-      const users = await getAllUsers();
-      setAllUsers(users);
+      try {
+        const users = await getAllUsers();
+        setAllUsers(users);
+      } catch (error) {
+        if (error.message === "Unauthorized") {
+          handleTokenExpired();
+        } else {
+          console.error("Error fetching all users: ", error);
+        }
+      }
     };
 
     fetchAllUsers();
-  }, []);
+  }, [handleTokenExpired]);
 
   const handleDelete = async (user) => {
     await deleteUser(user.id);

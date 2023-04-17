@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -77,7 +77,7 @@ const Home = () => {
                 <h2>{t("home.helpSupport")}</h2>
                 <Grid container spacing={3} justifyContent="center">
                   <Grid item xs={12} sm={6} md={4}>
-                    <Link key={t("home.faqs")} to={`/FAQS`}>
+                    <Link key={t("home.faqs")} to={`/faqs`}>
                       <motion.div
                         className="help-support-item"
                         whileHover={{
@@ -91,21 +91,27 @@ const Home = () => {
                     </Link>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
-                    <Link key={t("home.userGuides")} to={`/Help`}>
+                    <Link key={t("home.terms")} to={`/terms`}>
                       <motion.div
                         className="help-support-item"
-                        whileHover={{ y: -10 }}
+                        whileHover={{
+                          scale: 1.05,
+                          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                        }}
                       >
-                        <h3>{t("home.userGuides")}</h3>
-                        <p>{t("home.userGuidesDesc")}</p>
+                        <h3>{t("home.terms")}</h3>
+                        <p>{t("home.termsDesc")}</p>
                       </motion.div>
                     </Link>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
-                    <Link key={t("home.contactUs")} to={`/Contact`}>
+                    <Link key={t("home.contactUs")} to={`/contact`}>
                       <motion.div
                         className="help-support-item"
-                        whileHover={{ y: -10 }}
+                        whileHover={{
+                          scale: 1.05,
+                          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                        }}
                       >
                         <h3>{t("home.contactUs")}</h3>
                         <p>{t("home.contactUsDesc")}</p>

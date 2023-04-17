@@ -9,6 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CategoryIcon from "@mui/icons-material/Category";
 import LabelIcon from "@mui/icons-material/Label";
 import SyncIcon from "@mui/icons-material/Sync";
+import { useAuth } from "../../../contexts/AuthContext";
 import "./ItemList.scss";
 import { Grid, Card, CardContent, CardActions, Button } from "@mui/material";
 
@@ -41,6 +42,7 @@ const useItemFilter = (initialItems) => {
 
 const ItemList = () => {
   useAdminRole();
+  const { handleTokenExpired } = useAuth();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
 
@@ -64,7 +66,12 @@ const ItemList = () => {
         const allItemInstances = await getAllItemInstances();
         setItems(allItemInstances);
       } catch (error) {
-        console.error("Error fetching warehouse items.", error);
+        console.log(error);
+        if (error.message === "Unauthorized") {
+          handleTokenExpired();
+        } else {
+          console.error("Error fetching warehouse items.", error);
+        }
       }
     };
     const fetchedTypes = async () => {
@@ -78,7 +85,7 @@ const ItemList = () => {
     fetchItems();
     fetchedTypes();
     fetchNames();
-  }, []);
+  }, [handleTokenExpired]);
 
   return (
     <div className="admin-equipment-list">

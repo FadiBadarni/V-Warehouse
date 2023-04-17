@@ -13,7 +13,11 @@ const useAdminRole = () => {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
-        navigate("/unauthorized");
+        if (!user) {
+          navigate("/auth/login");
+        } else {
+          navigate("/unauthorized");
+        }
       }
     }
   }, [user, navigate, loading]);

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import LanguageSelector from "../LanguageSelector";
+import LanguageSelector from "../LanguageSelector/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import "./Navbar.scss";

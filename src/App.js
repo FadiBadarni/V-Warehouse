@@ -21,6 +21,8 @@ import { Modal, Button } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { useTranslation } from "react-i18next";
 import Faqs from "./components/Faqs/Faqs";
+import Terms from "./components/Terms/Terms";
+import Contact from "./components/Contact/Contact";
 
 function App() {
   const { i18n } = useTranslation();
@@ -42,7 +44,9 @@ function App() {
       <Navbar>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/FAQS" element={<Faqs />} />
+          <Route exact path="/faqs" element={<Faqs />} />
+          <Route exact path="/terms" element={<Terms />} />
+          <Route exact path="/contact" element={<Contact />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/login-failed" element={<LoginFailed />} />
