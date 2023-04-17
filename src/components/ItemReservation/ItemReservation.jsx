@@ -25,7 +25,7 @@ const BorrowedItemDetails = () => {
   const [intendedStartDate, setIntendedStartDate] = useState("");
   const [intendedReturnDate, setIntendedReturnDate] = useState("");
   const [borrowReason, setBorrowReason] = useState("");
-  const [selectedInstanceIds, setSelectedInstanceIds] = useState([]);
+  const [quantity, setQuantity] = useState([]);
 
   const navigate = useNavigate();
 
@@ -52,7 +52,7 @@ const BorrowedItemDetails = () => {
       alert("Please provide a signature.");
     } else {
       const base64Signature = signaturePad.toDataURL();
-      console.log(selectedInstanceIds);
+    
       const userId = getUserIdFromLocalStorage();
       const borrowRequestData = {
         userId,
@@ -60,7 +60,7 @@ const BorrowedItemDetails = () => {
         intendedStartDate,
         intendedReturnDate,
         borrowingReason: borrowReason,
-        itemInstanceIds: selectedInstanceIds,
+        quantity: quantity,
         signatureData: base64Signature,
       };
       const result = await sendBorrowRequest(borrowRequestData);
@@ -118,8 +118,9 @@ const BorrowedItemDetails = () => {
         setBorrowReason={setBorrowReason}
         handleSendRequest={handleSendRequest}
         isFormValid={isFormValid}
-        itemInstances={itemDetails.itemInstances}
-        setSelectedInstanceIds={setSelectedInstanceIds}
+        quantity={itemDetails.quantity}
+        setQuantity={setQuantity}
+        itemId={itemDetails.id}
       />
       <AnimatePresence>
         {showModal && (

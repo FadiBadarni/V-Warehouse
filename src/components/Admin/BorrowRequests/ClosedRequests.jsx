@@ -9,6 +9,7 @@ const ClosedRequests = ({
   itemDetails,
   user,
   actionsHeaderTitle,
+  activeTab
 }) => {
   return (
     <Box>
@@ -23,6 +24,7 @@ const ClosedRequests = ({
         user={user}
         actionsHeaderTitle={actionsHeaderTitle}
         showState={true}
+        activeTab={ activeTab}
       />
     </Box>
   );

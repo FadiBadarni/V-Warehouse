@@ -29,8 +29,9 @@ export async function fetchedItemTypes() {
       "Warehouse item fetched successfully",
       "An error occurred while fetching warehouse item by ID:"
     );
+    };
 
-}
+
 
 
 

@@ -19,12 +19,14 @@ const RequestsTable = ({
   handlePickupConfirm,
   handleReturn,
   handleOverDue,
-  itemDetails,
   user,
   handleRowClick,
   setExpandedRow,
   actionsHeaderTitle,
   showState,
+  setitemsId,
+  items,
+  activeTab
 }) => {
   return (
     <TableContainer component={Paper}>
@@ -50,12 +52,14 @@ const RequestsTable = ({
                 handlePickupCancel={handlePickupCancel}
                 handleReturn={handleReturn}
                 handleOverDue={handleOverDue}
-                itemDetails={itemDetails}
                 user={user}
                 handleRowClick={handleRowClick}
                 setExpandedRow={setExpandedRow}
                 actionsHeaderTitle={actionsHeaderTitle}
                 showState={showState}
+                setitemsId={setitemsId}
+                items={items}
+                activeTab={activeTab}
               />
             ))
           )}

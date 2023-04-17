@@ -8,6 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import RowDetailsQR from "./RowDetailsQR";
 import RowDetails from "./RowDetails";
 import { useTranslation } from "react-i18next";
 import customStatus from "./Utils/CustomStatus";
@@ -23,15 +24,21 @@ const RequestsTableRow = ({
   handleReturn,
   handleOverDue,
   expandedRow,
-  itemDetails,
   user,
   handleRowClick,
   setExpandedRow,
   showState,
+  activeTab
+  // setitemsId,
+  // items
 }) => {
   const customized = customStatus(request.status);
   const [itemInstances, setItemInstances] = useState([]);
+  const [items, setItems] = useState([]);
   const { i18n, t } = useTranslation();
+  const [acceptButtonIsDisabled, setAcceptButtonIsDisabled] = useState(true);
+  const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
+
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -45,8 +52,10 @@ const RequestsTableRow = ({
   };
 
   useEffect(() => {
+    if(activeTab==2)
     if (expandedRow === index) {
-      getItemInstancesByRequestId(request.requestId)
+      
+     getItemInstancesByRequestId(request.requestId)
         .then((instances) => setItemInstances(instances))
         .catch((error) =>
           console.error("Error fetching item instances:", error)
@@ -80,18 +89,20 @@ const RequestsTableRow = ({
         <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
         <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
         <TableCell>{request.borrowingReason}</TableCell>
-        <TableCell>{request.quantity}</TableCell>
+        <TableCell>{request.itemInstanceIds +"/"+ request.quantity}</TableCell>
         <TableCell>{formatDate(request.requestTime)}</TableCell>
-
+        
         {handleAccept && handleReject && (
           <TableCell>
             <Button
               variant="contained"
               color="primary"
-              sx={{ mr: 1 }}
+              sx={{ mr: 1 }} 
+             
               onClick={(event) => {
                 event.stopPropagation();
                 handleAccept(request);
+               
               }}
             >
               {t("borrowRequests.pendingRequests.approve")}
@@ -117,8 +128,9 @@ const RequestsTableRow = ({
               sx={{ mr: 1 }}
               onClick={(event) => {
                 event.stopPropagation();
-                handlePickupConfirm(request);
+                handlePickupConfirm(request,items);
               }}
+              disabled={acceptButtonIsDisabled}
             >
               Confirm
             </Button>
@@ -145,6 +157,7 @@ const RequestsTableRow = ({
                 event.stopPropagation();
                 handleReturn(request);
               }}
+              disabled={returnButtonIsDisable}
             >
               confirm
             </Button>
@@ -167,13 +180,30 @@ const RequestsTableRow = ({
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+          { activeTab===1 || activeTab === 2 ?(
             <Box sx={{ margin: 2 }}>
-              <RowDetails
+              <RowDetailsQR
                 request={request}
                 user={user}
+                setItems={setItems}
+                items={items}
+                setAcceptButtonIsDisable={setAcceptButtonIsDisabled}
+                activeTab={activeTab}
                 itemInstances={itemInstances}
+                setReturnButtonIsDisable={setReturnButtonIsDisable}
               />
             </Box>
+          ):  
+           <Box sx={{ margin: 2 }}>
+          <RowDetails
+            request={request}
+            user={user}
+            itemInstances={itemInstances}
+            setItems={setItems}
+            items={items}
+          />
+        </Box>
+          }
           </Collapse>
         </TableCell>
       </TableRow>

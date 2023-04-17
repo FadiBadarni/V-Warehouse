@@ -147,6 +147,16 @@ export async function updateRequestStatus(requestId, newStatus) {
   );
 }
 
+export async function addItemInstances(requestId, itemInstances) {
+  return apiWrapper(
+    () =>
+      axiosInstance.put(`/borrow-additemInstances/${requestId}?itemInstances=${itemInstances}`),
+    "Borrow request status updated successfully",
+    "An error occurred while updating borrow request status:"
+  );
+}
+
+
 
 
 export { axiosInstance };
