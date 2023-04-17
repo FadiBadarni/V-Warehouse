@@ -23,6 +23,7 @@ const BorrowRequests = () => {
   const [expandedRejectedRow, setExpandedRejectedRow] = useState(-1);
   const [expandedClosedRow, setExpandedClosedRow] = useState(-1);
   const { itemDetails, fetchItemDetails } = useItemDetails();
+  const {items,setitemsId}=useState([])
   const {
     pendingRequests,
     awaitingPickupRequests,
@@ -80,8 +81,8 @@ const BorrowRequests = () => {
             handleReject={handleReject}
             handleRowClick={handleRowClick}
             expandedRow={expandedPendingRow}
-            itemDetails={itemDetails}
             user={user}
+            activeTab={activeTab}
           />
         )}
         {activeTab === 1 && (
@@ -91,8 +92,10 @@ const BorrowRequests = () => {
             handlePickupConfirm={handlePickupConfirm}
             handlePickupCancel={handlePickupCancel}
             expandedRow={expandedWaitingRow}
-            itemDetails={itemDetails}
             user={user}
+            setitemsId={setitemsId}
+            items={items}
+            activeTab={activeTab}
           />
         )}
         {activeTab === 2 && (
@@ -102,8 +105,8 @@ const BorrowRequests = () => {
             handleReturn={handleReturn}
             handleOverDue={handleOverDue}
             expandedRow={expandedRejectedRow}
-            itemDetails={itemDetails}
             user={user}
+            activeTab={activeTab}
           />
         )}
         {activeTab === 3 && (
@@ -111,9 +114,9 @@ const BorrowRequests = () => {
             requests={closedRequests}
             handleRowClick={handleRowClick}
             expandedRow={expandedClosedRow}
-            itemDetails={itemDetails}
             user={user}
             actionsHeaderTitle="State"
+            activeTab={activeTab}
           />
         )}
       </Box>

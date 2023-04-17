@@ -9,8 +9,8 @@ const PendingRequests = ({
   handleReject,
   handleRowClick,
   expandedRow,
-  itemDetails,
   user,
+  activeTab
 }) => {
   const { t } = useTranslation("borrowRequests");
 
@@ -25,8 +25,8 @@ const PendingRequests = ({
         handleReject={handleReject}
         handleRowClick={handleRowClick}
         expandedRow={expandedRow}
-        itemDetails={itemDetails}
         user={user}
+        activeTab={ activeTab}
       />
     </Box>
   );

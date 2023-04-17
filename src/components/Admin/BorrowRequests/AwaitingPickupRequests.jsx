@@ -12,6 +12,9 @@ const AwaitingPickupRequests = ({
   itemDetails,
   user,
   actionsHeaderTitle,
+  setitemsId,
+  items,
+  activeTab
 }) => {
   return (
     <Box>
@@ -27,6 +30,9 @@ const AwaitingPickupRequests = ({
         itemDetails={itemDetails}
         user={user}
         actionsHeaderTitle={actionsHeaderTitle}
+        setitemsId={ setitemsId}
+        items={items}
+        activeTab={activeTab}
       />
     </Box>
   );

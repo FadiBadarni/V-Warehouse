@@ -10,6 +10,7 @@ const PendingReturnRequests = ({
   expandedRow,
   itemDetails,
   user,
+  activeTab
 }) => {
   return (
     <Box>
@@ -24,6 +25,7 @@ const PendingReturnRequests = ({
         expandedRow={expandedRow}
         itemDetails={itemDetails}
         user={user}
+        activeTab={ activeTab}
       />
     </Box>
   );

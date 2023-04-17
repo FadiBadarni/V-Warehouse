@@ -7,8 +7,9 @@ import { Box, Typography, Grid } from "@material-ui/core";
 import { motion } from "framer-motion";
 import { DatePicker } from "@mui/x-date-pickers";
 import {
-  getAllOccupiedDates,
   getPendingBorrowRequestsByItemInstance,
+  getEveryTimeSchedule,
+  getEveryTimeToReturnInSchedule,
 } from "../../api/BorrowService";
 import TimeTable from "./Table/TimeTable";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
@@ -21,86 +22,165 @@ const BorrowForm = ({
   setBorrowReason,
   handleSendRequest,
   isFormValid,
-  itemInstances,
-  setSelectedInstanceIds,
+  quantity,
+  setQuantity,
+  itemId,
 }) => {
   const { t } = useTranslation("itemReservation");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
   const [occupiedDates, setOccupiedDates] = useState([]);
-  const availableInstances = itemInstances;
+  const [occupiedReturnDates, setOccupiedReturnDates] = useState([]);
+  const availableInstances = [];
   const [selectedInstanceIds, setSelectedInstanceIdsLocal] = useState([]);
   const [pendingDates, setPendingDates] = useState([]);
+  const itemIdValue = itemId;
+  const [startTime, setstartTime] = useState();
+  const [startDate, setstartDate] = useState();
+  const [startDateTime, setstartDateTime] = useState();
 
-  useEffect(() => {
-    const fetchPendingRequests = async () => {
-      if (selectedInstanceIds.length > 0) {
-        try {
-          const pendingRequests = await Promise.all(
-            selectedInstanceIds.map((instanceId) =>
-              getPendingBorrowRequestsByItemInstance(instanceId)
-            )
-          );
-          setPendingDates(pendingRequests.flat());
-        } catch (error) {
-          console.error("Error fetching pending borrow requests:", error);
-        }
-      }
-    };
-
-    fetchPendingRequests();
-  }, [selectedInstanceIds]);
+  for (let i = 1; i <= quantity; i++) {
+    availableInstances.push({
+      value: i,
+      label: i.toString(),
+    });
+  }
 
   const handleInstanceIdChange = (e) => {
     setSelectedInstanceIdsLocal(e.target.value);
-    setSelectedInstanceIds(e.target.value);
+    setQuantity(e.target.value);
   };
-
-  useEffect(() => {
-    const fetchOccupiedDates = async () => {
-      let allOccupiedDates = [];
-      for (const instanceId of selectedInstanceIds) {
-        try {
-          const result = await getAllOccupiedDates(instanceId);
-          allOccupiedDates = allOccupiedDates.concat(result);
-        } catch (error) {
-          console.error("Error fetching occupied dates:", error);
-        }
-      }
-      setOccupiedDates(allOccupiedDates);
-    };
-
-    fetchOccupiedDates();
-  }, [selectedInstanceIds]);
-
-  const isDateColliding = useCallback(
-    (date) => {
-      return occupiedDates.some(({ intendedStartDate, intendedReturnDate }) => {
-        const occupiedStart = dayjs(intendedStartDate);
-        const occupiedEnd = dayjs(intendedReturnDate);
-        return date.isBetween(occupiedStart, occupiedEnd, null, "[]");
-      });
-    },
-    [occupiedDates]
-  );
 
   const handleStartDateChange = async (date) => {
-    setSelectedStartDate(date);
-    setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-
-    if (selectedInstanceIds.length > 0) {
-      try {
-        const result = await getAllOccupiedDates(selectedInstanceIds);
-        setOccupiedDates(result);
-      } catch (error) {
-        console.error("Error fetching occupied dates:", error);
+    const result = await getEveryTimeSchedule(
+      selectedInstanceIds,
+      date,
+      itemIdValue
+    );
+    const listForAllstartDate = result.startDates;
+    setstartDate(date);
+    const dateTimestr = date.toISOString();
+    const originalDate = new Date(dateTimestr);
+    originalDate.setDate(originalDate.getDate() + 1);
+    const datestr = originalDate.toISOString().substring(0, 10);
+    setstartTime(listForAllstartDate);
+    const listOfKeys = Object.keys(listForAllstartDate);
+    const timeSlots = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        timeSlots.push(
+          datestr +
+            "T" +
+            hour.toString().padStart(2, "0") +
+            ":" +
+            minute.toString().padStart(2, "0")
+        );
       }
     }
+    const newList = timeSlots.filter((time) => !listOfKeys.includes(time));
+    console.log(newList);
+    const dayjs = require("dayjs");
+    const occupiedDates = [];
+
+    newList.forEach((dateStr) => {
+      const date = dayjs(dateStr);
+      const occupiedDate = {
+        intendedStartDate: date.toISOString(),
+        intendedReturnDate: date.add(30, "minute").toISOString(),
+      };
+      occupiedDates.push(occupiedDate);
+    });
+
+    setOccupiedDates(occupiedDates);
+    setSelectedStartDate(date);
+
+    const bendingStartDates = [];
+    const x = result.bendingStartDates;
+    x.forEach((dateStr) => {
+      const date = dayjs(dateStr);
+      const occupiedDate = {
+        intendedStartDate: date.toISOString(),
+        intendedReturnDate: date.add(30, "minute").toISOString(),
+      };
+      bendingStartDates.push(occupiedDate);
+    });
+
+    setPendingDates(bendingStartDates);
   };
 
-  const handleReturnDateChange = (date) => {
-    setSelectedReturnDate(date);
+  const handleStartTimeChange = (date) => {
+    setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+    setstartDateTime(date);
+  };
+
+  const handleReturnTimeChange = (date) => {
     setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+  };
+
+  const handleReturnDateChange = async (date) => {
+    setSelectedReturnDate(date);
+    const dateTimeString = startDateTime.toISOString().slice(0, 16);
+    if (startTime.hasOwnProperty(dateTimeString)) {
+      const x = startTime[dateTimeString];
+      const result = await getEveryTimeToReturnInSchedule(
+        selectedInstanceIds,
+        startDate,
+        date,
+        itemIdValue,
+        x
+      );
+      const listforAllReturnData = result.returnDates;
+      const dateTimestr = date.toISOString();
+      const originalDate = new Date(dateTimestr);
+      originalDate.setDate(originalDate.getDate() + 1);
+      const datestr = originalDate.toISOString().substring(0, 10);
+
+      const timeSlots = [];
+      for (let hour = 0; hour < 24; hour++) {
+        for (let minute = 0; minute < 60; minute += 30) {
+          timeSlots.push(
+            datestr +
+              "T" +
+              hour.toString().padStart(2, "0") +
+              ":" +
+              minute.toString().padStart(2, "0") +
+              ":00"
+          );
+        }
+      }
+
+      const newList = timeSlots.filter(
+        (time) => !listforAllReturnData.includes(time)
+      );
+      console.log(newList);
+
+      const dayjs = require("dayjs");
+      const occupiedDates = [];
+
+      newList.forEach((dateStr) => {
+        const date = dayjs(dateStr);
+        const occupiedDate = {
+          intendedStartDate: date.toISOString(),
+          intendedReturnDate: date.add(30, "minute").toISOString(),
+        };
+        occupiedDates.push(occupiedDate);
+      });
+
+      setOccupiedReturnDates(occupiedDates);
+
+      const bendingStartDates = [];
+      const y = result.bendingStartDates;
+      y.forEach((dateStr) => {
+        const date = dayjs(dateStr);
+        const occupiedDate = {
+          intendedStartDate: date.toISOString(),
+          intendedReturnDate: date.add(30, "minute").toISOString(),
+        };
+        bendingStartDates.push(occupiedDate);
+      });
+
+      setPendingDates(bendingStartDates);
+    }
   };
 
   const minDate = useMemo(() => dayjs().startOf("day"), []);
@@ -139,21 +219,16 @@ const BorrowForm = ({
                 <p className="borrow-form__label">Instance</p>
               </div>
               <FormControl fullWidth>
-                <InputLabel id="instance-select-label">Instances</InputLabel>
                 <Select
                   labelId="instance-select-label"
                   id="instance-select"
-                  multiple
                   value={selectedInstanceIds}
                   onChange={handleInstanceIdChange}
                   label="Instances"
                 >
-                  <MenuItem value="">
-                    <em>Select instances</em>
-                  </MenuItem>
-                  {availableInstances.map((instance) => (
-                    <MenuItem key={instance.id} value={instance.id}>
-                      {`ID: ${instance.id}`}
+                  {availableInstances.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
                     </MenuItem>
                   ))}
                 </Select>
@@ -171,9 +246,6 @@ const BorrowForm = ({
               onChange={handleStartDateChange}
               minDate={minDate}
               maxDate={lastDayOfCurrentYear}
-              shouldDisableDate={(date) => {
-                return isDateColliding(dayjs(date));
-              }}
             />
           </div>
           {selectedStartDate && (
@@ -195,7 +267,7 @@ const BorrowForm = ({
                     <TimeTable
                       selectedDate={selectedStartDate}
                       occupiedDates={occupiedDates}
-                      onTimeSelected={handleStartDateChange}
+                      onTimeSelected={handleStartTimeChange}
                       minTime={getTimeBoundaries(selectedStartDate).minTime}
                       maxTime={getTimeBoundaries(selectedStartDate).maxTime}
                       disableOccupied={true}
@@ -231,15 +303,15 @@ const BorrowForm = ({
                 </div>
                 <TimeTable
                   selectedDate={selectedReturnDate}
-                  occupiedDates={[]}
-                  onTimeSelected={handleReturnDateChange}
+                  occupiedDates={occupiedReturnDates}
+                  onTimeSelected={handleReturnTimeChange}
                   minTime={
                     selectedReturnDate.isSame(selectedStartDate, "day")
                       ? dayjs(selectedStartDate).add(30, "minute")
                       : getTimeBoundaries(selectedReturnDate).minTime
                   }
                   maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
-                  disableOccupied={false}
+                  disableOccupied={true}
                   pendingDates={pendingDates}
                 />
               </div>
