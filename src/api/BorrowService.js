@@ -66,7 +66,7 @@ export async function findScheduleIdsByItemIdAndDate(id, date) {
     "An error occurred while fetching warehouse item by ID:"
   );
 }
-export async function getEveryTimeSchedule(quantity, localDateTime,itemId) {
+export async function getllTheTimethatCanStart(quantity, localDateTime,itemId) {
   return apiWrapper(
     async () =>
       await axiosInstance.get(`/borrow-requests/get_every_time_schedule/${quantity}`, {
@@ -77,7 +77,7 @@ export async function getEveryTimeSchedule(quantity, localDateTime,itemId) {
   );
 }
 
-export async function getEveryTimeToReturnInSchedule(quantity, localDateTimeStart, localDateTimeReturn,itemId,data ) {
+export async function getAllTheTimeToReturn(quantity, localDateTimeStart, localDateTimeReturn,itemId,data ) {
   return apiWrapper(
     async () =>
       await axiosInstance.post(`/borrow-requests/get_every_time_to-return/${quantity}?localDateTimeStart=${localDateTimeStart}&localDateTimeReturn=${localDateTimeReturn}&itemId=${itemId}`, data),

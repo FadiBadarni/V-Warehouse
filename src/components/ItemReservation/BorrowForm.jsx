@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,12 +7,11 @@ import { Box, Typography, Grid } from "@material-ui/core";
 import { motion } from "framer-motion";
 import { DatePicker } from "@mui/x-date-pickers";
 import {
-  getPendingBorrowRequestsByItemInstance,
-  getEveryTimeSchedule,
-  getEveryTimeToReturnInSchedule,
+  getllTheTimethatCanStart,
+  getAllTheTimeToReturn,
 } from "../../api/BorrowService";
 import TimeTable from "./Table/TimeTable";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Select, MenuItem, FormControl } from "@mui/material";
 import dayjs from "dayjs";
 
 const BorrowForm = ({
@@ -38,6 +37,8 @@ const BorrowForm = ({
   const [startTime, setstartTime] = useState();
   const [startDate, setstartDate] = useState();
   const [startDateTime, setstartDateTime] = useState();
+  const [disabledReturnTime, setDisabledReturnTime] = useState(true);
+  const [disabledStartTime, setDisabledStartTime] = useState(true);
 
   for (let i = 1; i <= quantity; i++) {
     availableInstances.push({
@@ -47,24 +48,19 @@ const BorrowForm = ({
   }
 
   const handleInstanceIdChange = (e) => {
+    setDisabledStartTime(false);
     setSelectedInstanceIdsLocal(e.target.value);
     setQuantity(e.target.value);
   };
 
-  const handleStartDateChange = async (date) => {
-    const result = await getEveryTimeSchedule(
-      selectedInstanceIds,
-      date,
-      itemIdValue
-    );
-    const listForAllstartDate = result.startDates;
-    setstartDate(date);
+  //get string list of date (string yyyy-MM-ddTHH-mm)  and return  (list (all the day from time 00:00 to 24:00) - timeList)
+  const bulidRList = (date, timeList) => {
     const dateTimestr = date.toISOString();
     const originalDate = new Date(dateTimestr);
     originalDate.setDate(originalDate.getDate() + 1);
     const datestr = originalDate.toISOString().substring(0, 10);
-    setstartTime(listForAllstartDate);
-    const listOfKeys = Object.keys(listForAllstartDate);
+
+    //all the time
     const timeSlots = [];
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
@@ -77,12 +73,15 @@ const BorrowForm = ({
         );
       }
     }
-    const newList = timeSlots.filter((time) => !listOfKeys.includes(time));
-    console.log(newList);
+    return timeSlots.filter((time) => !timeList.includes(time));
+  };
+
+  //get string list of name and return list in date in type  occupiedDates
+  const bulidoccupiedDate = (timeList) => {
     const dayjs = require("dayjs");
     const occupiedDates = [];
 
-    newList.forEach((dateStr) => {
+    timeList.forEach((dateStr) => {
       const date = dayjs(dateStr);
       const occupiedDate = {
         intendedStartDate: date.toISOString(),
@@ -90,27 +89,29 @@ const BorrowForm = ({
       };
       occupiedDates.push(occupiedDate);
     });
+    return occupiedDates;
+  };
 
-    setOccupiedDates(occupiedDates);
+  const handleStartDateChange = async (date) => {
+    setstartDate(date);
+    const result = await getllTheTimethatCanStart(
+      selectedInstanceIds,
+      date,
+      itemIdValue
+    );
+    const listForAllstartDate = result.startDates;
+    const listOfKeys = Object.keys(listForAllstartDate);
+    setstartTime(listForAllstartDate);
+    const timeList = bulidRList(date, listOfKeys);
+    setOccupiedDates(bulidoccupiedDate(timeList));
     setSelectedStartDate(date);
-
-    const bendingStartDates = [];
-    const x = result.bendingStartDates;
-    x.forEach((dateStr) => {
-      const date = dayjs(dateStr);
-      const occupiedDate = {
-        intendedStartDate: date.toISOString(),
-        intendedReturnDate: date.add(30, "minute").toISOString(),
-      };
-      bendingStartDates.push(occupiedDate);
-    });
-
-    setPendingDates(bendingStartDates);
+    setPendingDates(result.bendingStartDates);
   };
 
   const handleStartTimeChange = (date) => {
     setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
     setstartDateTime(date);
+    setDisabledReturnTime(false);
   };
 
   const handleReturnTimeChange = (date) => {
@@ -121,65 +122,20 @@ const BorrowForm = ({
     setSelectedReturnDate(date);
     const dateTimeString = startDateTime.toISOString().slice(0, 16);
     if (startTime.hasOwnProperty(dateTimeString)) {
-      const x = startTime[dateTimeString];
-      const result = await getEveryTimeToReturnInSchedule(
+      const result = await getAllTheTimeToReturn(
         selectedInstanceIds,
         startDate,
         date,
         itemIdValue,
-        x
+        startTime[dateTimeString]
       );
       const listforAllReturnData = result.returnDates;
-      const dateTimestr = date.toISOString();
-      const originalDate = new Date(dateTimestr);
-      originalDate.setDate(originalDate.getDate() + 1);
-      const datestr = originalDate.toISOString().substring(0, 10);
-
-      const timeSlots = [];
-      for (let hour = 0; hour < 24; hour++) {
-        for (let minute = 0; minute < 60; minute += 30) {
-          timeSlots.push(
-            datestr +
-              "T" +
-              hour.toString().padStart(2, "0") +
-              ":" +
-              minute.toString().padStart(2, "0") +
-              ":00"
-          );
-        }
-      }
-
-      const newList = timeSlots.filter(
-        (time) => !listforAllReturnData.includes(time)
+      const formattedDates = listforAllReturnData.map((dateString) =>
+        dateString.substring(0, 16)
       );
-      console.log(newList);
-
-      const dayjs = require("dayjs");
-      const occupiedDates = [];
-
-      newList.forEach((dateStr) => {
-        const date = dayjs(dateStr);
-        const occupiedDate = {
-          intendedStartDate: date.toISOString(),
-          intendedReturnDate: date.add(30, "minute").toISOString(),
-        };
-        occupiedDates.push(occupiedDate);
-      });
-
-      setOccupiedReturnDates(occupiedDates);
-
-      const bendingStartDates = [];
-      const y = result.bendingStartDates;
-      y.forEach((dateStr) => {
-        const date = dayjs(dateStr);
-        const occupiedDate = {
-          intendedStartDate: date.toISOString(),
-          intendedReturnDate: date.add(30, "minute").toISOString(),
-        };
-        bendingStartDates.push(occupiedDate);
-      });
-
-      setPendingDates(bendingStartDates);
+      const timeList = bulidRList(date, formattedDates);
+      setOccupiedReturnDates(bulidoccupiedDate(timeList));
+      setPendingDates(bulidoccupiedDate(result.bendingStartDates));
     }
   };
 
@@ -224,8 +180,7 @@ const BorrowForm = ({
                   id="instance-select"
                   value={selectedInstanceIds}
                   onChange={handleInstanceIdChange}
-                  label="Instances"
-                >
+                  label="Instances">
                   {availableInstances.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
@@ -240,6 +195,7 @@ const BorrowForm = ({
               </p>
             </div>
             <DatePicker
+              disabled={disabledStartTime}
               className="borrow-form__date-picker"
               label="Start date"
               value={selectedStartDate}
@@ -255,8 +211,7 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <Box mb={4}>
                   <Typography variant="h5">
                     {t("itemReservation.timeSlots")}
@@ -286,6 +241,7 @@ const BorrowForm = ({
               </p>
             </div>
             <DatePicker
+              disabled={disabledReturnTime}
               className="borrow-form__datetime-picker"
               label="Return date"
               value={selectedReturnDate}
@@ -334,8 +290,7 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}
-          >
+            disabled={!isFormValid()}>
             {t("itemReservation.sendRequest")}
           </button>
         </div>
