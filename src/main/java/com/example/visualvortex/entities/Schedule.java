@@ -38,4 +38,6 @@ public class Schedule {
 
     @Column(nullable = false)
     private boolean isActive = true;
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.visualvortex.services;
 
+import com.example.visualvortex.dtos.AvailableTime;
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
 import com.example.visualvortex.dtos.ScheduleDTO;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,10 +47,15 @@ public class BorrowRequestService {
     }
 
     public List<BorrowRequestDTO> getPendingRequestsByItemInstance(Long itemInstanceId) {
-        return borrowRequestRepository.findAllByStatusAndItemInstanceIdsContains(RequestStatus.PENDING, itemInstanceId).stream()
-                .map(this::convertToBorrowRequestDTO)
-                .collect(Collectors.toList());
+//        return borrowRequestRepository.findAllByStatusAndItemInstanceIdsContains(RequestStatus.PENDING, itemInstanceId).stream()
+//                .map(this::convertToBorrowRequestDTO)
+//                .collect(Collectors.toList());
+        return null;
     }
+    public List<BorrowRequest> getPendingRequestsByItemId(Long itemInstanceId) {
+        return borrowRequestRepository.findPendingRequestsByItemId(itemInstanceId,RequestStatus.PENDING);
+    }
+
 
 
     public BorrowRequestDTO createBorrowRequest(BorrowRequestDTO dto) {
@@ -59,7 +67,7 @@ public class BorrowRequestService {
                 .intendedStartDate(dto.getIntendedStartDate())
                 .intendedReturnDate(dto.getIntendedReturnDate())
                 .borrowingReason(dto.getBorrowingReason())
-                .itemInstanceIds(dto.getItemInstanceIds())
+                .quantity(dto.getQuantity())
                 .signatureData(dto.getSignatureData())
                 .requestTime(LocalDateTime.now())
                 .status(RequestStatus.PENDING)
@@ -84,8 +92,8 @@ public class BorrowRequestService {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
 
-        if (borrowRequest.getStatus() == RequestStatus.PENDING && status == RequestStatus.AWAITING_PICKUP) {
-
+        if (borrowRequest.getStatus() == RequestStatus.PENDING && status == RequestStatus.AWAITING_PICKUP) {}
+        if (borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP && status == RequestStatus.AWAITING_RETURN) {
             List<ItemInstance> associatedInstances = itemInstanceService.getInstancesByIds(borrowRequest.getItemInstanceIds());
 
             User user = userService.getUserById(borrowRequest.getUserId());
@@ -109,9 +117,9 @@ public class BorrowRequestService {
             List<ItemInstance> associatedInstances = itemInstanceService.getInstancesByIds(borrowRequest.getItemInstanceIds());
             for (ItemInstance instance : associatedInstances) {
                 instance.setState(ItemState.AVAILABLE);
-                Schedule schedule = scheduleRepository.findByItemInstance(instance);
-                if (schedule != null) {
-                    schedule.setActive(false);
+                List<Schedule> scheduleList = scheduleRepository.findByItemInstance(instance);
+                if (scheduleList != null && scheduleList.size()!=0) {
+                    scheduleList.stream().forEach(schedule -> schedule.setActive(false));
                 }
             }
         }
@@ -135,6 +143,7 @@ public class BorrowRequestService {
         notificationsService.createNotification(borrowRequest.getUserId(), notificationMessage);
 
         return convertToBorrowRequestDTO(updatedBorrowRequest);
+
     }
 
     private BorrowRequestDTO convertToBorrowRequestDTO(BorrowRequest borrowRequest) {
@@ -144,7 +153,7 @@ public class BorrowRequestService {
                 .intendedStartDate(borrowRequest.getIntendedStartDate())
                 .intendedReturnDate(borrowRequest.getIntendedReturnDate())
                 .borrowingReason(borrowRequest.getBorrowingReason())
-                .itemInstanceIds(borrowRequest.getItemInstanceIds())
+                .quantity(borrowRequest.getQuantity())
                 .status(borrowRequest.getStatus())
                 .requestTime(borrowRequest.getRequestTime())
                 .requestId(borrowRequest.getRequestId())
@@ -157,6 +166,8 @@ public class BorrowRequestService {
                 .map(this::convertToScheduleDTO)
                 .collect(Collectors.toList());
     }
+
+
 
     public List<ItemInstanceDTO> getItemInstancesByRequestId(UUID requestId) {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
@@ -187,4 +198,151 @@ public class BorrowRequestService {
                 .build();
     }
 
+    public List<ScheduleDTO> getAllScheduleByItemID(Long itemId) {
+        return  scheduleRepository.findByItemTypeId(itemId).stream()
+                .filter(Schedule::isActive)
+                .map(this::convertToScheduleDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    public AvailableTime getEveryTimeSchedule(long itemId ,int quantity, LocalDateTime localDateTime) {
+
+
+        List<Schedule> scheduleTable=scheduleRepository.findByItemTypeId(itemId);
+        List<Schedule> filteredScheduleTable= scheduleTable.stream().filter(schedule -> !schedule.isActive()).toList();
+
+        List<ItemInstance> itemInstanceTable=itemInstanceService.findByItemTypeId(itemId);
+
+        List<BorrowRequest> borrowRequestsTable=borrowRequestRepository.findAll();
+        List<BorrowRequest> awaitingBorrowRequestsTable = borrowRequestsTable.stream()
+                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+
+        List<BorrowRequest> bendingBorrowRequestsTable = borrowRequestsTable.stream()
+                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+        return startData(filteredScheduleTable,localDateTime,quantity,itemInstanceTable,awaitingBorrowRequestsTable,bendingBorrowRequestsTable);
+
+    }
+
+
+    public AvailableTime startData(List<Schedule> orderList, LocalDateTime localDateTime, int x, List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
+    {
+        LocalDateTime startDate = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
+        HashMap< LocalDateTime, List<ItemInstance>> data=new HashMap<>();
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+        LocalDateTime currentDateTime = startDate;
+        while (currentDateTime.isBefore(endDateTime)) {
+
+            List<ItemInstance> availableIds = new ArrayList<>(itemInstanceList);
+            for (Schedule schedule : orderList) {
+                LocalDateTime orderStart =  schedule.getIntendedStartDate();
+                LocalDateTime orderEnd =  schedule.getIntendedReturnDate();
+
+                if (!(currentDateTime.isBefore(orderEnd) && currentDateTime.isAfter(orderStart)))
+                    availableIds.removeAll(itemInstanceService.getInstancesById(schedule.getItemInstance().getId()));
+
+            }
+            int count=0;
+            for(BorrowRequest borrowRequest:awaitingBorrowRequestsTable)
+                if((currentDateTime.isBefore( borrowRequest.getIntendedReturnDate())&& currentDateTime.isAfter(borrowRequest.getIntendedStartDate())))
+                   count+=borrowRequest.getQuantity();
+
+            if( availableIds.size()>=x+count ){
+                data.put(currentDateTime,availableIds);
+                count=0;
+                for(BorrowRequest borrowRequest:bendingBorrowRequestsTable)
+                    if((currentDateTime.isBefore( borrowRequest.getIntendedReturnDate())&& currentDateTime.isAfter(borrowRequest.getIntendedStartDate())))
+                        count+=borrowRequest.getQuantity();
+                if(availableIds.size()<count+x) {
+                    bendinglist.add(currentDateTime);
+                    System.out.println(currentDateTime);
+                }
+
+            }
+
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        return AvailableTime.builder().bendingStartDates(bendinglist).startDates(data).build();
+    }
+
+
+
+
+    public AvailableTime getEveryTimeToReturnInSchedule(int quantity,LocalDateTime localDateTimeStart,LocalDateTime localDateTimeReturn, List<ItemInstance> data,long itemId) {
+
+
+        List<BorrowRequest> borrowRequests=borrowRequestRepository.findAll();
+        List<BorrowRequest> filteredList = borrowRequests.stream()
+                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+        List<BorrowRequest> bendingBorrowRequestsTable =borrowRequests.stream()
+                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+         return returnData(quantity,localDateTimeStart,localDateTimeReturn,data,filteredList,bendingBorrowRequestsTable);
+    }
+
+    public  AvailableTime returnData(int i, LocalDateTime localDateTimeStart, LocalDateTime localDateTimeEnd, List<ItemInstance> data, List<BorrowRequest> awaitingBorrowRequestsTable,List<BorrowRequest> bendingBorrowRequestsTable) {
+
+        LocalDateTime startDate = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 23, 59);
+        LocalDateTime currentDateTime = startDate;
+        List<LocalDateTime> localDateTimeList=new ArrayList<>();
+
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+
+        while (currentDateTime.isBefore(endDateTime)) {
+            List<ItemInstance> copydata=new ArrayList<>(data);
+            for( ItemInstance itemInstance:data)
+            {
+                List<Schedule> scheduleList=scheduleRepository.findByItemInstance(itemInstance);
+                if(scheduleList!= null)
+                {
+                    for(Schedule schedule:scheduleList) {
+                        LocalDateTime orderStart =schedule.getIntendedStartDate();
+                        LocalDateTime orderEnd = schedule.getIntendedReturnDate();
+
+                        if (!(currentDateTime.isAfter(orderEnd) && localDateTimeStart.isBefore(orderStart))) {
+                            List<ItemInstance> help=new ArrayList<>();
+                            for(ItemInstance instanceData:copydata)
+                                if(instanceData.getId()!=schedule.getItemInstance().getId())
+                                 help.add(instanceData);
+                            copydata=new ArrayList<>(help);
+                        }
+                    }
+                }
+            }
+            int count=0;
+            for(BorrowRequest borrowRequestItem:awaitingBorrowRequestsTable)
+                if (currentDateTime.isAfter(borrowRequestItem.getIntendedReturnDate()))
+                        if( localDateTimeStart.isBefore(borrowRequestItem.getIntendedStartDate()))
+                      count+=borrowRequestItem.getQuantity();
+
+            if (copydata.size() >= i+count){
+                localDateTimeList.add(currentDateTime);
+
+                count=0;
+                for(BorrowRequest borrowRequest:bendingBorrowRequestsTable)
+                    if((currentDateTime.isBefore( borrowRequest.getIntendedReturnDate())&& currentDateTime.isAfter(borrowRequest.getIntendedStartDate())))
+                        count+=borrowRequest.getQuantity();
+
+                if(copydata.size()<count+i) {
+                    bendinglist.add(currentDateTime);
+                    System.out.println(currentDateTime);
+                }
+            }
+
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        return  AvailableTime.builder().returnDates(localDateTimeList).bendingReturnDates(bendinglist).build();
+    }
+
+    public void borrowAddItemInstances(UUID requestId, List<Long> itemInstances) {
+        BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
+        borrowRequest.setItemInstanceIds(itemInstances);
+        borrowRequestRepository.save(borrowRequest);
+    }
 }
