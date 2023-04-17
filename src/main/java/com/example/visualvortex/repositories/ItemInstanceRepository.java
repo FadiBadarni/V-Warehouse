@@ -12,4 +12,5 @@ public interface ItemInstanceRepository extends JpaRepository<ItemInstance, Long
     @Query("SELECT COUNT(*) FROM ItemInstance WHERE item.id = ?1")
     int quantityItemsBy(Long id);
     List<ItemInstance> findAllByItemId(Long itemId);
+
 }

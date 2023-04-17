@@ -1,6 +1,5 @@
 package com.example.visualvortex.services.User;
 
-import com.example.visualvortex.dtos.UserDTOS.RegistrationDto;
 import com.example.visualvortex.dtos.UserDTOS.UserDTO;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.entities.User.UserRole;
@@ -215,4 +214,14 @@ public class UserService implements UserDetailsService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public void updateUser(Long id, String email, String username, String role, Integer year) {
+        User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setRole(UserRole.valueOf(role));
+        user.setYear(year);
+        repository.save(user);
+    }
+
 }

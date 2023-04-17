@@ -13,9 +13,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ItemTypeService {
+    private final ItemTypeRepository repository;
 
-    @Autowired
-    private ItemTypeRepository repository;
 
     public ItemType save(ItemType itemType) {
         return repository.save(itemType);
