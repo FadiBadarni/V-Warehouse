@@ -2,6 +2,7 @@ package com.example.visualvortex.dtos;
 
 
 import com.example.visualvortex.entities.Request.RequestStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,11 +16,13 @@ import java.util.UUID;
 @Setter
 @Builder
 public class BorrowRequestDTO {
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime intendedStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime intendedReturnDate;
     private LocalDateTime requestTime;
     private String borrowingReason;
-    private List<Long> itemInstanceIds;
+    private int quantity;
     private Long userId;
     private Long itemId;
     private String signatureData;

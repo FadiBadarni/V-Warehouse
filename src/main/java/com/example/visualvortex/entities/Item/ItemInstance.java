@@ -24,4 +24,9 @@ public class ItemInstance {
     @JoinColumn(name = "item_id")
     @JsonIgnore
     private Item item;
+
+    @Override
+    public String toString() {
+        return id+" ";
+    }
 }

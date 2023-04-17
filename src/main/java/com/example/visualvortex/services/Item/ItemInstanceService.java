@@ -10,8 +10,10 @@ import com.example.visualvortex.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,5 +72,32 @@ public class ItemInstanceService {
     public int quantityItemsBy(Long id) {
         return itemInstanceRepository.quantityItemsBy(id);
 
+    }
+
+    public int countItemInstancesByItemId(Long itemId)
+    {
+        return itemInstanceRepository.countItemInstancesByItemId(itemId);
+    }
+
+    public int countItemInstancesByItemIdAndIntendedDates(Long itemId, Date intendedStartDate, Date intendedReturnDate){
+        return itemInstanceRepository.countItemInstancesByItemIdAndIntendedDates(itemId,intendedStartDate, intendedReturnDate);
+    }
+
+    public List<Object[]> findScheduleIdsByItemIdAndDate(long itemId, LocalDate date)
+    {
+//        LocalDate localDate= LocalDate.parse(date);
+        return  itemInstanceRepository. findItemInstancesByItemIdAndDate(itemId, date,date.plusDays(1));
+    }
+
+    public List<ItemInstance> findAll() {
+        return itemInstanceRepository.findAll();
+    }
+
+    public List<ItemInstance> getInstancesById(long id) {
+        return itemInstanceRepository.findAllByItemId(id);
+    }
+
+    public List<ItemInstance> findByItemTypeId(long id) {
+        return itemInstanceRepository.findAllByItemId(id);
     }
 }
