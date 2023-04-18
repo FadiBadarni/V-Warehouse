@@ -1,0 +1,15 @@
+{
+    "navbar": {
+        "home":"דף הבית",
+        "warehouse": "מחסן",
+        "dashboard": "אזור אישי",
+        "login": "התחברות",
+        "logout": "התנתקות",
+        "notifications": "התראות",
+        "languageSelector":{
+          "title":"שפה",
+          "hebrew":"עברית",
+          "english":"אנגלית"
+        }
+      }
+}

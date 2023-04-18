@@ -1,0 +1,67 @@
+@import "../../variables";
+
+.faqs {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background: $sce-background-color;
+    border-radius: 4px;
+
+    &__title {
+        margin-bottom: 2rem;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__item {
+        border-radius: 4px;
+    }
+
+    &__summary {
+        border-radius: 4px;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    &__question {
+        margin-bottom: 1rem;
+    }
+
+    &__answer {
+        color: rgba(0, 0, 0, 0.7);
+    }
+
+    &__additional-info {
+        margin-top: 2rem;
+        padding: 1rem;
+        background-color: whitesmoke;
+        border-radius: 4px;
+        text-align: center;
+
+        &-title {
+            margin-bottom: 1rem;
+        }
+
+        &-text {
+            color: $sce-primary-color;
+        }
+
+        &-link {
+            color: $sce-secondary-color;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

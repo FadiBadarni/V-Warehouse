@@ -1,0 +1,27 @@
+{
+    "home": {
+        "title": "Lights, Camera, Action!",
+        "subtitle": "The Virtual Warehouse for Visual Mavericks.",
+        "cta": "Browse Equipment",
+        "browsetitle": "The ultimate resource for equipment rentals and management, designed for the visual communication Department.",
+        "services": "Experience Our Expertise",
+        "equipmentRentals": "Equipment Rentals",
+        "equipmentRentalsDesc": "From cameras to lights, we have everything you need to bring your visual communication projects to life.",
+        "equipmentManagement": "Equipment Management",
+        "equipmentManagementDesc": "Our system allows you to track and manage equipment usage, repairs, and inventory with ease.",
+        "procurement": "Rooms Booking",
+        "procurementDesc": "Need to book a room? Our procurement system has got you covered.",
+        "equipmentCatalog": "Equipment Catalog",
+        "dummyEquipment": "Dummy Equipment",
+        "helpSupport": "Help and Support",
+        "faqs": "FAQs",
+        "faqsDesc": "Find answers to the most frequently asked questions about using the virtual warehouse system.",
+        "terms": "Terms and Conditions",
+        "termsDesc": "These terms and conditions outline the rules and regulations for the use of SCE's virtual warehouse website.",
+        "contactUs": "Contact Us",
+        "contactUsDesc": "Need assistance? Get in touch with our support team for help with any issues or inquiries."
+      },
+      "footer":{
+        "hero": "All rights reserved."
+      }
+}

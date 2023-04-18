@@ -1,0 +1,153 @@
+@import '../../variables';
+@import '../../directions';
+
+.features {
+    margin-top: 4rem;
+    text-align: center;
+    background-color: $sce-background-color;
+
+    &__title {
+        width: 100%;
+        margin-bottom: 4rem;
+        padding: 2rem;
+        color: $sce-primary-color;
+
+        span {
+            font-size: 3.5rem;
+            font-weight: 600;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 2rem;
+        align-items: center;
+        perspective: 1000px;
+
+        @media only screen and (min-width: $breakpoint-large) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media only screen and (max-width: $breakpoint-medium) {
+            grid-gap: 1rem;
+        }
+
+        &-item {
+            background-color: $third-color;
+            color: $primary-color;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s, box-shadow 0.5s;
+            transform-style: preserve-3d;
+
+            &:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+            }
+
+            h3 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 1.5rem;
+                }
+            }
+
+            p {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
+
+
+.feature-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background-color: $sce-primary-color;
+    color: $sce-text-color;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s, box-shadow 0.5s;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    height: 300px;
+
+    &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    &__icon {
+        width: 80px;
+        height: 80px;
+        fill: $sce-text-color-dark;
+        transition: fill 0.3s;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        transition: color 0.3s;
+
+        @media only screen and (max-width: 768px) {
+            font-size: 1.5rem;
+        }
+    }
+
+    &__description {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        transition: color 0.3s;
+
+        @media only screen and (max-width: 768px) {
+            font-size: 1rem;
+        }
+    }
+
+    &:hover {
+        &__icon {
+            fill: $sce-text-color4;
+        }
+
+        &__title,
+        &__description {
+            color: $sce-text-color3;
+        }
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 50%);
+        transition: 0.5s;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 50%);
+    }
+}

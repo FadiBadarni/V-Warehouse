@@ -1,0 +1,72 @@
+@import '../../variables';
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: $sce-background-color;
+
+    .profile-banner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: $sce-primary-color;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+
+        .profile-details {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                color: $sce-text-color;
+            }
+
+            p {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+                color: $sce-text-color;
+
+                strong {
+                    color: $sce-text-color;
+                }
+            }
+        }
+    }
+
+    .content {
+        width: 90%;
+        max-width: 1200px;
+
+        .sub-section {
+            margin-bottom: 3rem;
+
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                color: $sce-text-color4;
+            }
+
+            .items-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-gap: 1rem;
+
+                .item-card {
+                    background-color: $sce-secondary-color;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+                    &:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+                    }
+                }
+            }
+        }
+    }
+}

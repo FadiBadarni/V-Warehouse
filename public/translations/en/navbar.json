@@ -1,0 +1,14 @@
+{
+    "navbar": {
+        "home":"Home",
+        "warehouse": "Warehouse",
+        "dashboard": "Dashboard",
+        "login": "Login",
+        "logout": "Logout",
+        "notifications": "Notifications",
+        "languageSelector":{
+          "english": "English",
+          "hebrew": "Hebrew"
+        }
+      }
+}

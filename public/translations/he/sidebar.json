@@ -1,0 +1,10 @@
+{
+    "sidebar": {
+        "home": "בית",
+        "itemList": "רשימת ציוד",
+        "itemManagement": "ניהול ציוד",
+        "usersManagement": "ניהול משתמשים",
+        "borrowRequests": "בקשות השאלה",
+        "statistics": "סטטיסטיקה"
+      }
+}

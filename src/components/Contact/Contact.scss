@@ -1,0 +1,97 @@
+@import '../../variables';
+
+
+
+.contact {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    &__content {
+        max-width: 1200px;
+        margin: 0 auto;
+
+    }
+
+    &__title {
+        text-align: center;
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    &__info {
+        padding: 1rem;
+        background-color: $sce-background-color;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        &-title {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        &-item {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    &__form-paper {
+        padding: 1rem;
+        background-color: $sce-background-color;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 0.5rem;
+    }
+
+    .MuiTextField-root {
+        background-color: $sce-background-color;
+        margin-bottom: 1rem;
+    }
+
+    .MuiInputBase-input {
+        background-color: $sce-background-color;
+        color: $sce-text-color-dark;
+    }
+
+    .MuiInputLabel-root.Mui-focused {
+        color: $accent-color;
+    }
+
+    .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border-color: $accent-color;
+    }
+
+    .MuiButton-containedPrimary {
+        background-color: $accent-color;
+        color: $sce-background-color;
+        padding: 8px 16px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            background-color: darken($accent-color, 5%);
+        }
+    }
+
+    @media (max-width: $breakpoint-medium) {
+
+        &__info,
+        &__form-paper {
+            margin-bottom: 2rem;
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@import "../../variables";
+@import '../../directions';
+
+.item-info {
+    background-color: $sce-background-color;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 30px;
+
+    &__title {
+        color: $sce-primary-color;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    &__description {
+        color: $sce-text-color3;
+        margin-bottom: 1.5rem;
+
+        .ltr & {
+            font-size: 1.3rem;
+        }
+
+        .rtl & {
+            font-size: 1.4rem;
+        }
+    }
+
+    &__details {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    &__attribute-card {
+        background-color: $sce-background-color;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+        width: 150px;
+        height: 120px;
+        margin: 0 10px 20px;
+
+        transition: .5s all ease-in-out;
+
+
+        &:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+        }
+    }
+
+    .MuiCardContent-root {
+        padding: 0;
+        text-align: center;
+    }
+
+    &__attribute-icon {
+        font-size: 2rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: $sce-primary-color;
+        height: 40px;
+    }
+
+    .item-info__attribute-text {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+
+    }
+
+    .MuiTypography-subtitle1 {
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+}
