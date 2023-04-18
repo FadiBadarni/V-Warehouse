@@ -1,0 +1,22 @@
+{
+    "borrowRequests": {
+        "title": "Borrow Requests",
+        "pendingTitle": "Pending Orders",
+        "awaitingTitle": "Requests Awaiting Pickup",
+        "returnedTitle": "Requests Pending Return",
+        "closedTitle": "Closed Requests",
+        "tableHeaders":{
+          "id":"ID Number",
+          "itemName": "Item Name",
+          "startDate": "Start Date",
+          "returnDate": "Return Date",
+          "quantity": "Quantity",
+          "requestDate": "Request Date",
+          "actions": "Actions"
+        },
+        "pendingRequests":{
+          "approve": "Approve",
+          "reject": "Reject"
+        }
+      }
+}

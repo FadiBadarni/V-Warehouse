@@ -1,0 +1,9 @@
+{
+    "login":{
+        "title":"Login Page",
+        "username":"Username",
+        "password":"Password",
+        "forgotPassword":"Forgot Password ?",
+        "submit":"Log In"
+      }
+}

@@ -1,0 +1,96 @@
+@import "../../../variables";
+@import "./RowDetails.scss";
+
+.MuiTable-root {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    overflow-x: auto;
+
+    .MuiTableHead-root {
+        background-color: #f7f7f7;
+
+        th {
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+    }
+
+    .MuiTableBody-root {
+
+        tr {
+            transition: all 0.2s ease-in-out;
+
+            &:hover {
+                background-color: #f0f0f0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+        }
+
+        td {
+            padding: 16px 8px;
+            text-align: center;
+
+
+        }
+    }
+
+    .MuiButton-root {
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+.borrow-requests {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+
+    &__content {
+        flex: 1;
+        background-color: #f2f2f2;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+
+
+
+        .requests-title {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    }
+
+    &__title {
+        color: #ff0000;
+        margin-bottom: 10px;
+    }
+
+    #tab-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .custom-tab-indicator {
+        .MuiTabs-indicator {
+            background-color: $sce-text-color4;
+        }
+    }
+
+    .custom-tab-text-color {
+        .MuiTab-root {
+            color: black;
+
+            &.Mui-selected {
+                color: $sce-text-color4;
+            }
+        }
+    }
+
+
+}

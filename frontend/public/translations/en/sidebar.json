@@ -1,0 +1,10 @@
+{
+    "sidebar": {
+        "home": "Home",
+        "itemList": "Item List",
+        "itemManagement": "Item Management",
+        "usersManagement": "Users Management",
+        "borrowRequests": "Borrow Requests",
+        "statistics": "Statistics"
+      }
+}

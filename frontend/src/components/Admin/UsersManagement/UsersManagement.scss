@@ -1,0 +1,48 @@
+@import "../../../variables";
+@import "./Excel.scss";
+@import "./Table.scss";
+
+
+
+.users-management {
+    display: flex;
+    flex-direction: row;
+
+    .users-section {
+        margin-top: 2rem;
+        flex: 1;
+        height: 100vh;
+
+        #tab-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .custom-tab-indicator {
+            .MuiTabs-indicator {
+                background-color: $sce-text-color4;
+            }
+        }
+
+        .custom-tab-text-color {
+            .MuiTab-root {
+                color: black;
+
+                &.Mui-selected {
+                    color: $sce-text-color4;
+                }
+            }
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            margin-top: 2rem;
+        }
+    }
+
+}
