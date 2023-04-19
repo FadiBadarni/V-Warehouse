@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAllItemInstances, fetchItemNames } from "../../../api/AdminService";
 import { fetchedItemTypes } from "../../../api/WarehouseService";
 import useAdminRole from "../../../hooks/useAdminRole";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../Sidebar/AdminLayout";
 import { useTranslation } from "react-i18next";
 import { TextField, MenuItem, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -12,6 +12,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./ItemList.scss";
 import { Grid, Card, CardContent, CardActions, Button } from "@mui/material";
+import { FormControl, InputLabel, Select } from "@mui/material";
 
 const useItemFilter = (initialItems) => {
   const [filteredItems, setFilteredItems] = useState(initialItems);
@@ -95,97 +96,130 @@ const ItemList = () => {
           Effortlessly Browse and Filter Equipment Categories
         </p>
         <div className="search-filters">
-          <div className="search">
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
-              label="Search By Category"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-          <div className="filters">
-            <TextField
-              select
-              label="Filter by Type"
-              value={itemType}
-              onChange={(event) => setItemType(event.target.value)}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <CategoryIcon />
-                  </InputAdornment>
-                ),
-              }}
-            >
-              {type.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Filter by Name"
-              value={itemName}
-              onChange={(event) => setItemName(event.target.value)}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LabelIcon />
-                  </InputAdornment>
-                ),
-              }}
-            >
-              {names.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Filter by State"
-              value={itemState}
-              onChange={(event) => setItemState(event.target.value)}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SyncIcon />
-                  </InputAdornment>
-                ),
-              }}
-            >
-              {["TAKEN", "DAMAGED", "IN_MAINTENANCE", "AVAILABLE"].map(
-                (option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                )
-              )}
-            </TextField>
-          </div>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={4} sm={6}>
+              <div className="search">
+                <TextField
+                  id="outlined-basic"
+                  variant="outlined"
+                  fullWidth
+                  label="Search By Category"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={6} md={8}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Filter by Name</InputLabel>
+                <Select
+                  label="Filter by Name"
+                  value={itemName}
+                  onChange={(event) => setItemName(event.target.value)}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <LabelIcon />
+                    </InputAdornment>
+                  }
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: "200px",
+                        overflowY: "auto",
+                      },
+                    },
+                  }}
+                >
+                  {names.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <div className="filters">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Filter by Type</InputLabel>
+                  <Select
+                    label="Filter by Type"
+                    value={itemType}
+                    onChange={(event) => setItemType(event.target.value)}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CategoryIcon />
+                      </InputAdornment>
+                    }
+                    MenuProps={{
+                      disableScrollLock: false,
+                      PaperProps: {
+                        sx: {
+                          maxHeight: "200px",
+                          overflowY: "auto",
+                        },
+                      },
+                    }}
+                  >
+                    {type.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Filter by State</InputLabel>
+                <Select
+                  label="Filter by State"
+                  value={itemState}
+                  onChange={(event) => setItemState(event.target.value)}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <SyncIcon />
+                    </InputAdornment>
+                  }
+                  MenuProps={{
+                    disableScrollLock: false,
+                    PaperProps: {
+                      sx: {
+                        maxHeight: "200px",
+                        overflowY: "auto",
+                      },
+                    },
+                  }}
+                >
+                  {["TAKEN", "DAMAGED", "IN_MAINTENANCE", "AVAILABLE"].map(
+                    (option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
         </div>
         <div className="equipments-grid">
           <Grid container spacing={2}>
             {filteredItems.map((item) => (
-              <Grid item xs={12} sm={6} md={4} lg={2.5} key={item.id}>
+              <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                 <Card className="item-card" elevation={3}>
                   <CardContent className="item-card__details">
-                    <p className="item-card__title">{item.itemName}</p>
-                    <p className="item-card__body">{item.state}</p>
+                    <div className="item-card__header">
+                      <p className="item-card__title">{item.itemName}</p>
+                      <p className="item-card__state">{item.state}</p>
+                    </div>
                   </CardContent>
                   <CardActions className="item-card__actions">
                     <Button className="item-card__button" size="small">
