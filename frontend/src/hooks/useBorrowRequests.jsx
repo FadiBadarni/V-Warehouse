@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { updateRequestStatus,addItemInstances } from "../api/AdminService";
+import { updateRequestStatus, addItemInstances } from "../api/AdminService";
 import { getBorrowRequests } from "../api/BorrowService";
 const useBorrowRequests = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -54,18 +54,18 @@ const useBorrowRequests = () => {
     setClosedRequests(closed);
   };
 
-  const updateRequestStatusAndState = async (request, newStatus,itemInstances) => {
-    if(itemInstances && newStatus==='AWAITING_RETURN')
-    {
-      const result = await  addItemInstances(
-        request.requestId,
-        itemInstances,
-      );
+  const updateRequestStatusAndState = async (
+    request,
+    newStatus,
+    itemInstances
+  ) => {
+    if (itemInstances && newStatus === "AWAITING_RETURN") {
+      await addItemInstances(request.requestId, itemInstances);
     }
     try {
       const updatedRequest = await updateRequestStatus(
         request.requestId,
-        newStatus,
+        newStatus
       );
       updateRequestStates(request, updatedRequest, newStatus);
     } catch (error) {
@@ -115,11 +115,11 @@ const useBorrowRequests = () => {
 
   const handleAccept = (request) =>
     updateRequestStatusAndState(request, "AWAITING_PICKUP");
-  const handlePickupConfirm = (request,itemInstances) =>
-    updateRequestStatusAndState(request, "AWAITING_RETURN",itemInstances);
+  const handlePickupConfirm = (request, itemInstances) =>
+    updateRequestStatusAndState(request, "AWAITING_RETURN", itemInstances);
   const handlePickupCancel = (request) =>
     updateRequestStatusAndState(request, "CANCELLED");
-  const handleReturn = (request,itemInstances) =>
+  const handleReturn = (request, itemInstances) =>
     updateRequestStatusAndState(request, "RETURNED");
   const handleOverDue = (request) =>
     updateRequestStatusAndState(request, "OVERDUE_RETURN");

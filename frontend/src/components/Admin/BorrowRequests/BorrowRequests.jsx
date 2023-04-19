@@ -22,7 +22,7 @@ const BorrowRequests = () => {
   const [expandedWaitingRow, setExpandedWaitingRow] = useState(-1);
   const [expandedRejectedRow, setExpandedRejectedRow] = useState(-1);
   const [expandedClosedRow, setExpandedClosedRow] = useState(-1);
-  const { itemDetails, fetchItemDetails } = useItemDetails();
+  const { fetchItemDetails } = useItemDetails();
   const { items, setitemsId } = useState([]);
   const {
     pendingRequests,

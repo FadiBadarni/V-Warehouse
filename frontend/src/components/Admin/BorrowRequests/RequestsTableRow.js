@@ -51,7 +51,7 @@ const RequestsTableRow = ({
   };
 
   useEffect(() => {
-    if (activeTab == 2)
+    if (activeTab === 2)
       if (expandedRow === index) {
         getItemInstancesByRequestId(request.requestId)
           .then((instances) => setItemInstances(instances))
@@ -59,7 +59,7 @@ const RequestsTableRow = ({
             console.error("Error fetching item instances:", error)
           );
       }
-  }, [expandedRow, index, request.requestId]);
+  }, [expandedRow, index, request.requestId, activeTab]);
 
   return (
     <React.Fragment>
