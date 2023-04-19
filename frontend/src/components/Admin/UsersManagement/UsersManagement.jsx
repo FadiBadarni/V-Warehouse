@@ -7,7 +7,7 @@ import React, {
   Suspense,
 } from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../Sidebar/AdminLayout";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../contexts/AuthContext";

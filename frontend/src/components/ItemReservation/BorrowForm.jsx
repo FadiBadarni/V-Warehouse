@@ -105,7 +105,7 @@ const BorrowForm = ({
     const timeList = bulidRList(date, listOfKeys);
     setOccupiedDates(bulidoccupiedDate(timeList));
     setSelectedStartDate(date);
-    setPendingDates(result.bendingStartDates);
+    setPendingDates(bulidoccupiedDate(result.bendingStartDates));
   };
 
   const handleStartTimeChange = (date) => {
@@ -135,7 +135,7 @@ const BorrowForm = ({
       );
       const timeList = bulidRList(date, formattedDates);
       setOccupiedReturnDates(bulidoccupiedDate(timeList));
-      setPendingDates(bulidoccupiedDate(result.bendingStartDates));
+      setPendingDates(bulidoccupiedDate(result.bendingReturnDates));
     }
   };
 
@@ -180,7 +180,8 @@ const BorrowForm = ({
                   id="instance-select"
                   value={selectedInstanceIds}
                   onChange={handleInstanceIdChange}
-                  label="Instances">
+                  label="Instances"
+                >
                   {availableInstances.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
@@ -211,7 +212,8 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}>
+                transition={{ duration: 0.5 }}
+              >
                 <Box mb={4}>
                   <Typography variant="h5">
                     {t("itemReservation.timeSlots")}
@@ -290,7 +292,8 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}>
+            disabled={!isFormValid()}
+          >
             {t("itemReservation.sendRequest")}
           </button>
         </div>

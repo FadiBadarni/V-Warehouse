@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../Sidebar/AdminLayout";
 import { useTranslation } from "react-i18next";
 import {
   Box,

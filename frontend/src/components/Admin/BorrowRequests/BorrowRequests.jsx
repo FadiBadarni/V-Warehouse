@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { getUserById } from "../../../api/AdminService";
 import useAdminRole from "../../../hooks/useAdminRole";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../Sidebar/AdminLayout";
 import useBorrowRequests from "../../../hooks/useBorrowRequests";
 import PendingRequests from "./PendingRequests";
 import AwaitingPickupRequests from "./AwaitingPickupRequests";
@@ -23,7 +23,7 @@ const BorrowRequests = () => {
   const [expandedRejectedRow, setExpandedRejectedRow] = useState(-1);
   const [expandedClosedRow, setExpandedClosedRow] = useState(-1);
   const { itemDetails, fetchItemDetails } = useItemDetails();
-  const {items,setitemsId}=useState([])
+  const { items, setitemsId } = useState([]);
   const {
     pendingRequests,
     awaitingPickupRequests,
