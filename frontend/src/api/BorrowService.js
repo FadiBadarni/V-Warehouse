@@ -8,9 +8,9 @@ export async function getBorrowRequests() {
   );
 }
 
-export async function sendBorrowRequest(borrowRequestData) {
+export async function createBorrowRequest(borrowRequestData) {
   return apiWrapper(
-    () => axiosInstance.post(`/borrow-requests2`, borrowRequestData),
+    () => axiosInstance.post(`/borrow-requests`, borrowRequestData),
     "Borrow request sent successfully",
     "An error occurred while sending borrow request:"
   );
@@ -23,7 +23,6 @@ export async function getPendingBorrowRequestsByItemInstance(itemId) {
     "Failed to fetch pending borrow requests"
   );
 }
-
 
 export async function getAllOccupiedDates(itemInstanceIds) {
   if (!Array.isArray(itemInstanceIds)) {
@@ -61,26 +60,45 @@ export async function getScheduleByItemId(itemId) {
 
 export async function findScheduleIdsByItemIdAndDate(id, date) {
   return apiWrapper(
-    async () => await axiosInstance.get(`/indScheduleIdsByItemIdAndDate/${id}`, {params: {date: date}}),
+    async () =>
+      await axiosInstance.get(`/indScheduleIdsByItemIdAndDate/${id}`, {
+        params: { date: date },
+      }),
     "Warehouse item fetched successfully",
     "An error occurred while fetching warehouse item by ID:"
   );
 }
-export async function getllTheTimethatCanStart(quantity, localDateTime,itemId) {
+export async function getllTheTimethatCanStart(
+  quantity,
+  localDateTime,
+  itemId
+) {
   return apiWrapper(
     async () =>
-      await axiosInstance.get(`/borrow-requests/get_every_time_schedule/${quantity}`, {
-        params: { localDateTime: localDateTime ,itemId: itemId},
-      }),
+      await axiosInstance.get(
+        `/borrow-requests/get_every_time_schedule/${quantity}`,
+        {
+          params: { localDateTime: localDateTime, itemId: itemId },
+        }
+      ),
     "Every time schedule fetched successfully",
     "An error occurred while fetching every time schedule:"
   );
 }
 
-export async function getAllTheTimeToReturn(quantity, localDateTimeStart, localDateTimeReturn,itemId,data ) {
+export async function getAllTheTimeToReturn(
+  quantity,
+  localDateTimeStart,
+  localDateTimeReturn,
+  itemId,
+  data
+) {
   return apiWrapper(
     async () =>
-      await axiosInstance.post(`/borrow-requests/get_every_time_to-return/${quantity}?localDateTimeStart=${localDateTimeStart}&localDateTimeReturn=${localDateTimeReturn}&itemId=${itemId}`, data),
+      await axiosInstance.post(
+        `/borrow-requests/get_every_time_to-return/${quantity}?localDateTimeStart=${localDateTimeStart}&localDateTimeReturn=${localDateTimeReturn}&itemId=${itemId}`,
+        data
+      ),
     "Every time schedule fetched successfully",
     "An error occurred while fetching every time schedule:"
   );

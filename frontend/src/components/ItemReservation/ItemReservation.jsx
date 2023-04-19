@@ -9,7 +9,7 @@ import SignatureModal from "./SignatureModal";
 import SignatureBackdrop from "./SignatureBackdrop";
 import { useTranslation } from "react-i18next";
 import { getUserIdFromLocalStorage } from "../../api/UserService";
-import { sendBorrowRequest } from "../../api/BorrowService";
+import { createBorrowRequest } from "../../api/BorrowService";
 import useItemDetails from "../../hooks/useItemDetails";
 
 import dayjs from "dayjs";
@@ -52,7 +52,7 @@ const BorrowedItemDetails = () => {
       alert("Please provide a signature.");
     } else {
       const base64Signature = signaturePad.toDataURL();
-    
+
       const userId = getUserIdFromLocalStorage();
       const borrowRequestData = {
         userId,
@@ -63,7 +63,7 @@ const BorrowedItemDetails = () => {
         quantity: quantity,
         signatureData: base64Signature,
       };
-      const result = await sendBorrowRequest(borrowRequestData);
+      const result = await createBorrowRequest(borrowRequestData);
       if (result) {
         alert("Borrow request sent successfully.");
         navigate("/warehouse");

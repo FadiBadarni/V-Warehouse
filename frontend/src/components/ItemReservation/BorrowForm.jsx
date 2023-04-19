@@ -6,13 +6,14 @@ import { TextArea } from "semantic-ui-react";
 import { Box, Typography, Grid } from "@material-ui/core";
 import { motion } from "framer-motion";
 import { DatePicker } from "@mui/x-date-pickers";
+import { Select, MenuItem, FormControl } from "@mui/material";
+import dayjs from "dayjs";
+
+import TimeTable from "./Table/TimeTable";
 import {
   getllTheTimethatCanStart,
   getAllTheTimeToReturn,
 } from "../../api/BorrowService";
-import TimeTable from "./Table/TimeTable";
-import { Select, MenuItem, FormControl } from "@mui/material";
-import dayjs from "dayjs";
 
 const BorrowForm = ({
   setIntendedStartDate,
@@ -31,11 +32,11 @@ const BorrowForm = ({
   const [occupiedDates, setOccupiedDates] = useState([]);
   const [occupiedReturnDates, setOccupiedReturnDates] = useState([]);
   const availableInstances = [];
-  const [selectedInstanceIds, setSelectedInstanceIdsLocal] = useState([]);
-  const [pendingDates, setPendingDates] = useState([]);
+  const [selectedInstanceIds, setSelectedInstanceIdsLocal] = useState("");
+  const [pendingReturnDates, setPendingRetrunDates] = useState([]);
+  const [pendingStartDates, setPendingStartDates] = useState([]);
   const itemIdValue = itemId;
   const [startTime, setstartTime] = useState();
-  const [startDate, setstartDate] = useState();
   const [startDateTime, setstartDateTime] = useState();
   const [disabledReturnTime, setDisabledReturnTime] = useState(true);
   const [disabledStartTime, setDisabledStartTime] = useState(true);
@@ -51,16 +52,19 @@ const BorrowForm = ({
     setDisabledStartTime(false);
     setSelectedInstanceIdsLocal(e.target.value);
     setQuantity(e.target.value);
+
+    if (selectedStartDate) {
+      handleStartDateChange(selectedStartDate);
+    }
   };
 
-  //get string list of date (string yyyy-MM-ddTHH-mm)  and return  (list (all the day from time 00:00 to 24:00) - timeList)
-  const bulidRList = (date, timeList) => {
+  const buildAvailableTimeList = (date, timeList) => {
     const dateTimestr = date.toISOString();
+
     const originalDate = new Date(dateTimestr);
-    originalDate.setDate(originalDate.getDate() + 1);
+    originalDate.setHours(originalDate.getHours() + 3);
     const datestr = originalDate.toISOString().substring(0, 10);
 
-    //all the time
     const timeSlots = [];
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
@@ -76,8 +80,7 @@ const BorrowForm = ({
     return timeSlots.filter((time) => !timeList.includes(time));
   };
 
-  //get string list of name and return list in date in type  occupiedDates
-  const bulidoccupiedDate = (timeList) => {
+  const buildOccupiedDateList = (timeList) => {
     const dayjs = require("dayjs");
     const occupiedDates = [];
 
@@ -93,29 +96,18 @@ const BorrowForm = ({
   };
 
   const handleStartDateChange = async (date) => {
-    setstartDate(date);
     const result = await getllTheTimethatCanStart(
       selectedInstanceIds,
-      date,
+      date.toISOString(),
       itemIdValue
     );
     const listForAllstartDate = result.startDates;
     const listOfKeys = Object.keys(listForAllstartDate);
     setstartTime(listForAllstartDate);
-    const timeList = bulidRList(date, listOfKeys);
-    setOccupiedDates(bulidoccupiedDate(timeList));
+    const timeList = buildAvailableTimeList(date, listOfKeys);
+    setOccupiedDates(buildOccupiedDateList(timeList));
     setSelectedStartDate(date);
-    setPendingDates(bulidoccupiedDate(result.bendingStartDates));
-  };
-
-  const handleStartTimeChange = (date) => {
-    setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-    setstartDateTime(date);
-    setDisabledReturnTime(false);
-  };
-
-  const handleReturnTimeChange = (date) => {
-    setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+    setPendingStartDates(buildOccupiedDateList(result.bendingStartDates));
   };
 
   const handleReturnDateChange = async (date) => {
@@ -124,8 +116,8 @@ const BorrowForm = ({
     if (startTime.hasOwnProperty(dateTimeString)) {
       const result = await getAllTheTimeToReturn(
         selectedInstanceIds,
-        startDate,
-        date,
+        startDateTime.toISOString(),
+        date.toISOString(),
         itemIdValue,
         startTime[dateTimeString]
       );
@@ -133,10 +125,24 @@ const BorrowForm = ({
       const formattedDates = listforAllReturnData.map((dateString) =>
         dateString.substring(0, 16)
       );
-      const timeList = bulidRList(date, formattedDates);
-      setOccupiedReturnDates(bulidoccupiedDate(timeList));
-      setPendingDates(bulidoccupiedDate(result.bendingReturnDates));
+      const timeList = buildAvailableTimeList(date, formattedDates);
+      setOccupiedReturnDates(buildOccupiedDateList(timeList));
+      setPendingRetrunDates(buildOccupiedDateList(result.bendingReturnDates));
     }
+  };
+
+  const handleStartTimeChange = (date) => {
+    setIntendedStartDate(date.toISOString());
+    setstartDateTime(date);
+    setDisabledReturnTime(false);
+
+    if (selectedReturnDate) {
+      handleReturnDateChange(selectedReturnDate);
+    }
+  };
+
+  const handleReturnTimeChange = (date) => {
+    setIntendedReturnDate(dayjs(date).toISOString());
   };
 
   const minDate = useMemo(() => dayjs().startOf("day"), []);
@@ -228,7 +234,7 @@ const BorrowForm = ({
                       minTime={getTimeBoundaries(selectedStartDate).minTime}
                       maxTime={getTimeBoundaries(selectedStartDate).maxTime}
                       disableOccupied={true}
-                      pendingDates={pendingDates}
+                      pendingDates={pendingStartDates}
                     />
                   </Grid>
                   <Grid item xs={12} md={2}></Grid>
@@ -270,7 +276,7 @@ const BorrowForm = ({
                   }
                   maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
                   disableOccupied={true}
-                  pendingDates={pendingDates}
+                  pendingDates={pendingReturnDates}
                 />
               </div>
             )}
