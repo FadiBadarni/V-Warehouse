@@ -7,7 +7,7 @@ import BuildIcon from "@mui/icons-material/Build";
 import PeopleIcon from "@mui/icons-material/People";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import "./Admin.scss";
+import "./Sidebar.scss";
 import SidebarLink from "./SidebarLink";
 
 const AdminLayout = ({ direction }) => {
@@ -83,7 +83,7 @@ const AdminLayout = ({ direction }) => {
               boxSizing: "border-box",
             },
           }}
-          variant="temporary"
+          variant="permanent"
           anchor={direction === "rtl" ? "right" : "left"}
           ModalProps={{
             keepMounted: true,

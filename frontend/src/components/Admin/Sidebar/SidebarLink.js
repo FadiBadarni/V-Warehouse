@@ -1,9 +1,13 @@
 import React from "react";
 import { ListItem, ListItemIcon, Tooltip, Badge } from "@mui/material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SidebarLink = ({ text, path, icon }) => (
-  <Link to={path} className="sidebar-link">
+  <NavLink
+    to={path}
+    end
+    className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+  >
     <Tooltip title={text} placement="right">
       <ListItem button>
         <Badge color="secondary">
@@ -13,7 +17,7 @@ const SidebarLink = ({ text, path, icon }) => (
         </Badge>
       </ListItem>
     </Tooltip>
-  </Link>
+  </NavLink>
 );
 
 export default SidebarLink;
