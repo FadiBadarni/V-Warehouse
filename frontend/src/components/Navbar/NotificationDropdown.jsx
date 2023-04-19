@@ -53,19 +53,23 @@ const NotificationDropdown = ({
               transition: { duration: 0.3 },
             }}
           >
-            {notifications.map((notification) => (
-              <motion.li
-                key={notification.id}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <span className="notification-msg">{notification.message}</span>
-                <span className="notification-date">
-                  {formatDate(notification.date)}
-                </span>
-              </motion.li>
-            ))}
+            {notifications
+              .sort((a, b) => new Date(b.date) - new Date(a.date))
+              .map((notification) => (
+                <motion.li
+                  key={notification.id}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  <span className="notification-msg">
+                    {notification.message}
+                  </span>
+                  <span className="notification-date">
+                    {formatDate(notification.date)}
+                  </span>
+                </motion.li>
+              ))}
             <motion.li
               className="clear-notifications"
               initial={{ opacity: 0, y: -20 }}
