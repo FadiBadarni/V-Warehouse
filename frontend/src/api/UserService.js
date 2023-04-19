@@ -51,7 +51,13 @@ export async function loginUser(username, password) {
     }
   } catch (error) {
     console.error("An error occurred:", error);
-    throw error;
+
+    // Check for invalid username or password error
+    if (error.response && error.response.status === 401) {
+      throw new Error("Invalid username or password");
+    } else {
+      throw new Error("An error occurred, please try again later");
+    }
   }
 }
 

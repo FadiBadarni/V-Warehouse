@@ -15,6 +15,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const { t } = useTranslation("login");
@@ -27,13 +28,10 @@ function Login() {
         window.localStorage.setItem("token", result.token);
         login(result.token);
         navigate("/dashboard");
-      } else {
-        navigate("/auth/login-failed");
-        console.log("Login failed");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      navigate("/auth/error");
+      setError(error.message);
     }
   };
 
@@ -130,6 +128,7 @@ function Login() {
               <button type="submit" className="login-button">
                 {t("login.submit")}
               </button>
+              <div className="error-message">{error}</div>
             </form>
           </div>
           <div className="login-image-section">
