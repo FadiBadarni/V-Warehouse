@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class NotificationsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         Notifications notification = new Notifications();
+
         notification.setMessage(message);
         notification.setDate(LocalDateTime.now());
         notification.setUser(user);
@@ -57,4 +59,13 @@ public class NotificationsService {
         notifications.forEach(notification -> notification.setRead(true));
         notificationsRepository.saveAll(notifications);
     }
+
+    public void broadcastNotificationToAllUsers(String message) {
+        Iterable<User> allUsersIterable = userRepository.findAll();
+        List<User> allUsers = StreamSupport.stream(allUsersIterable.spliterator(), false)
+                .toList();
+        allUsers.forEach(user -> createNotification(user.getId(), message));
+    }
+
+
 }
