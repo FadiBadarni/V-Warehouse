@@ -9,7 +9,7 @@ import CheckMark from "./CheckMark";
 import Autocomplete from "@mui/material/Autocomplete";
 import QRCode from "react-qr-code";
 import QRCodePrint from "./QRCodePrint";
-import { fetchedItemTypes } from "../../../api/WarehouseService" 
+import { fetchedItemTypes } from "../../../api/WarehouseService";
 
 import "./ItemManagement.scss";
 
@@ -24,8 +24,6 @@ const EquipmentForm = () => {
 
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
 
-
-   
   const [attributes, setAttributes] = useState([
     { attributeName: "", attributeValue: "" },
   ]);
@@ -48,17 +46,13 @@ const EquipmentForm = () => {
     }
   };
 
-
-
   const [itemTypes, setItemTypes] = useState([]);
   const handleTypeInputClick = async () => {
-    const fetchedItemType = await  fetchedItemTypes();
+    const fetchedItemType = await fetchedItemTypes();
     if (fetchedItemType) {
       setItemTypes(fetchedItemType);
     }
   };
-
-
 
   const handleSelectNameItem = async (selectedItemName) => {
     if (selectedItemName) {
@@ -104,11 +98,18 @@ const EquipmentForm = () => {
     if (itemInstances) {
       console.log("Item added successfully:", itemInstances);
 
+      // Reset fields
       setName("");
       setDescription("");
       setQuantity("");
       setItemType("");
       setAttributes([{ attributeName: "", attributeValue: "" }]);
+      setIsExistingItem(false);
+      setIsPrintButtonDisabled(false); // Enable the print button
+
+      // Clear item names and item types to reload them on next focus
+      setItemNames([]);
+      setItemTypes([]);
 
       // Generate QR codes for each created item instance
       const qrCodes = itemInstances.map((itemInstance) => {
@@ -131,10 +132,8 @@ const EquipmentForm = () => {
       });
 
       setGeneratedQRCodes(qrCodes);
-      setIsPrintButtonDisabled(false); // Enable the print button
 
       setShowCheckMark(true);
-      setIsExistingItem(false);
       setTimeout(() => setShowCheckMark(false), 3000);
     } else {
       console.error("Failed to add the item.");
@@ -143,25 +142,29 @@ const EquipmentForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="equipment-management__form">
+    <form onSubmit={handleSubmit} className="item-management__form">
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Autocomplete
+            autoFocus
             fullWidth
             id="name"
             options={itemNames}
             getOptionLabel={(option) => option}
             freeSolo
+            inputValue={name}
+            onInputChange={(event, newInputValue) => {
+              setName(newInputValue);
+            }}
             onChange={async (event, selectedItemName) => {
               handleSelectNameItem(selectedItemName);
             }}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Equipment Name"
+                label="Item Name"
                 onFocus={handleNameInputClick}
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                required
               />
             )}
           />
@@ -178,11 +181,9 @@ const EquipmentForm = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Equipment Type"
+                label="Item Type"
                 onFocus={handleTypeInputClick}
-             
                 onChange={(event) => setItemType(event.target.value)}
-                
               />
             )}
           />
@@ -191,7 +192,7 @@ const EquipmentForm = () => {
           <TextField
             fullWidth
             id="description"
-            label="Equipment Description"
+            label="Item Description"
             multiline
             rows={3}
             value={description}
@@ -200,7 +201,6 @@ const EquipmentForm = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <h3>df</h3>
           <TextField
             fullWidth
             id="quantity"
@@ -208,9 +208,10 @@ const EquipmentForm = () => {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            inputProps={{ min: 1 }}
           />
         </Grid>
-       
+
         {attributes.map((attribute, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} md={6}>
@@ -248,13 +249,13 @@ const EquipmentForm = () => {
             Add Attribute
           </Button>
         </Grid>
-        <Grid item xs={12} className="equipment-management__checkmark">
-          <CheckMark show={showCheckMark} />
-        </Grid>
+
+        <CheckMark show={showCheckMark} />
+
         <Grid item xs={12} md={6}>
           <Button
             type="submit"
-            className="equipment-management__submit-button"
+            className="item-management__submit-button"
             variant="contained"
             color="primary"
             fullWidth
@@ -262,7 +263,7 @@ const EquipmentForm = () => {
             Add Item
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <QRCodePrint
             generatedQRCodes={generatedQRCodes}
             isPrintButtonDisabled={isPrintButtonDisabled}
