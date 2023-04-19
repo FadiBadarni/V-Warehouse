@@ -6,77 +6,77 @@
     box-sizing: border-box;
 }
 
-.sidebar {
-    display: flex;
-    height: 100%;
-
-    .MuiDrawer-paper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        background-color: $sce-primary-color;
-        position: fixed;
-        z-index: 0;
-        transition: all 0.25s ease-in-out;
-    }
-
-    .badges-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex: 1;
-        width: 100%;
-    }
-}
-
-.sidebar-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    text-decoration: none;
-    color: inherit;
-    margin-bottom: 1rem;
-
-    &.active {
-        .MuiListItem-root {
-            background-color: #263841;
-        }
-    }
-
-    .MuiListItem-root {
-        padding: 16px;
-        width: 100%;
-        justify-content: center;
-        transition: background-color 0.2s ease-in-out;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-    }
-
-    .MuiListItemIcon-root {
-        color: $sce-background-color;
-        transition: color 0.2s ease-in-out;
-        min-width: 20px;
-
-    }
-
-    &:hover {
-        .MuiListItemIcon-root {
-            color: rgba(255, 255, 255, 0.9);
-        }
-    }
-}
-
 .admin-home {
     display: flex;
     flex-direction: row;
+    background-position: center;
+    background-size: cover;
+    background-image: url('../../assets/404-bg.jpg');
 
-    .home-content {
+    &__header {
+        text-align: center;
+        padding: 2rem 0;
+        font-size: 2.2rem !important;
+        font-weight: 600;
+    }
+
+    &__content {
         flex: 1;
         height: 100vh;
-        background-color: rgb(70, 70, 70);
+
+        .admin-section {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            border-radius: 8px;
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            box-shadow: 10px 20px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.3);
+            background-color: darken($color: $sce-background-color, $amount: 2%);
+            margin: 1rem 0;
+
+
+            &__icon {
+                color: $sce-primary-color;
+                margin-bottom: 0.5rem;
+                transition: color 0.3s ease-in-out;
+            }
+
+            cursor: default;
+
+            &__button {
+                position: absolute;
+                bottom: -1.1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 8px;
+                transition: background-color 0.3s ease-in-out;
+                background-color: $sce-secondary-color;
+
+                &:hover {
+                    background-color: darken($color: $sce-primary-color, $amount: 10%);
+                    color: $sce-background-color;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-medium) {
+    .admin-home {
+        &__content {
+            .admin-section {
+                padding: 1.5rem;
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-small) {
+    .admin-home {
+        &__content {
+            .admin-section {
+                padding: 1rem;
+            }
+        }
     }
 }
