@@ -148,4 +148,13 @@ export async function addItemInstances(requestId, itemInstances) {
   );
 }
 
+export const broadcastMessageToAllUsers = async (message) => {
+  return apiWrapper(
+    async () =>
+      await axiosInstance.post("/broadcast", null, { params: { message } }),
+    "Broadcast message sent successfully",
+    "Error sending broadcast message:"
+  );
+};
+
 export { axiosInstance };

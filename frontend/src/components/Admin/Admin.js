@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useAdminRole from "../../hooks/useAdminRole";
 import AdminLayout from "./Sidebar/AdminLayout";
 import { useTranslation } from "react-i18next";
@@ -16,12 +16,43 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 import PeopleIcon from "@mui/icons-material/People";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BroadcastOnPersonalIcon from "@mui/icons-material/BroadcastOnPersonal";
+import { broadcastMessageToAllUsers } from "../../api/AdminService";
+import CheckMark from "./ItemManagement/CheckMark";
+
 import "./Admin.scss";
 
 const Admin = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
+  const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [broadcastMessageError, setBroadcastMessageError] = useState("");
+  const [showCheckMark, setShowCheckMark] = useState(false);
+
+  const validateBroadcastMessage = () => {
+    if (broadcastMessage.trim() === "") {
+      setBroadcastMessageError("The broadcast message cannot be empty.");
+      return false;
+    } else if (broadcastMessage.trim().length < 10) {
+      setBroadcastMessageError(
+        "The broadcast message must be at least 10 characters long."
+      );
+      return false;
+    } else {
+      setBroadcastMessageError("");
+      return true;
+    }
+  };
+
+  const handleBroadcastSubmit = async (e) => {
+    e.preventDefault();
+    if (validateBroadcastMessage()) {
+      await broadcastMessageToAllUsers(broadcastMessage);
+      setShowCheckMark(true);
+      setTimeout(() => setShowCheckMark(false), 3000);
+      setBroadcastMessage("");
+    }
+  };
 
   return (
     <div className="admin-home">
@@ -101,6 +132,7 @@ const Admin = () => {
                     flexDirection="column"
                     justifyContent="center"
                     alignItems="center"
+                    onSubmit={handleBroadcastSubmit}
                   >
                     <TextField
                       label="Broadcast Message"
@@ -109,7 +141,18 @@ const Admin = () => {
                       fullWidth
                       variant="outlined"
                       className="admin-section__input"
+                      value={broadcastMessage}
+                      onChange={(e) => setBroadcastMessage(e.target.value)}
                     />
+                    {broadcastMessageError && (
+                      <div
+                        className="broadcast-message-error"
+                        style={{ marginTop: "1rem", color: "red" }}
+                      >
+                        {broadcastMessageError}
+                      </div>
+                    )}
+                    <CheckMark show={showCheckMark} />
                     <Button
                       type="submit"
                       variant="contained"
