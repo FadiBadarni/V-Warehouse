@@ -92,6 +92,7 @@ const BorrowRequests = () => {
             handlePickupConfirm={handlePickupConfirm}
             handlePickupCancel={handlePickupCancel}
             expandedRow={expandedWaitingRow}
+            setExpandedRow={setExpandedWaitingRow}
             user={user}
             setitemsId={setitemsId}
             items={items}

@@ -9,12 +9,13 @@ const AwaitingPickupRequests = ({
   handlePickupConfirm,
   handlePickupCancel,
   expandedRow,
+  setExpandedWaitingRow,
   itemDetails,
   user,
   actionsHeaderTitle,
   setitemsId,
   items,
-  activeTab
+  activeTab,
 }) => {
   return (
     <Box>
@@ -27,10 +28,11 @@ const AwaitingPickupRequests = ({
         handlePickupConfirm={handlePickupConfirm}
         handlePickupCancel={handlePickupCancel}
         expandedRow={expandedRow}
+        setExpandedRow={setExpandedWaitingRow}
         itemDetails={itemDetails}
         user={user}
         actionsHeaderTitle={actionsHeaderTitle}
-        setitemsId={ setitemsId}
+        setitemsId={setitemsId}
         items={items}
         activeTab={activeTab}
       />

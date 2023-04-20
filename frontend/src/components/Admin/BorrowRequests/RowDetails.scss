@@ -21,7 +21,11 @@
         padding-right: 1rem;
         border-right: 3px solid rgba(0, 0, 0, 0.267);
 
-
+        &__title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
     }
 
 

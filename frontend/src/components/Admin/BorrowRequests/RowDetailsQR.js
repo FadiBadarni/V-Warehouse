@@ -98,7 +98,8 @@ const RowDetailsQR = ({
             Requested Item Info
           </Typography>
           <FormControl
-            sx={{ m: 1, width: 300, fullWidth: true, size: "medium" }}>
+            sx={{ m: 1, width: 300, fullWidth: true, size: "medium" }}
+          >
             <InputLabel id="multiple-chip">Item</InputLabel>
             <Select
               labelId="ID"
@@ -114,7 +115,8 @@ const RowDetailsQR = ({
                   ))}
                 </Box>
               )}
-              MenuProps={MenuProps}>
+              MenuProps={MenuProps}
+            >
               {scans.map((name) => (
                 <MenuItem
                   key={name}

@@ -8,18 +8,6 @@ const RowDetails = ({ request, user, itemInstances }) => {
         Request No. {request.requestId}
       </Typography>
       <Box className="expanded-row__content">
-        <Box className="expanded-row__info">
-          {/* {itemInstances.map((instance, index) => ( */}
-            {/* <Box key={index} className="expanded-row__instance"> */}
-              <Typography className="expanded-row__instance__title">
-                Requested Item Info
-              </Typography>
-              {/* <Typography>Instance ID: {instance.id}</Typography> */}
-              {/* <Typography>Instance State: {instance.state}</Typography>
-              <Typography>Instance Item ID: {instance.itemId}</Typography> */}
-            {/* </Box> */}
-          {/* ))} */}
-        </Box>
         {user && (
           <Box className="expanded-row__user">
             <Typography className="expanded-row__user__title">
