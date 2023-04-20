@@ -93,3 +93,11 @@ export const getUserInfo = async () => {
 export function getUserIdFromLocalStorage() {
   return localStorage.getItem("userId");
 }
+
+export async function getBorrowRequestsByUserId(userId) {
+  return apiWrapper(
+    () => axiosInstance.get(`/borrow-requests/user/${userId}`),
+    "Borrow requests fetched successfully",
+    "Failed to fetch borrow requests"
+  );
+}

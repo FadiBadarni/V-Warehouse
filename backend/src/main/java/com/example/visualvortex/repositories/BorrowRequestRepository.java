@@ -24,5 +24,7 @@ public interface BorrowRequestRepository extends JpaRepository<BorrowRequest, UU
     @Query("SELECT br FROM BorrowRequest br WHERE br.itemId = :itemId AND br.status = :status")
     List<BorrowRequest> findPendingRequestsByItemId(@Param("itemId") Long itemId, @Param("status") RequestStatus status);
 
+    List<BorrowRequest> findByUserId(Long userId);
 
+    BorrowRequest findByRequestId(UUID requestId);
 }

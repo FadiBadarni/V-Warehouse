@@ -126,5 +126,9 @@ public class BorrowRequestController {
         return borrowRequestService.getItemInstancesByRequestId(requestId);
     }
 
-
+    @PutMapping("/borrow-requests/{requestId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelBorrowRequest(@PathVariable UUID requestId) {
+        borrowRequestService.cancelBorrowRequest(requestId);
+    }
 }

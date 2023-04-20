@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Modal, Button } from "semantic-ui-react";
-import { logoutUser, getUserInfo } from "../../api/UserService";
+import { Typography, Grid } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import {
+  logoutUser,
+  getUserInfo,
+  getBorrowRequestsByUserId,
+} from "../../api/UserService";
 import { motion } from "framer-motion";
+import { getWarehouseItemById } from "../../api/WarehouseService";
+import { cancelBorrowRequest } from "../../api/BorrowService";
 import "semantic-ui-css/semantic.min.css";
 
 import "./Dashboard.scss";
@@ -16,6 +24,33 @@ function Dashboard() {
   const [username, setUsername] = useState("");
   const [year, setYear] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [borrowRequests, setBorrowRequests] = useState([]);
+
+  const [currentOngoingPage, setCurrentOngoingPage] = useState(1);
+  const [currentDuePage, setcurrentDuePage] = useState(1);
+  const itemsPerPage = 3;
+
+  useEffect(() => {
+    const fetchBorrowRequests = async () => {
+      try {
+        const userId = user && user.id;
+        const requests = await getBorrowRequestsByUserId(userId);
+        const requestsWithItem = await Promise.all(
+          requests.map(async (request) => {
+            const item = await fetchItem(request.itemId);
+            return { ...request, item };
+          })
+        );
+        setBorrowRequests(requestsWithItem);
+      } catch (error) {
+        console.error("Error fetching borrow requests:", error);
+      }
+    };
+
+    if (user) {
+      fetchBorrowRequests();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -39,10 +74,38 @@ function Dashboard() {
     }
   }, [isAuthenticated, navigate, loading, user]);
 
+  const fetchItem = async (itemId) => {
+    try {
+      const item = await getWarehouseItemById(itemId);
+      return item;
+    } catch (error) {
+      console.error("Error fetching item :", error);
+    }
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     logoutUser();
     navigate("/auth/login");
+  };
+
+  const handleCancelRequest = async (requestId) => {
+    try {
+      await cancelBorrowRequest(requestId);
+      setBorrowRequests((prevRequests) =>
+        prevRequests.map((request) =>
+          request.requestId === requestId
+            ? { ...request, status: "CANCELLED" }
+            : request
+        )
+      );
+    } catch (error) {
+      console.error("Error cancelling the request:", error);
+    }
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentOngoingPage(value);
   };
 
   if (loading) {
@@ -64,56 +127,172 @@ function Dashboard() {
       </Modal>
       {isAuthenticated ? (
         <>
-          <div className="profile-banner">
+          <header className="profile-banner">
             <div className="profile-details">
-              <h1>{`${username}`}</h1>
-              <p>
+              <Typography variant="h3" gutterBottom>
+                {username}
+              </Typography>
+              <Typography variant="body1">
                 <strong>Email:</strong> {email}
-              </p>
-              <p>
+              </Typography>
+              <Typography variant="body1">
                 <strong>Year:</strong> {year}
-              </p>
+              </Typography>
             </div>
-          </div>
-          <div className="content">
-            <div className="sub-section">
-              <h2>Items On Loan</h2>
-              <div className="items-container">
-                <motion.div
-                  className="item-card"
-                  whileHover={{
-                    y: -10,
-                    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
-                  }}
-                >
-                  Item 1
-                </motion.div>
-                <div className="item-card">Item 2</div>
-                <div className="item-card">Item 3</div>
-                <div className="item-card">Item 4</div>
-                <div className="item-card">Item 5</div>
-                <div className="item-card">Item 6</div>
-              </div>
-            </div>
-            <div className="sub-section">
-              <h2>Items Loaned</h2>
-              <div className="items-container">
-                {/* Create a grid of loaned items */}
-                <div className="item-card">Item 1</div>
-                <div className="item-card">Item 2</div>
-                <div className="item-card">Item 3</div>
-                <div className="item-card">Item 4</div>
-                <div className="item-card">Item 5</div>
-                <div className="item-card">Item 6</div>
-              </div>
-            </div>
+          </header>
+          <main className="content">
+            <section className="ongoing-section">
+              <Typography variant="h4" gutterBottom>
+                Ongoing Requests
+              </Typography>
+              <Grid container spacing={3}>
+                {borrowRequests
+                  .filter(
+                    (request) =>
+                      request.status === "AWAITING_RETURN" ||
+                      request.status === "AWAITING_PICKUP" ||
+                      request.status === "PENDING"
+                  )
+                  .slice(
+                    (currentOngoingPage - 1) * itemsPerPage,
+                    currentOngoingPage * itemsPerPage
+                  )
+                  .map((request) => (
+                    <Grid item xs={12} sm={6} md={4} key={request.requestId}>
+                      <motion.div
+                        className="item-card"
+                        whilehover={{
+                          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                        }}
+                      >
+                        <div className="card">
+                          <div className="card-header">
+                            <span>ID: {request.requestId}</span>
+                            <span>{request.item.name}</span>
+                          </div>
+                          <div className="card-content">
+                            <p>
+                              <strong>Request Made at:</strong>{" "}
+                              {new Date(request.requestTime).toLocaleDateString(
+                                undefined,
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
+                            </p>
+                          </div>
+                          <div className="card-actions">
+                            <button
+                              onClick={() =>
+                                handleCancelRequest(request.requestId)
+                              }
+                            >
+                              Cancel Request
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </Grid>
+                  ))}
+              </Grid>
+              <Pagination
+                count={Math.ceil(
+                  borrowRequests.filter(
+                    (request) =>
+                      request.status === "AWAITING_RETURN" ||
+                      request.status === "AWAITING_PICKUP" ||
+                      request.status === "PENDING"
+                  ).length / itemsPerPage
+                )}
+                page={currentOngoingPage}
+                onChange={handlePageChange}
+                color="success"
+                size="large"
+                showFirstButton
+                showLastButton
+                sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+              />
+            </section>
+            <section className="due-section">
+              <Typography variant="h4" gutterBottom>
+                Due Requests
+              </Typography>
+              <Grid container spacing={3}>
+                {borrowRequests
+                  .filter(
+                    (request) =>
+                      request.status === "RETURNED" ||
+                      request.status === "OVERDUE_RETURN" ||
+                      request.status === "CANCELLED" ||
+                      request.status === "REJECTED"
+                  )
+                  .slice(
+                    (currentDuePage - 1) * itemsPerPage,
+                    currentDuePage * itemsPerPage
+                  )
+                  .map((request) => (
+                    <Grid item xs={12} sm={6} md={4} key={request.requestId}>
+                      <motion.div
+                        className="item-card"
+                        whilehover={{
+                          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+                        }}
+                      >
+                        <div className="card">
+                          <div className="card-header">
+                            <span>ID: {request.requestId}</span>
+                            <span>{request.item.name}</span>
+                          </div>
+                          <div className="card-content">
+                            <p>
+                              <strong>Request Made at:</strong>{" "}
+                              {new Date(request.requestTime).toLocaleDateString(
+                                undefined,
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </Grid>
+                  ))}
+              </Grid>
+              <Pagination
+                count={Math.ceil(
+                  borrowRequests.filter(
+                    (request) =>
+                      request.status === "RETURNED" ||
+                      request.status === "OVERDUE_RETURN" ||
+                      request.status === "CANCELLED" ||
+                      request.status === "REJECTED"
+                  ).length / itemsPerPage
+                )}
+                page={currentDuePage}
+                onChange={handlePageChange}
+                color="success"
+                size="large"
+                showFirstButton
+                showLastButton
+                sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+              />
+            </section>
             {isAuthenticated && user && user.role.includes("TEACHER") && (
-              <div className="sub-section">
-                <h2>Teacher-specific section</h2>
+              <section className="sub-section teacher-section">
+                <Typography variant="h5" gutterBottom>
+                  Teacher-specific section
+                </Typography>
                 {/* Add content specific to teachers here */}
-              </div>
+              </section>
             )}
-          </div>
+          </main>
         </>
       ) : (
         <p>You are not authenticated.</p>

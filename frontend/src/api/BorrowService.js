@@ -103,3 +103,11 @@ export async function getAllTheTimeToReturn(
     "An error occurred while fetching every time schedule:"
   );
 }
+
+export async function cancelBorrowRequest(requestId) {
+  return apiWrapper(
+    () => axiosInstance.put(`/borrow-requests/${requestId}/cancel`),
+    "Borrow request cancelled successfully",
+    "Failed to cancel borrow request"
+  );
+}

@@ -20,6 +20,7 @@ import com.example.visualvortex.services.Item.ItemService;
 import com.example.visualvortex.services.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -359,4 +360,28 @@ public class BorrowRequestService {
         borrowRequest.setItemInstanceIds(itemInstances);
         borrowRequestRepository.save(borrowRequest);
     }
+
+    public List<BorrowRequestDTO> getRequestsByUserId(Long userId) {
+        return borrowRequestRepository.findByUserId(userId).stream()
+                .map(this::convertToBorrowRequestDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void cancelBorrowRequest(UUID requestId) {
+        BorrowRequest borrowRequest = borrowRequestRepository.findByRequestId(requestId);
+        if (borrowRequest != null && (borrowRequest.getStatus() == RequestStatus.PENDING || borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP)) {
+            borrowRequest.setStatus(RequestStatus.CANCELLED);
+            borrowRequestRepository.save(borrowRequest);
+
+            Item item = itemService.getItemById(borrowRequest.getItemId());
+
+            notificationsService.createNotification(borrowRequest.getUserId(),
+                    "Your request to borrow " + item.getName() +
+                            " with ID " + requestId.toString() +
+                            " has been cancelled.");
+        } else {
+            throw new NotFoundException("Borrow request not found or not in a cancellable state.");
+        }
+    }
+
 }
