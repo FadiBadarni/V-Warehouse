@@ -1,0 +1,52 @@
+{
+    "dashboard": {
+        "expired":{
+            "title":"Session Expired",
+            "message":"Your session has expired. Please log in again.",
+            "button":"Log In"
+        },
+        "siteAdministrator": "Site Administrator",
+        "teacher": "Teacher",
+        "firstYearStudent": "First-Year Student",
+        "secondYearStudent": "Second-Year Student",
+        "thirdYearStudent": "Third-Year Student",
+        "fourthYearStudent": "Fourth-Year Student",
+        "ongoingRequests": "Ongoing Requests",
+        "dueRequests": "Due Requests",
+        "requestId": "ID:",
+        "requestDate": "Request Date:",
+        "moreDetailsButton": "More Details",
+        "cancelRequestButton": "Cancel Request",
+        "teacherArea": "Teacher Area",
+        "youAreNotAuthenticated": "You are not authenticated.",
+        "requestDetails": {
+            "title": "Request Details",
+            "requestId": "Request ID",
+            "itemName": "Item Name",
+            "status": "Status",
+            "requestMadeAt": "Request Made At",
+            "reportIssue": "Report Issue",
+            "transferOwnership": "Transfer Ownership",
+            "extendTime": "Extend Time",
+            "close": "Close",
+            "reportIssueFor": "Report issue for",
+            "issueTitle": "Issue Title",
+            "issueDescription": "Issue Description",
+            "submit": "Submit",
+            "transferOwnershipOf": "Transfer ownership of",
+            "currentOwner": "Current Owner",
+            "newOwner": "New Owner",
+            "transfer": "Transfer",
+            "extendTimeFor": "Extend Time for",
+            "currentEndTime": "Current End Time",
+            "additionalTime": "Additional Time",
+            "extend": "Extend"
+          }
+    
+    
+    
+    
+    
+    
+    }
+}

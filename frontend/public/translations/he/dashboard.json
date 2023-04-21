@@ -1,0 +1,48 @@
+{
+    "dashboard": {
+      "expired": {
+        "title": "פג תוקף ההתחברות",
+        "message": "פג תוקף ההתחברות שלך. אנא התחבר שוב.",
+        "button": "אישור"
+      },
+      "siteAdministrator": "מנהל האתר",
+      "teacher": "מורה",
+      "firstYearStudent": "סטודנט בשנת הלימודים הראשונה",
+      "secondYearStudent": "סטודנט בשנת הלימודים השנייה",
+      "thirdYearStudent": "סטודנט בשנת הלימודים השלישית",
+      "fourthYearStudent": "סטודנט בשנת הלימודים הרביעית",
+      "ongoingRequests": "בקשות מתמשכות",
+      "dueRequests": "בקשות שפוג תוקפן",
+      "requestId": "מספר זיהוי:",
+      "requestDate": "תאריך הבקשה:",
+      "moreDetailsButton": "פרטים נוספים",
+      "cancelRequestButton": "בטל בקשה",
+      "teacherArea": "אזור המורה",
+      "youAreNotAuthenticated": "אינך מאומת.",
+      "requestDetails": {
+        "title": "פרטי הבקשה",
+        "requestId": "מספר הבקשה",
+        "itemName": "שם הפריט",
+        "status": "סטטוס",
+        "requestMadeAt": "הבקשה נעשתה ב",
+        "reportIssue": "דווח על בעיה",
+        "transferOwnership": "העברת בעלות",
+        "extendTime": "הארכת זמן",
+        "close": "סגירה",
+        "reportIssueFor": "דווח על בעיה ב",
+        "issueTitle": "כותרת הבעיה",
+        "issueDescription": "תאור הבעיה",
+        "submit": "שלח",
+        "transferOwnershipOf": "העברת בעלות של",
+        "currentOwner": "הבעלים הנוכחי",
+        "newOwner": "בעלים חדש",
+        "transfer": "העבר",
+        "extendTimeFor": "הארכת זמן ל",
+        "currentEndTime": "זמן הסיום הנוכחי",
+        "additionalTime": "זמן נוסף",
+        "extend": "הארכה"
+      }
+    }
+    
+  }
+  
