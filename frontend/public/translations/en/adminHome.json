@@ -1,0 +1,14 @@
+{
+    "adminHome":{
+        "title":"Admin Control Panel Home Page",
+        "requestsTitle":"Requests",
+        "requestsButton":"Go To Requests",
+        "usersTitle":"Users",
+        "usersButton":"Go To Users",
+        "listTitle":"Items List",
+        "listButton":"Go To List",
+        "broadcastTitle":"Broadcast A Message",
+        "broadcastMessageLabel":"Broadcast Message...",
+        "broadcastButton":"Broadcast"
+    }
+}

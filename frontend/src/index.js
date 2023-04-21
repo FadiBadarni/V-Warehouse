@@ -32,6 +32,8 @@ i18n
       "itemReservation",
       "sidebar",
       "borrowRequests",
+      "dashboard",
+      "adminHome",
     ],
     defaultNS: "home",
   });

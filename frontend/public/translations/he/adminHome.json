@@ -1,0 +1,15 @@
+{
+    "adminHome": {
+      "title": "דף הבית של לוח הבקרה למנהלים",
+      "requestsTitle": "בקשות",
+      "requestsButton": "עבור לבקשות",
+      "usersTitle": "משתמשים",
+      "usersButton": "עבור למשתמשים",
+      "listTitle": "רשימת פריטים",
+      "listButton": "עבור לרשימה",
+      "broadcastTitle": "שדר הודעה",
+      "broadcastMessageLabel": "שדר הודעה...",
+      "broadcastButton": "שדר"
+    }
+  }
+  
