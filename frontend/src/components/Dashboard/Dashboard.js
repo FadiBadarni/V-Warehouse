@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { getWarehouseItemById } from "../../api/WarehouseService";
 import { cancelBorrowRequest } from "../../api/BorrowService";
 import "semantic-ui-css/semantic.min.css";
+import RequestDetails from "./RequestDetails";
 
 import "./Dashboard.scss";
 
@@ -27,8 +28,11 @@ function Dashboard() {
   const [borrowRequests, setBorrowRequests] = useState([]);
 
   const [currentOngoingPage, setCurrentOngoingPage] = useState(1);
-  const [currentDuePage, setcurrentDuePage] = useState(1);
+  const [currentDuePage] = useState(1);
   const itemsPerPage = 3;
+
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     const fetchBorrowRequests = async () => {
@@ -108,6 +112,15 @@ function Dashboard() {
     setCurrentOngoingPage(value);
   };
 
+  const handleMoreDetailsClick = (request) => {
+    setSelectedRequest(request);
+    setDetailsModalOpen(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setDetailsModalOpen(false);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -125,21 +138,56 @@ function Dashboard() {
           </Button>
         </Modal.Actions>
       </Modal>
+      <RequestDetails
+        showModal={detailsModalOpen}
+        request={selectedRequest}
+        handleClose={handleCloseDetailsModal}
+      />
+
       {isAuthenticated ? (
         <>
           <header className="profile-banner">
+            <div className="avatar">{username.charAt(0).toUpperCase()}</div>
+
             <div className="profile-details">
               <Typography variant="h3" gutterBottom>
                 {username}
               </Typography>
-              <Typography variant="body1">
-                <strong>Email:</strong> {email}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Year:</strong> {year}
-              </Typography>
+              {year === 0 && user.role.includes("ADMIN") && (
+                <Typography variant="body1">Site Adminstrator</Typography>
+              )}
+              {year === 0 && user.role.includes("TEACHER") && (
+                <Typography variant="body1">Teacher</Typography>
+              )}
+              {year === 1 && (
+                <Typography variant="body1">First Year Student</Typography>
+              )}
+              {year === 2 && (
+                <Typography variant="body1">Second Year Student</Typography>
+              )}
+              {year === 3 && (
+                <Typography variant="body1">Third Year Student</Typography>
+              )}
+              {year === 4 && (
+                <Typography variant="body1">Fourth Year Student</Typography>
+              )}
+              <Typography variant="body1">{email}</Typography>
             </div>
           </header>
+          <div className="custom-shape-divider-top-1681994798">
+            <svg
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1200 120"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+                className="shape-fill"
+              ></path>
+            </svg>
+          </div>
+
           <main className="content">
             <section className="ongoing-section">
               <Typography variant="h4" gutterBottom>
@@ -185,6 +233,11 @@ function Dashboard() {
                             </p>
                           </div>
                           <div className="card-actions">
+                            <button
+                              onClick={() => handleMoreDetailsClick(request)}
+                            >
+                              More Details
+                            </button>
                             <button
                               onClick={() =>
                                 handleCancelRequest(request.requestId)

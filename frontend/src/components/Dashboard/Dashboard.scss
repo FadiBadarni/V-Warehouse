@@ -1,36 +1,83 @@
 @import '../../variables';
 
+.custom-shape-divider-top-1681994798 {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-top-1681994798 svg {
+    position: relative;
+    display: block;
+    width: calc(120% + 1.3px);
+    height: 74px;
+}
+
+.custom-shape-divider-top-1681994798 .shape-fill {
+    fill: $sce-primary-color;
+
+}
+
 .dashboard {
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    background-color: $sce-background-color;
+    background-color: darken($sce-background-color, 5%);
 
     .profile-banner {
         width: 100%;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 1rem 0;
         background-color: $sce-primary-color;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
+        position: relative;
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: $sce-secondary-color;
+            color: $sce-text-color;
+            margin-bottom: 1rem;
+            position: relative;
+            top: 2rem;
+
+            .ltr & {
+                margin-right: 2rem;
+            }
+
+            .rtl & {
+                margin-left: 2rem;
+            }
+        }
+
 
         .profile-details {
+            position: relative;
+            top: 2rem;
+
             h3 {
                 font-size: 2rem;
                 margin-bottom: 0.5rem;
-                color: $sce-text-color;
+                color: $sce-background-color;
             }
 
             p {
                 font-size: 1.2rem;
                 margin-bottom: 0.5rem;
-                color: $sce-text-color;
+                color: $sce-background-color;
 
                 strong {
                     color: $sce-text-color;
+                    font-weight: 500;
                 }
             }
         }
@@ -53,6 +100,7 @@
             color: $sce-text-color4;
         }
     }
+
 
 
     .item-card {
@@ -126,5 +174,75 @@
                 padding: 1rem;
             }
         }
+    }
+}
+
+.request-details-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.request-details-modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+button {
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+
+}
+
+.custom-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+
+    .custom-modal-content {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 4px;
+        text-align: center;
+        width: 80%;
+        max-width: 600px;
+        height: 100%;
+        max-height: 380px;
+        position: relative;
+    }
+
+    .buttons-container {
+        margin-top: 1rem;
     }
 }
