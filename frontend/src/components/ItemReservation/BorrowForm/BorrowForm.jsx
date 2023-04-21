@@ -3,17 +3,14 @@ import { useTranslation } from "react-i18next";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextArea } from "semantic-ui-react";
-import { Box, Typography, Grid } from "@material-ui/core";
-import { motion } from "framer-motion";
-import { DatePicker } from "@mui/x-date-pickers";
-import { Select, MenuItem, FormControl } from "@mui/material";
 import dayjs from "dayjs";
-
-import TimeTable from "./Table/TimeTable";
+import InstanceSelector from "./InstanceSelector";
+import DateSelector from "./DateSelector";
+import TimeTableWrapper from "./TimeTableWrapper";
 import {
   getllTheTimethatCanStart,
   getAllTheTimeToReturn,
-} from "../../api/BorrowService";
+} from "../../../api/BorrowService";
 
 const BorrowForm = ({
   setIntendedStartDate,
@@ -31,7 +28,6 @@ const BorrowForm = ({
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
   const [occupiedDates, setOccupiedDates] = useState([]);
   const [occupiedReturnDates, setOccupiedReturnDates] = useState([]);
-  const availableInstances = [];
   const [selectedInstanceIds, setSelectedInstanceIdsLocal] = useState("");
   const [pendingReturnDates, setPendingRetrunDates] = useState([]);
   const [pendingStartDates, setPendingStartDates] = useState([]);
@@ -40,13 +36,6 @@ const BorrowForm = ({
   const [startDateTime, setstartDateTime] = useState();
   const [disabledReturnTime, setDisabledReturnTime] = useState(true);
   const [disabledStartTime, setDisabledStartTime] = useState(true);
-
-  for (let i = 1; i <= quantity; i++) {
-    availableInstances.push({
-      value: i,
-      label: i.toString(),
-    });
-  }
 
   const handleInstanceIdChange = (e) => {
     setDisabledStartTime(false);
@@ -180,67 +169,36 @@ const BorrowForm = ({
               <div className="borrow-form__inputName">
                 <p className="borrow-form__label">Instance</p>
               </div>
-              <FormControl fullWidth>
-                <Select
-                  labelId="instance-select-label"
-                  id="instance-select"
-                  value={selectedInstanceIds}
-                  onChange={handleInstanceIdChange}
-                  label="Instances"
-                >
-                  {availableInstances.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <InstanceSelector
+                quantity={quantity}
+                selectedInstanceIds={selectedInstanceIds}
+                handleInstanceIdChange={handleInstanceIdChange}
+              />
             </div>
             <div className="borrow-form__inputName">
               <p className="borrow-form__label">
                 {t("itemReservation.startDate")}
               </p>
             </div>
-            <DatePicker
+            <DateSelector
               disabled={disabledStartTime}
-              className="borrow-form__date-picker"
               label="Start date"
-              value={selectedStartDate}
-              onChange={handleStartDateChange}
+              selectedDate={selectedStartDate}
+              handleDateChange={handleStartDateChange}
               minDate={minDate}
               maxDate={lastDayOfCurrentYear}
             />
           </div>
           {selectedStartDate && (
-            <div className="borrow-form__field">
-              <div className="borrow-form__inputName"></div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Box mb={4}>
-                  <Typography variant="h5">
-                    {t("itemReservation.timeSlots")}
-                  </Typography>
-                </Box>
-                <Grid container spacing={2} alignItems="flex-start">
-                  <Grid item xs={12} md={12}>
-                    <TimeTable
-                      selectedDate={selectedStartDate}
-                      occupiedDates={occupiedDates}
-                      onTimeSelected={handleStartTimeChange}
-                      minTime={getTimeBoundaries(selectedStartDate).minTime}
-                      maxTime={getTimeBoundaries(selectedStartDate).maxTime}
-                      disableOccupied={true}
-                      pendingDates={pendingStartDates}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={2}></Grid>
-                </Grid>
-              </motion.div>
-            </div>
+            <TimeTableWrapper
+              selectedDate={selectedStartDate}
+              occupiedDates={occupiedDates}
+              onTimeSelected={handleStartTimeChange}
+              minTime={getTimeBoundaries(selectedStartDate).minTime}
+              maxTime={getTimeBoundaries(selectedStartDate).maxTime}
+              disableOccupied={true}
+              pendingDates={pendingStartDates}
+            />
           )}
           <div className="borrow-form__field">
             <div className="borrow-form__inputName">
@@ -248,37 +206,29 @@ const BorrowForm = ({
                 {t("itemReservation.returnDate")}
               </p>
             </div>
-            <DatePicker
+            <DateSelector
               disabled={disabledReturnTime}
-              className="borrow-form__datetime-picker"
               label="Return date"
-              value={selectedReturnDate}
-              onChange={handleReturnDateChange}
+              selectedDate={selectedReturnDate}
+              handleDateChange={handleReturnDateChange}
               minDate={selectedStartDate || minDate}
               maxDate={lastDayOfCurrentYear}
               shouldDisableDate={isDisabledDate}
             />
             {selectedReturnDate && (
-              <div className="borrow-form__field">
-                <div className="borrow-form__inputName">
-                  <p className="borrow-form__label">
-                    {t("itemReservation.timeSlots")}
-                  </p>
-                </div>
-                <TimeTable
-                  selectedDate={selectedReturnDate}
-                  occupiedDates={occupiedReturnDates}
-                  onTimeSelected={handleReturnTimeChange}
-                  minTime={
-                    selectedReturnDate.isSame(selectedStartDate, "day")
-                      ? dayjs(selectedStartDate).add(30, "minute")
-                      : getTimeBoundaries(selectedReturnDate).minTime
-                  }
-                  maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
-                  disableOccupied={true}
-                  pendingDates={pendingReturnDates}
-                />
-              </div>
+              <TimeTableWrapper
+                selectedDate={selectedReturnDate}
+                occupiedDates={occupiedReturnDates}
+                onTimeSelected={handleReturnTimeChange}
+                minTime={
+                  selectedReturnDate.isSame(selectedStartDate, "day")
+                    ? dayjs(selectedStartDate).add(30, "minute")
+                    : getTimeBoundaries(selectedReturnDate).minTime
+                }
+                maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
+                disableOccupied={true}
+                pendingDates={pendingReturnDates}
+              />
             )}
           </div>
           <div className="borrow-form__field">

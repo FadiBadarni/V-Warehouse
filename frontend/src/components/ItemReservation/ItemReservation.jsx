@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ItemInfo from "./ItemInfo";
 import LatePolicy from "./LatePolicy";
-import BorrowForm from "./BorrowForm";
+import BorrowForm from "./BorrowForm/BorrowForm";
 import SignatureModal from "./SignatureModal";
 import SignatureBackdrop from "./SignatureBackdrop";
 import { useTranslation } from "react-i18next";
