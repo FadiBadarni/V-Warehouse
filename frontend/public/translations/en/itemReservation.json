@@ -11,6 +11,8 @@
         "request": "Request to Borrow",
         "startDate": "Intended Start Date: ",
         "returnDate": "Intended Return Date: ",
+        "startDateLabel": "Start Date: ",
+        "returnDateLabel": "Return Date: ",
         "reason": "Reason for borrowing: ",
         "quantity": "Quantity Needed: ",
         "sendRequest": "Send Borrow Request",

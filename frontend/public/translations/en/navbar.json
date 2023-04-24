@@ -9,6 +9,7 @@
         "languageSelector":{
           "english": "English",
           "hebrew": "Hebrew"
-        }
+        },
+        "admin": "Admin"
       }
 }

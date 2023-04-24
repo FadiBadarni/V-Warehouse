@@ -11,6 +11,8 @@
         "request": "בקשה להשאלה",
         "startDate": "תאריך התחלה מבוקש: ",
         "returnDate": "תאריך החזרה מבוקש: ",
+        "startDateLabel": "תאריך התחלה מבוקש: ",
+        "returnDateLabel": "תאריך החזרה מבוקש: ",
         "reason": "סיבה להשאלה: ",
         "quantity": "כמות הנדרשת: ",
         "sendRequest": "שלח בקשה להשאלה",
