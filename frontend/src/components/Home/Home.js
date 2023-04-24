@@ -44,9 +44,11 @@ const Home = () => {
                 <p className="home__subheader-subtitle">
                   {t("home.browsetitle")}
                 </p>
-                <button className="home__subheader-button">
-                  <span>{t("home.cta")}</span>
-                </button>
+                <Link to="/warehouse">
+                  <button className="home__subheader-button">
+                    <span>{t("home.cta")}</span>
+                  </button>
+                </Link>
               </div>
             </header>
 
