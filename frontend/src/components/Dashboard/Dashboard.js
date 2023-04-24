@@ -14,12 +14,14 @@ import { getWarehouseItemById } from "../../api/WarehouseService";
 import { cancelBorrowRequest } from "../../api/BorrowService";
 import "semantic-ui-css/semantic.min.css";
 import RequestDetails from "./RequestDetails";
+import { useTranslation } from "react-i18next";
 
 import "./Dashboard.scss";
 
 function Dashboard() {
   const { isAuthenticated, loading, user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation("dashboard");
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -128,13 +130,13 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <Modal open={showModal} onClose={handleCloseModal} size="tiny">
-        <Modal.Header>Session Expired</Modal.Header>
+        <Modal.Header>{t("dashboard.expired.title")}</Modal.Header>
         <Modal.Content>
-          <p>Your session has expired. Please log in again.</p>
+          <p>{t("dashboard.expired.message")}</p>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={handleCloseModal} primary>
-            Log In
+            {t("dashboard.expired.button")}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -154,22 +156,34 @@ function Dashboard() {
                 {username}
               </Typography>
               {year === 0 && user.role.includes("ADMIN") && (
-                <Typography variant="body1">Site Adminstrator</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.siteAdministrator")}
+                </Typography>
               )}
               {year === 0 && user.role.includes("TEACHER") && (
-                <Typography variant="body1">Teacher</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.teacher")}
+                </Typography>
               )}
               {year === 1 && (
-                <Typography variant="body1">First Year Student</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.firstYearStudent")}
+                </Typography>
               )}
               {year === 2 && (
-                <Typography variant="body1">Second Year Student</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.secondYearStudent")}
+                </Typography>
               )}
               {year === 3 && (
-                <Typography variant="body1">Third Year Student</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.thirdYearStudent")}
+                </Typography>
               )}
               {year === 4 && (
-                <Typography variant="body1">Fourth Year Student</Typography>
+                <Typography variant="body1">
+                  {t("dashboard.fourthYearStudent")}
+                </Typography>
               )}
               <Typography variant="body1">{email}</Typography>
             </div>
@@ -191,7 +205,7 @@ function Dashboard() {
           <main className="content">
             <section className="ongoing-section">
               <Typography variant="h4" gutterBottom>
-                Ongoing Requests
+                {t("dashboard.ongoingRequests")}
               </Typography>
               <Grid container spacing={3}>
                 {borrowRequests
@@ -215,12 +229,14 @@ function Dashboard() {
                       >
                         <div className="card">
                           <div className="card-header">
-                            <span>ID: {request.requestId}</span>
+                            <span>
+                              {t("dashboard.requestId")} {request.requestId}
+                            </span>
                             <span>{request.item.name}</span>
                           </div>
                           <div className="card-content">
                             <p>
-                              <strong>Request Made at:</strong>{" "}
+                              <strong>{t("dashboard.requestDate")}</strong>{" "}
                               {new Date(request.requestTime).toLocaleDateString(
                                 undefined,
                                 {
@@ -236,14 +252,14 @@ function Dashboard() {
                             <button
                               onClick={() => handleMoreDetailsClick(request)}
                             >
-                              More Details
+                              {t("dashboard.moreDetailsButton")}
                             </button>
                             <button
                               onClick={() =>
                                 handleCancelRequest(request.requestId)
                               }
                             >
-                              Cancel Request
+                              {t("dashboard.cancelRequestButton")}
                             </button>
                           </div>
                         </div>
@@ -271,7 +287,7 @@ function Dashboard() {
             </section>
             <section className="due-section">
               <Typography variant="h4" gutterBottom>
-                Due Requests
+                {t("dashboard.dueRequests")}
               </Typography>
               <Grid container spacing={3}>
                 {borrowRequests
@@ -296,12 +312,14 @@ function Dashboard() {
                       >
                         <div className="card">
                           <div className="card-header">
-                            <span>ID: {request.requestId}</span>
+                            <span>
+                              {t("dashboard.requestId")} {request.requestId}
+                            </span>
                             <span>{request.item.name}</span>
                           </div>
                           <div className="card-content">
                             <p>
-                              <strong>Request Made at:</strong>{" "}
+                              <strong>{t("requestDate")}</strong>{" "}
                               {new Date(request.requestTime).toLocaleDateString(
                                 undefined,
                                 {
@@ -340,7 +358,7 @@ function Dashboard() {
             {isAuthenticated && user && user.role.includes("TEACHER") && (
               <section className="sub-section teacher-section">
                 <Typography variant="h5" gutterBottom>
-                  Teacher-specific section
+                  {t("dashboard.teacherArea")}
                 </Typography>
                 {/* Add content specific to teachers here */}
               </section>
@@ -348,7 +366,7 @@ function Dashboard() {
           </main>
         </>
       ) : (
-        <p>You are not authenticated.</p>
+        <p>{t("dashboard.youAreNotAuthenticated")}</p>
       )}
     </div>
   );
