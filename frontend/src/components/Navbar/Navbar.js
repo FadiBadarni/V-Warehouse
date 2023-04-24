@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector/LanguageSelector";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,7 @@ const Navbar = ({ children }) => {
   const { t } = useTranslation("navbar");
   const direction = getLanguageDirection(i18n.language);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] =
     useState(false);
 
@@ -62,6 +63,13 @@ const Navbar = ({ children }) => {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
   };
+  useEffect(() => {
+    if (user && user.role.includes("ADMIN")) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user]);
 
   return (
     <div id="navigation-bar" className={direction}>
@@ -99,6 +107,14 @@ const Navbar = ({ children }) => {
             )}
             {isAuthenticated && (
               <>
+                {isAdmin && (
+                  <motion.li
+                    onClick={handleMobileMenuItemClick}
+                    variants={navItemVariant}
+                  >
+                    <Link to="/admin">{t("navbar.admin")}</Link>
+                  </motion.li>
+                )}
                 <motion.li
                   onClick={handleMobileMenuItemClick}
                   variants={navItemVariant}
@@ -145,6 +161,14 @@ const Navbar = ({ children }) => {
           )}
           {isAuthenticated && (
             <>
+              {isAdmin && (
+                <motion.li
+                  onClick={handleMobileMenuItemClick}
+                  variants={navItemVariant}
+                >
+                  <Link to="/admin">{t("navbar.admin")}</Link>
+                </motion.li>
+              )}
               <motion.li
                 className="notification-icon"
                 variants={navItemVariant}
