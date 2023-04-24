@@ -104,39 +104,41 @@ const BorrowedItemDetails = () => {
   }
 
   return (
-    <div className="item-details-container">
-      <h1 className="page-title">{t("itemReservation.title")}</h1>
-      <ItemInfo item={itemDetails}></ItemInfo>
+    <div className="item-details">
+      <div className="item-details-container">
+        <h1 className="page-title">{t("itemReservation.title")}</h1>
+        <ItemInfo item={itemDetails}></ItemInfo>
 
-      <LatePolicy></LatePolicy>
-      <BorrowForm
-        intendedStartDate={intendedStartDate}
-        setIntendedStartDate={setIntendedStartDate}
-        intendedReturnDate={intendedReturnDate}
-        setIntendedReturnDate={setIntendedReturnDate}
-        borrowReason={borrowReason}
-        setBorrowReason={setBorrowReason}
-        handleSendRequest={handleSendRequest}
-        isFormValid={isFormValid}
-        quantity={itemDetails.quantity}
-        setQuantity={setQuantity}
-        itemId={itemDetails.id}
-      />
-      <AnimatePresence>
-        {showModal && (
-          <SignatureModal
-            showModal={showModal}
-            signaturePad={signaturePad}
-            setSignaturePad={setSignaturePad}
-            canSubmit={canSubmit}
-            setCanSubmit={setCanSubmit}
-            handleClear={handleClear}
-            handleSubmit={handleSubmit}
-            handleClose={handleClose}
-          />
-        )}
-      </AnimatePresence>
-      {showModal && <SignatureBackdrop handleClose={handleClose} />}
+        <LatePolicy></LatePolicy>
+        <BorrowForm
+          intendedStartDate={intendedStartDate}
+          setIntendedStartDate={setIntendedStartDate}
+          intendedReturnDate={intendedReturnDate}
+          setIntendedReturnDate={setIntendedReturnDate}
+          borrowReason={borrowReason}
+          setBorrowReason={setBorrowReason}
+          handleSendRequest={handleSendRequest}
+          isFormValid={isFormValid}
+          quantity={itemDetails.quantity}
+          setQuantity={setQuantity}
+          itemId={itemDetails.id}
+        />
+        <AnimatePresence>
+          {showModal && (
+            <SignatureModal
+              showModal={showModal}
+              signaturePad={signaturePad}
+              setSignaturePad={setSignaturePad}
+              canSubmit={canSubmit}
+              setCanSubmit={setCanSubmit}
+              handleClear={handleClear}
+              handleSubmit={handleSubmit}
+              handleClose={handleClose}
+            />
+          )}
+        </AnimatePresence>
+        {showModal && <SignatureBackdrop handleClose={handleClose} />}
+      </div>
     </div>
   );
 };

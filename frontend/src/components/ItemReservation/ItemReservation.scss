@@ -14,13 +14,14 @@
 
 .page-title {
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin-top: 1.5rem !important;
+    margin-bottom: 2rem !important;
     font-weight: bold;
     color: $sce-primary-color;
 }
 
 .late-policy {
-    background-color: $sce-background-color;
+    background-color: darken($color: $sce-background-color, $amount: 5%);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);

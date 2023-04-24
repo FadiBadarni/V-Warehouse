@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Button } from "semantic-ui-react";
 import { motion } from "framer-motion";
 import CustomModal from "./CustomModal";
+import { useTranslation } from "react-i18next";
 
 const RequestDetails = ({ showModal, request, handleClose }) => {
-  const [showReportIssueModal, setShowReportIssueModal] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
+  const { t } = useTranslation("dashboard");
 
   if (!showModal || !request) return null;
 
@@ -34,18 +35,21 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
       transition={{ duration: 0.3 }}
     >
       <div className="request-details-modal-content">
-        <h3>Request Details</h3>
+        <h3>{t("dashboard.requestDetails.title")}</h3>
         <p>
-          <strong>Request ID:</strong> {request.requestId}
+          <strong>{t("dashboard.requestDetails.requestId")}:</strong>{" "}
+          {request.requestId}
         </p>
         <p>
-          <strong>Item Name:</strong> {request.item.name}
+          <strong>{t("dashboard.requestDetails.itemName")}:</strong>{" "}
+          {request.item.name}
         </p>
         <p>
-          <strong>Status:</strong> {request.status}
+          <strong>{t("dashboard.requestDetails.status")}:</strong>{" "}
+          {request.status}
         </p>
         <p>
-          <strong>Request Made at:</strong>{" "}
+          <strong>{t("dashboard.requestDetails.requestMadeAt")}:</strong>{" "}
           {new Date(request.requestTime).toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
@@ -54,44 +58,71 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
           })}
         </p>
         <div className="buttons-container">
-          <Button onClick={handleReportIssue}>Report an issue</Button>
-          <Button onClick={handleTransferOwnership}>Transfer Ownership</Button>
-          <Button onClick={handleExtendTime}>Extend Time</Button>
+          <Button onClick={handleReportIssue}>
+            {t("dashboard.requestDetails.reportIssue")}
+          </Button>
+          <Button onClick={handleTransferOwnership}>
+            {t("dashboard.requestDetails.transferOwnership")}
+          </Button>
+          <Button onClick={handleExtendTime}>
+            {t("dashboard.requestDetails.extendTime")}
+          </Button>
         </div>
         <div className="buttons-container">
-          <button onClick={handleClose}>Close</button>
+          <button onClick={handleClose}>
+            {t("dashboard.requestDetails.close")}
+          </button>
         </div>
       </div>
       <CustomModal
         showModal={activeModal === "reportIssue"}
         handleClose={closeActiveModal}
       >
-        <h3>Report an issue for {request.item.name}</h3>
-        <label htmlFor="issue-title">Issue Title:</label>
+        <h3>
+          {t("dashboard.requestDetails.reportIssueFor")} {request.item.name}
+        </h3>
+        <label htmlFor="issue-title">
+          {t("dashboard.requestDetails.issueTitle")}:
+        </label>
         <input type="text" id="issue-title" name="issue-title" />
-        <label htmlFor="issue-description">Issue Description:</label>
+        <label htmlFor="issue-description">
+          {t("dashboard.requestDetails.issueDescription")}:
+        </label>
         <textarea id="issue-description" name="issue-description"></textarea>
-        <Button primary>Submit</Button>
+        <Button primary>{t("dashboard.requestDetails.submit")}</Button>
       </CustomModal>
       <CustomModal
         showModal={activeModal === "transferOwnership"}
         handleClose={closeActiveModal}
       >
-        <h3>Transfer ownership of {request.item.name}</h3>
-        <p>Current Owner: {request.item.owner}</p>
-        <label htmlFor="new-owner">New Owner:</label>
+        <h3>
+          {t("dashboard.requestDetails.transferOwnershipOf")}{" "}
+          {request.item.name}
+        </h3>
+        <p>
+          {t("dashboard.requestDetails.currentOwner")}: {request.item.owner}
+        </p>
+        <label htmlFor="new-owner">
+          {t("dashboard.requestDetails.newOwner")}:
+        </label>
         <input type="text" id="new-owner" name="new-owner" />
-        <Button primary>Transfer</Button>
+        <Button primary>{t("dashboard.requestDetails.transfer")}</Button>
       </CustomModal>
       <CustomModal
         showModal={activeModal === "extendTime"}
         handleClose={closeActiveModal}
       >
-        <h3>Extend time for {request.item.name}</h3>
-        <p>Current End Time: {request.item.endTime}</p>
-        <label htmlFor="additional-time">Additional Time (in hours):</label>
+        <h3>
+          {t("dashboard.requestDetails.extendTimeFor")} {request.item.name}
+        </h3>
+        <p>
+          {t("dashboard.requestDetails.currentEndTime")}: {request.item.endTime}
+        </p>
+        <label htmlFor="additional-time">
+          {t("dashboard.requestDetails.additionalTime")}:
+        </label>
         <input type="number" id="additional-time" name="additional-time" />
-        <Button primary>Extend</Button>
+        <Button primary>{t("dashboard.requestDetails.extend")}</Button>
       </CustomModal>
     </motion.div>
   );

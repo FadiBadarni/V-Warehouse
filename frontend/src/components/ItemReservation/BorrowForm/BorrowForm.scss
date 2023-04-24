@@ -2,7 +2,6 @@
 @import '../../../directions';
 
 .borrow-form {
-    background-color: $sce-background-color;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -13,8 +12,8 @@
     align-items: center;
     font-family: $font-family;
     margin-top: 2rem;
-    background-color: #ccc;
-    width: 100%;
+    background-color: darken($color: $sce-background-color, $amount: 8%);
+    width: 80%;
 
 
     &__title {
@@ -39,6 +38,8 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+
+
     }
 
     &__label {
@@ -50,7 +51,6 @@
     &__input,
     &__textarea {
         padding: 10px;
-        width: 100%;
         border: 1px solid $sce-background-color;
         border-radius: 5px;
         transition: border-color 0.3s;
@@ -59,13 +59,16 @@
             border-color: $sce-primary-color;
             outline: none;
         }
+
+
+
     }
 
     &__textarea {
         max-height: 200px;
         min-height: 50px;
         resize: vertical;
-        background-color: #ccc;
+        background-color: darken($color: $sce-background-color, $amount: 5%);
     }
 
     &__button {
@@ -94,5 +97,6 @@
         align-items: flex-start;
         justify-content: space-between;
     }
+
 
 }

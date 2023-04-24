@@ -2,7 +2,7 @@
 @import '../../directions';
 
 .item-info {
-    background-color: $sce-background-color;
+    background-color: darken($color: $sce-background-color, $amount: 5%);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -47,7 +47,6 @@
         align-items: center;
         justify-content: center;
         transition: box-shadow 0.3s, transform 0.3s;
-        cursor: pointer;
         width: 150px;
         height: 120px;
         margin: 0 10px 20px;

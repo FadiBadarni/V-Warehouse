@@ -167,7 +167,9 @@ const BorrowForm = ({
           <div className="borrow-form__field">
             <div className="borrow-form__field">
               <div className="borrow-form__inputName">
-                <p className="borrow-form__label">Instance</p>
+                <p className="borrow-form__label">
+                  {t("itemReservation.quantity")}
+                </p>
               </div>
               <InstanceSelector
                 quantity={quantity}
@@ -182,7 +184,6 @@ const BorrowForm = ({
             </div>
             <DateSelector
               disabled={disabledStartTime}
-              label="Start date"
               selectedDate={selectedStartDate}
               handleDateChange={handleStartDateChange}
               minDate={minDate}
@@ -208,7 +209,6 @@ const BorrowForm = ({
             </div>
             <DateSelector
               disabled={disabledReturnTime}
-              label="Return date"
               selectedDate={selectedReturnDate}
               handleDateChange={handleReturnDateChange}
               minDate={selectedStartDate || minDate}
