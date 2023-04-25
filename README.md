@@ -1,6 +1,10 @@
 # Virtual Warehouse
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-blue)](https://github.com/FadiBadarni/Virtual-Warehouse) [![GitHub Clone](https://img.shields.io/badge/GitHub-Clone-brightgreen)](git@github.com:FadiBadarni/Virtual-Warehouse.git)
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,spring,postgres,scss,css" width="50%" height="50%"/>
+  </a>
+</p>
 
 Virtual Warehouse is a web application designed to manage and track equipment in a visual communication department's virtual warehouse. The application is built using Java Spring Boot for the backend and React JS for the frontend, with styling provided by CSS combined with SCSS (Sass). The warehouse management system is backed by a PostgreSQL database and serves three main personas: the warehouse manager, the student, and the lecturer.
 
