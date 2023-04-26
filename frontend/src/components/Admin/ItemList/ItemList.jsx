@@ -4,31 +4,46 @@ import { fetchedItemTypes } from "../../../api/WarehouseService";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../Sidebar/AdminLayout";
 import { useTranslation } from "react-i18next";
-import { TextField, MenuItem, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import CategoryIcon from "@mui/icons-material/Category";
-import LabelIcon from "@mui/icons-material/Label";
-import SyncIcon from "@mui/icons-material/Sync";
 import { useAuth } from "../../../contexts/AuthContext";
+import Pagination from "@mui/material/Pagination";
+import SearchFilters from "./SearchFilters";
+import ItemsGrid from "./ItemsGrid";
+import ItemModal from "./ItemModal";
 import "./ItemList.scss";
-import { Grid, Card, CardContent, CardActions, Button } from "@mui/material";
-import { FormControl, InputLabel, Select } from "@mui/material";
 
-const useItemFilter = (initialItems) => {
+const useItemFilter = (initialItems, itemsPerPage) => {
   const [filteredItems, setFilteredItems] = useState(initialItems);
   const [itemType, setItemType] = useState("");
   const [itemName, setItemName] = useState("");
   const [itemState, setItemState] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const filtered = initialItems.filter(
-      (item) =>
-        (itemType === "" || itemType === item.itemType.name) &&
-        (itemName === "" || itemName === item.itemName) &&
-        (itemState === "" || itemState === item.state)
-    );
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    const filtered = initialItems
+      .filter(
+        (item) =>
+          (itemType === "" || itemType === item.itemType.name) &&
+          (itemName === "" || itemName === item.itemName) &&
+          (itemState === "" || itemState === item.state) &&
+          (searchQuery === "" ||
+            item.itemName.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+      .slice(start, end);
+
     setFilteredItems(filtered);
-  }, [initialItems, itemType, itemName, itemState]);
+  }, [
+    initialItems,
+    itemType,
+    itemName,
+    itemState,
+    searchQuery,
+    currentPage,
+    itemsPerPage,
+  ]);
 
   return {
     filteredItems,
@@ -38,6 +53,10 @@ const useItemFilter = (initialItems) => {
     setItemName,
     itemState,
     setItemState,
+    searchQuery,
+    setSearchQuery,
+    currentPage,
+    setCurrentPage,
   };
 };
 
@@ -50,6 +69,7 @@ const ItemList = () => {
   const [items, setItems] = useState([]);
   const [type, setType] = useState([]);
   const [names, setName] = useState([]);
+  const itemsPerPage = 11;
 
   const {
     filteredItems,
@@ -59,7 +79,16 @@ const ItemList = () => {
     setItemName,
     itemState,
     setItemState,
-  } = useItemFilter(items);
+    searchQuery,
+    setSearchQuery,
+    currentPage,
+    setCurrentPage,
+  } = useItemFilter(items, itemsPerPage);
+
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -88,6 +117,14 @@ const ItemList = () => {
     fetchNames();
   }, [handleTokenExpired]);
 
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+  const handleMoreInfoClick = (item) => {
+    setSelectedItem(item);
+    toggleModal();
+  };
+
   return (
     <div className="admin-equipment-list">
       <AdminLayout direction={direction}></AdminLayout>
@@ -95,142 +132,38 @@ const ItemList = () => {
         <p className="title">
           Effortlessly Browse and Filter Equipment Categories
         </p>
-        <div className="search-filters">
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={4} sm={6}>
-              <div className="search">
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  fullWidth
-                  label="Search By Category"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12} sm={6} md={8}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Filter by Name</InputLabel>
-                <Select
-                  label="Filter by Name"
-                  value={itemName}
-                  onChange={(event) => setItemName(event.target.value)}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <LabelIcon />
-                    </InputAdornment>
-                  }
-                  MenuProps={{
-                    PaperProps: {
-                      sx: {
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                      },
-                    },
-                  }}
-                >
-                  {names.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <div className="filters">
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Filter by Type</InputLabel>
-                  <Select
-                    label="Filter by Type"
-                    value={itemType}
-                    onChange={(event) => setItemType(event.target.value)}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <CategoryIcon />
-                      </InputAdornment>
-                    }
-                    MenuProps={{
-                      disableScrollLock: false,
-                      PaperProps: {
-                        sx: {
-                          maxHeight: "200px",
-                          overflowY: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    {type.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Filter by State</InputLabel>
-                <Select
-                  label="Filter by State"
-                  value={itemState}
-                  onChange={(event) => setItemState(event.target.value)}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <SyncIcon />
-                    </InputAdornment>
-                  }
-                  MenuProps={{
-                    disableScrollLock: false,
-                    PaperProps: {
-                      sx: {
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                      },
-                    },
-                  }}
-                >
-                  {["TAKEN", "DAMAGED", "IN_MAINTENANCE", "AVAILABLE"].map(
-                    (option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    )
-                  )}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
+        <SearchFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          itemName={itemName}
+          setItemName={setItemName}
+          itemType={itemType}
+          setItemType={setItemType}
+          itemState={itemState}
+          setItemState={setItemState}
+          names={names}
+          type={type}
+        />
+        <ItemsGrid
+          filteredItems={filteredItems}
+          handleMoreInfoClick={handleMoreInfoClick}
+        />
+        <div className="pagination">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(_, value) => setCurrentPage(value)}
+            color="primary"
+            size="large"
+          />
         </div>
-        <div className="equipments-grid">
-          <Grid container spacing={2}>
-            {filteredItems.map((item) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-                <Card className="item-card" elevation={3}>
-                  <CardContent className="item-card__details">
-                    <div className="item-card__header">
-                      <p className="item-card__title">{item.itemName}</p>
-                      <p className="item-card__state">{item.state}</p>
-                    </div>
-                  </CardContent>
-                  <CardActions className="item-card__actions">
-                    <Button className="item-card__button" size="small">
-                      More info
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
+        <ItemModal
+          modalOpen={modalOpen}
+          toggleModal={toggleModal}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          itemTypes={type}
+        />
       </main>
     </div>
   );
