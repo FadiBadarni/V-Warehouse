@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import "./Navbar.scss";
 import { useAuth } from "../../contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNotification } from "../../hooks/useNotification";
 import NotificationDropdown from "./NotificationDropdown";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -58,11 +58,7 @@ const Navbar = ({ children }) => {
   const handleMobileMenuItemClick = () => {
     setMobileMenuOpen(false);
   };
-  const navItemVariant = {
-    initial: { opacity: 0, y: -20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
-  };
+
   useEffect(() => {
     if (user && user.role.includes("ADMIN")) {
       setIsAdmin(true);
@@ -71,6 +67,24 @@ const Navbar = ({ children }) => {
     }
   }, [user]);
 
+  const navItemVariant = {
+    initial: { opacity: 0, y: -20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
+
+  const MobileMenuItem = ({ children, onClick, to }) => (
+    <motion.li
+      onClick={onClick}
+      variants={navItemVariant}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <Link to={to}>{children}</Link>
+    </motion.li>
+  );
+
   return (
     <div id="navigation-bar" className={direction}>
       <nav className="navbar">
@@ -78,69 +92,56 @@ const Navbar = ({ children }) => {
           &#9776;
         </button>
         <div className={`mobile-menu${mobileMenuOpen ? " open" : ""}`}>
-          <ul>
-            <motion.li
-              onClick={handleMobileMenuItemClick}
-              variants={navItemVariant}
-            >
-              <Link to="/">{t("navbar.home")}</Link>
-            </motion.li>
-            <motion.li
-              onClick={handleMobileMenuItemClick}
-              variants={navItemVariant}
-            >
-              <Link to="/warehouse">{t("navbar.warehouse")}</Link>
-            </motion.li>
-            <motion.li
-              onClick={handleMobileMenuItemClick}
-              variants={navItemVariant}
-            >
-              <Link to="/dashboard">{t("navbar.dashboard")}</Link>
-            </motion.li>
-            {!isAuthenticated && (
-              <motion.li
-                onClick={handleMobileMenuItemClick}
-                variants={navItemVariant}
-              >
-                <Link to="/auth/login">{t("navbar.login")}</Link>
-              </motion.li>
-            )}
-            {isAuthenticated && (
-              <>
-                {isAdmin && (
-                  <motion.li
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <ul>
+                <MobileMenuItem onClick={handleMobileMenuItemClick} to="/">
+                  {t("navbar.home")}
+                </MobileMenuItem>
+                <MobileMenuItem
+                  onClick={handleMobileMenuItemClick}
+                  to="/warehouse"
+                >
+                  {t("navbar.warehouse")}
+                </MobileMenuItem>
+                <MobileMenuItem
+                  onClick={handleMobileMenuItemClick}
+                  to="/dashboard"
+                >
+                  {t("navbar.dashboard")}
+                </MobileMenuItem>
+                {!isAuthenticated && (
+                  <MobileMenuItem
                     onClick={handleMobileMenuItemClick}
-                    variants={navItemVariant}
+                    to="/auth/login"
                   >
-                    <Link to="/admin">{t("navbar.admin")}</Link>
-                  </motion.li>
+                    {t("navbar.login")}
+                  </MobileMenuItem>
                 )}
-                <motion.li
-                  onClick={handleMobileMenuItemClick}
-                  variants={navItemVariant}
-                >
-                  <NotificationDropdown
-                    notifications={notifications}
-                    onClearNotifications={handleClearNotifications}
-                  />
-                </motion.li>
-                <motion.li
-                  onClick={handleMobileMenuItemClick}
-                  variants={navItemVariant}
-                >
-                  <LanguageSelector />
-                </motion.li>
-                <motion.li
-                  onClick={handleMobileMenuItemClick}
-                  variants={navItemVariant}
-                >
-                  <Link to="/auth/logout" onClick={handleLogout}>
-                    {t("navbar.logout")}
-                  </Link>
-                </motion.li>
-              </>
+                {isAuthenticated && (
+                  <>
+                    {isAdmin && (
+                      <MobileMenuItem
+                        onClick={handleMobileMenuItemClick}
+                        to="/admin"
+                      >
+                        {t("navbar.admin")}
+                      </MobileMenuItem>
+                    )}
+                    <MobileMenuItem onClick={handleMobileMenuItemClick}>
+                      <LanguageSelector />
+                    </MobileMenuItem>
+                    <MobileMenuItem
+                      onClick={handleMobileMenuItemClick}
+                      to="/auth/logout"
+                    >
+                      {t("navbar.logout")}
+                    </MobileMenuItem>
+                  </>
+                )}
+              </ul>
             )}
-          </ul>
+          </AnimatePresence>
         </div>
         <ul className="navbar-menu">
           <motion.li variants={navItemVariant}>
