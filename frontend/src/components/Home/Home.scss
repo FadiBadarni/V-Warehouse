@@ -162,7 +162,7 @@ body {
     &__subheader {
         text-align: center;
         padding: 0rem 0;
-        width: 50%;
+        width: 80%;
         margin-top: 2rem;
         margin-bottom: 2rem;
         margin: 0 auto;
@@ -177,6 +177,13 @@ body {
             @media only screen and (max-width: 768px) {
                 font-size: 1.2rem;
             }
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
         }
 
         &-button {
