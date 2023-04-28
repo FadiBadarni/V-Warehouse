@@ -30,15 +30,14 @@ public class BorrowRequest {
     private String borrowingReason;
 
     @Column
-    @CollectionTable(name="quantity")
+    @CollectionTable(name = "quantity")
     private int quantity;
 
     @Column
     @ElementCollection
-    @CollectionTable(name="requests_instances")
+    @CollectionTable(name = "requests_instances")
     private List<Long> itemInstanceIds;
 
-    //    @Column(nullable = true, columnDefinition = "bytea")
     private String signatureData;
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()")
@@ -47,7 +46,5 @@ public class BorrowRequest {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
-
-
 
 }
