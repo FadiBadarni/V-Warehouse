@@ -68,22 +68,22 @@
     }
 
     .MuiInputLabel-root.Mui-focused {
-        color: $accent-color;
+        color: $sce-primary-color;
     }
 
     .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-        border-color: $accent-color;
+        border-color: $sce-primary-color;
     }
 
     .MuiButton-containedPrimary {
-        background-color: $accent-color;
+        background-color: $sce-text-color;
         color: $sce-background-color;
         padding: 8px 16px;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
         &:hover {
-            background-color: darken($accent-color, 5%);
+            background-color: darken($sce-text-color, 5%);
         }
     }
 
