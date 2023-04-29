@@ -101,7 +101,8 @@ public class BorrowRequestController {
                                    @RequestParam String localDateTime,
                                    @RequestParam long itemId) {
         LocalDateTime localDateTimeO = LocalDateTime.parse(localDateTime, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        return borrowRequestService.getAvailableSchedules(itemId, quantity, localDateTimeO);
+        return borrowRequestService.getEveryTimeSchedule(itemId, quantity, localDateTimeO);
+        //return borrowRequestService.getAvailableSchedules(itemId, quantity, localDateTimeO);
     }
 
 
@@ -116,7 +117,9 @@ public class BorrowRequestController {
 
         LocalDateTime localDateTimeStartO = LocalDateTime.parse(localDateTimeStart, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         LocalDateTime localDateTimeReturnO = LocalDateTime.parse(localDateTimeReturn, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        return borrowRequestService.getAvailableReturnTimes(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
+        //return borrowRequestService.getAvailableReturnTimes(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
+        return borrowRequestService.getEveryTimeToReturnInSchedule(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
+
     }
 
 

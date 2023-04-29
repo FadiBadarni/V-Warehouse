@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
 
 
+    @Query("SELECT s.itemInstance.id FROM Schedule s WHERE s.intendedStartDate = :startDate AND s.intendedReturnDate = :returnDate AND s.itemType.id = :itemTypeId")
+    List<Long> getScheduleItemInstanceIds(@Param("itemTypeId") Long itemTypeId,@Param("startDate")  LocalDateTime startDate,  @Param("returnDate") LocalDateTime returnDate);
 }

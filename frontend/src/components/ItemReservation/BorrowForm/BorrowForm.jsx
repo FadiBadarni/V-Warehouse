@@ -97,6 +97,7 @@ const BorrowForm = ({
     setOccupiedDates(buildOccupiedDateList(timeList));
     setSelectedStartDate(date);
     setPendingStartDates(buildOccupiedDateList(result.bendingStartDates));
+    if (selectedReturnDate) handleReturnDateChange(selectedReturnDate);
   };
 
   const handleReturnDateChange = async (date) => {
@@ -222,7 +223,7 @@ const BorrowForm = ({
                 onTimeSelected={handleReturnTimeChange}
                 minTime={
                   selectedReturnDate.isSame(selectedStartDate, "day")
-                    ? dayjs(selectedStartDate).add(30, "minute")
+                    ? dayjs(startDateTime.toISOString()).add(30, "minute")
                     : getTimeBoundaries(selectedReturnDate).minTime
                 }
                 maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
@@ -248,8 +249,7 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}
-          >
+            disabled={!isFormValid()}>
             {t("itemReservation.sendRequest")}
           </button>
         </div>

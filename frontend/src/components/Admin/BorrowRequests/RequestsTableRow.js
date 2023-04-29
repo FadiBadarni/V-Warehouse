@@ -13,6 +13,8 @@ import RowDetails from "./RowDetails";
 import { useTranslation } from "react-i18next";
 import customStatus from "./Utils/CustomStatus";
 import { getItemInstancesByRequestId } from "../../../api/BorrowService";
+import { getAvaildabelQuantity } from "../../../api/AdminService";
+
 
 const RequestsTableRow = ({
   request,
@@ -38,6 +40,22 @@ const RequestsTableRow = ({
   const { i18n, t } = useTranslation("borrowRequests");
   const [acceptButtonIsDisabled, setAcceptButtonIsDisabled] = useState(true);
   const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
+
+  const [availdabelQuantity, setAvaildabelQuantity] = useState();
+  const [scheduleItemIstanceIDs, setScheduleItemIstanceIDs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const availableQuantity = await getAvaildabelQuantity(
+        request.itemId,
+        request.intendedStartDate,
+        request.intendedReturnDate
+      );
+      setAvaildabelQuantity(availableQuantity);
+    };
+    fetchData();
+  }, []);
+
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -65,8 +83,7 @@ const RequestsTableRow = ({
     <React.Fragment>
       <TableRow
         onClick={() => handleRowClick(index, request.itemId, request)}
-        sx={{ cursor: "pointer" }}
-      >
+        sx={{ cursor: "pointer" }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -74,8 +91,7 @@ const RequestsTableRow = ({
             onClick={(event) => {
               event.stopPropagation();
               setExpandedRow(expandedRow === index ? -1 : index);
-            }}
-          >
+            }}>
             {expandedRow === index ? (
               <KeyboardArrowUp />
             ) : (
@@ -86,10 +102,14 @@ const RequestsTableRow = ({
         <TableCell>{request.userId}</TableCell>
         <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
         <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
-        <TableCell>{request.borrowingReason}</TableCell>
-        <TableCell>
-          {request.itemInstanceIds + "/" + request.quantity}
-        </TableCell>
+        <TableCell>{request.itemId}</TableCell>
+        {availdabelQuantity && activeTab === 0 ? (
+          <TableCell>
+            {availdabelQuantity.availableQuantity + "/" + request.quantity}
+          </TableCell>
+        ) : (
+          <TableCell>{request.quantity}</TableCell>
+        )}
         <TableCell>{formatDate(request.requestTime)}</TableCell>
 
         {handleAccept && handleReject && (
@@ -101,8 +121,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleAccept(request);
-              }}
-            >
+              }}>
               {t("borrowRequests.pendingRequests.approve")}
             </Button>
             <Button
@@ -111,8 +130,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleReject(request);
-              }}
-            >
+              }}>
               {t("borrowRequests.pendingRequests.reject")}
             </Button>
           </TableCell>
@@ -128,8 +146,7 @@ const RequestsTableRow = ({
                 event.stopPropagation();
                 handlePickupConfirm(request, items);
               }}
-              disabled={acceptButtonIsDisabled}
-            >
+              disabled={acceptButtonIsDisabled}>
               Confirm
             </Button>
             <Button
@@ -139,8 +156,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handlePickupCancel(request);
-              }}
-            >
+              }}>
               Cancel
             </Button>
           </TableCell>
@@ -155,8 +171,7 @@ const RequestsTableRow = ({
                 event.stopPropagation();
                 handleReturn(request);
               }}
-              disabled={returnButtonIsDisable}
-            >
+              disabled={returnButtonIsDisable}>
               confirm
             </Button>
             <Button
@@ -165,8 +180,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleOverDue(request);
-              }}
-            >
+              }}>
               OverDue
             </Button>
           </TableCell>
@@ -181,13 +195,13 @@ const RequestsTableRow = ({
             {activeTab === 1 || activeTab === 2 ? (
               <Box sx={{ margin: 2 }}>
                 <RowDetailsQR
+                  availdabelQuantity={availdabelQuantity}
                   request={request}
                   user={user}
                   setItems={setItems}
                   items={items}
                   setAcceptButtonIsDisable={setAcceptButtonIsDisabled}
                   activeTab={activeTab}
-                  itemInstances={itemInstances}
                   setReturnButtonIsDisable={setReturnButtonIsDisable}
                 />
               </Box>
@@ -196,9 +210,7 @@ const RequestsTableRow = ({
                 <RowDetails
                   request={request}
                   user={user}
-                  itemInstances={itemInstances}
-                  setItems={setItems}
-                  items={items}
+                  availdabelQuantity={availdabelQuantity}
                 />
               </Box>
             )}

@@ -52,7 +52,7 @@ public class BorrowRequestService {
     }
 
     public List<BorrowRequest> getPendingRequestsByItemId(Long itemInstanceId) {
-        return borrowRequestRepository.findPendingRequestsByItemId(itemInstanceId, RequestStatus.PENDING);
+        return borrowRequestRepository.findRequestsByItemIdAndStatus(itemInstanceId, RequestStatus.PENDING);
     }
 
 
@@ -144,7 +144,7 @@ public class BorrowRequestService {
     }
 
     private BorrowRequestDTO convertToBorrowRequestDTO(BorrowRequest borrowRequest) {
-        return BorrowRequestDTO.builder()
+        BorrowRequestDTO x= BorrowRequestDTO.builder()
                 .userId(borrowRequest.getUserId())
                 .itemId(borrowRequest.getItemId())
                 .intendedStartDate(borrowRequest.getIntendedStartDate())
@@ -154,7 +154,10 @@ public class BorrowRequestService {
                 .status(borrowRequest.getStatus())
                 .requestTime(borrowRequest.getRequestTime())
                 .requestId(borrowRequest.getRequestId())
+                .signatureData(borrowRequest.getSignatureData())
+                .instancesIds(borrowRequest.getItemInstanceIds())
                 .build();
+        return   x;
     }
 
     public List<ScheduleDTO> getAllOccupiedDatesByItemInstances(List<Long> itemInstanceIds) {
@@ -382,6 +385,162 @@ public class BorrowRequestService {
         } else {
             throw new NotFoundException("Borrow request not found or not in a cancellable state.");
         }
+    }
+
+    public List<Long> borrowInstances(UUID requestId) {
+         BorrowRequest borrowRequest=borrowRequestRepository.getReferenceById(requestId);
+        return borrowRequest.getItemInstanceIds();
+    }
+
+
+
+
+
+    public AvailableTime getEveryTimeSchedule(long itemId ,int quantity, LocalDateTime localDateTime) {
+        List<ItemInstance> itemInstanceTable=itemInstanceService.findByItemTypeId(itemId);
+
+        List<BorrowRequest> borrowRequestsTable=borrowRequestRepository.findAll();
+        List<BorrowRequest> awaitingPickupBorrowRequestsTable = borrowRequestsTable.stream()
+                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+
+        List<BorrowRequest> bendingBorrowRequestsTable = borrowRequestsTable.stream()
+                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+
+
+        List<BorrowRequest> awaitingReturnBorrowRequestsTable = borrowRequestsTable.stream()
+                .filter(request -> request.getStatus() == RequestStatus.AWAITING_RETURN && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+
+
+        return startData(awaitingReturnBorrowRequestsTable,localDateTime,quantity,itemInstanceTable,awaitingPickupBorrowRequestsTable,bendingBorrowRequestsTable);
+
+    }
+
+
+    public AvailableTime startData(List<BorrowRequest> orderList, LocalDateTime startTime, int x, List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
+    {
+        LocalDateTime startDate = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 23, 59);
+        HashMap< LocalDateTime, List<ItemInstance>> data=new HashMap<>();
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+        LocalDateTime currentDateTime = startDate;
+        while (currentDateTime.isBefore(endDateTime)) {
+
+            List<ItemInstance> availableIds = new ArrayList<>(itemInstanceList);
+            for (BorrowRequest awaitingReturn : orderList) {
+                LocalDateTime orderStart =  awaitingReturn.getIntendedStartDate();
+                LocalDateTime orderEnd =  awaitingReturn.getIntendedReturnDate();
+
+                if (between(currentDateTime,orderStart,orderEnd)){
+                    List<Long> itemInstanceIds = awaitingReturn.getItemInstanceIds();
+                    for (Long itemInstanceId : itemInstanceIds)
+                        availableIds.removeAll(itemInstanceService.getInstancesById(itemInstanceId));
+                }
+            }
+            int count=0;
+            for(BorrowRequest awaitingborrowRequest:awaitingBorrowRequestsTable)
+                if(between(currentDateTime,awaitingborrowRequest.getIntendedStartDate(),awaitingborrowRequest.getIntendedReturnDate()))
+                    count+=awaitingborrowRequest.getQuantity();
+
+            if( availableIds.size()>=x+count ){
+                data.put(currentDateTime,availableIds);
+                count=0;
+                for(BorrowRequest bendingBorrowRequest:bendingBorrowRequestsTable)
+                    if(between(currentDateTime,bendingBorrowRequest.getIntendedStartDate(),bendingBorrowRequest.getIntendedReturnDate()))
+                        count+=bendingBorrowRequest.getQuantity();
+                if(availableIds.size()<count+x)
+                    bendinglist.add(currentDateTime);
+            }
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        return AvailableTime.builder().bendingStartDates(bendinglist).startDates(data).build();
+    }
+
+
+    public boolean between(LocalDateTime current, LocalDateTime start, LocalDateTime end) {
+        return current.isEqual(start)  || (current.isAfter(start) && current.isBefore(end));
+    }
+
+    public boolean collisionTime(LocalDateTime time1start, LocalDateTime time1end, LocalDateTime time2start, LocalDateTime time2end) {
+
+       return between(time1start,time2start,time2end) ||
+               between(time1end,time2start,time2end) ||
+                between( time2start,time1start,time1end)||
+                between(time2end,time1start,time1end);
+    }
+
+    public AvailableTime getEveryTimeToReturnInSchedule(int quantity,LocalDateTime localDateTimeStart,LocalDateTime localDateTimeReturn, List<ItemInstance> data,long itemId) {
+        List<BorrowRequest> borrowRequests=borrowRequestRepository.findAll();
+        List<BorrowRequest> awaitingPickupBorrow = borrowRequests.stream()
+                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+        List<BorrowRequest> bendingBorrow =borrowRequests.stream()
+                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
+                .collect(Collectors.toList());
+        return returnData(quantity,localDateTimeStart,localDateTimeReturn,data,awaitingPickupBorrow,bendingBorrow);
+    }
+
+    public  AvailableTime returnData(int quantity, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
+                                     List<BorrowRequest> awaitingPickupBorrow, List<BorrowRequest> bendingBorrow) {
+
+        LocalDateTime startDate ;
+        if(selectStartTime.toLocalDate().isEqual(localDateTimeEnd.toLocalDate()))
+            startDate = selectStartTime;
+        else  startDate = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 0, 0);
+
+        LocalDateTime endDateTime = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 23, 59);
+        LocalDateTime currentDateTime = startDate;
+        List<LocalDateTime> localDateTimeList=new ArrayList<>();
+
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+        while (currentDateTime.isBefore(endDateTime)) {
+            List<ItemInstance> copydata=new ArrayList<>(data);
+            for( ItemInstance itemInstance:data)
+            {
+                List<Schedule> scheduleList=scheduleRepository.findByItemInstance(itemInstance);
+                if(scheduleList!= null)
+                {
+                    for(Schedule schedule:scheduleList) {
+                        LocalDateTime orderStart =schedule.getIntendedStartDate();
+                        LocalDateTime orderEnd = schedule.getIntendedReturnDate();
+
+                        if(collisionTime(selectStartTime,currentDateTime,orderStart,orderEnd))
+                        {
+                            List<ItemInstance> help=new ArrayList<>();
+                            for(ItemInstance instanceData:copydata)
+                                if(instanceData.getId()!=schedule.getItemInstance().getId())
+                                    help.add(instanceData);
+                            copydata=new ArrayList<>(help);
+                        }
+                    }
+                }
+            }
+            int count=0;
+            for(BorrowRequest borrowRequestItem:awaitingPickupBorrow) {
+                LocalDateTime start =  borrowRequestItem.getIntendedStartDate();
+                LocalDateTime end = borrowRequestItem.getIntendedReturnDate();
+                if(collisionTime(selectStartTime,currentDateTime,start,end))
+                    count += borrowRequestItem.getQuantity();
+            }
+            if (copydata.size() >= quantity+count){
+                localDateTimeList.add(currentDateTime);
+                count=0;
+
+                for(BorrowRequest borrowRequest:bendingBorrow) {
+                    LocalDateTime start = borrowRequest.getIntendedStartDate();
+                    LocalDateTime end = borrowRequest.getIntendedReturnDate();
+                   if(collisionTime(selectStartTime,currentDateTime,start,end))
+                       count += borrowRequest.getQuantity();
+                }
+                if (copydata.size() < count + quantity) {
+                    bendinglist.add(currentDateTime);
+                }
+            }
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        return  AvailableTime.builder().returnDates(localDateTimeList).bendingReturnDates(bendinglist).build();
     }
 
 }

@@ -5,6 +5,9 @@ import com.example.visualvortex.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +31,20 @@ public class ScheduleService {
 
     public void deleteById(Long id) {
         scheduleRepository.deleteById(id);
+    }
+
+    public List<Long> getScheduleItemInstanceIds(Long itemId, String startDate, String returnDate) {
+        LocalDateTime startDateO=LocalDateTime.parse(startDate,DateTimeFormatter.ISO_DATE_TIME);
+        LocalDateTime returnDateO=LocalDateTime.parse(returnDate,DateTimeFormatter.ISO_DATE_TIME);
+        List<Schedule> scheduleList=scheduleRepository.findAll();
+
+        List<Long> x=new ArrayList<>();
+        for (Schedule s:scheduleList) {
+            if(s.getItemType().getId() == itemId)
+            if(s.getIntendedReturnDate().isEqual(returnDateO))
+                if(s.getIntendedStartDate().equals(startDateO))
+                    x.add(s.getItemInstance().getId());
+        }
+        return  x;
     }
 }

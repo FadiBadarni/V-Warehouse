@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getBorrowInstances } from "../../../api/AdminService";
 // import { Typography, Box,MenuItem,Select,InputLabel,FormControl,OutlinedInput } from "@mui/material";
 import "./RowDetails.scss";
 import { QrReader } from "react-qr-reader";
@@ -11,7 +12,19 @@ import {
   FormControl,
   Chip,
   Select,
+  useTheme,
 } from "@mui/material";
+
+function ErrorModal(props) {
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>{props.title}</h2>
+        <p>{props.message}</p>
+      </div>
+    </div>
+  );
+}
 
 const RowDetailsQR = ({
   request,
@@ -20,8 +33,8 @@ const RowDetailsQR = ({
   setItems,
   setAcceptButtonIsDisable,
   activeTab,
-  itemInstances,
   setReturnButtonIsDisable,
+  availdabelQuantity,
 }) => {
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -34,46 +47,89 @@ const RowDetailsQR = ({
     },
   };
 
-  const [scans, setScans] = useState([]);
-
-  const addItem = (data) => {
-    if (data) {
-      setScans((prevScans) => {
-        if (data && !prevScans.includes(data)) {
-          if (activeTab === 1) {
-            if (prevScans.length === request.quantity - 1) {
-              setAcceptButtonIsDisable(false);
-            } else setAcceptButtonIsDisable(true);
-          }
-          if (activeTab === 2) {
-            if (prevScans.length === request.quantity - 1) {
-              setReturnButtonIsDisable(false);
-            } else setReturnButtonIsDisable(true);
-          }
-
-          setItems([...prevScans, data]);
-          return [...prevScans, data];
-        } else {
-          setItems([prevScans]);
-          return prevScans;
-        }
-      });
-    }
-  };
+  function getStyles(name, items, theme) {
+    return {
+      fontWeight:
+        items.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+  const theme = useTheme();
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
     setItems(typeof value === "string" ? value.split(",") : value);
-    if (scans.length === request.quantity) {
+    if (items.length === request.quantity - 1) {
       setAcceptButtonIsDisable(false);
     } else setAcceptButtonIsDisable(true);
+    if (items.length === instances.length - 1) {
+      setReturnButtonIsDisable(false);
+    } else setReturnButtonIsDisable(true);
   };
 
-  const listItems = itemInstances.map((item) => (
-    <li key={item.id}>{item.id}</li>
-  ));
+  const [error, setError] = useState(null);
+  const [scans, setScans] = useState([]);
+  const [instances, setInstances] = useState([]);
+
+  useEffect(() => {
+    if (error) {
+      const timeoutId = setTimeout(() => {
+        setError(null);
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    const fetchBorrowInstances = async () => {
+      const borrowInstances = await getBorrowInstances(request.requestId);
+      setInstances(borrowInstances);
+    };
+    if (activeTab == 2) fetchBorrowInstances();
+  }, []);
+
+  const addItem = (data) => {
+    // const x = availdabelQuantity.availableItemsIds.map(String);
+    // console.log(x);
+    if (
+      availdabelQuantity.availableItemsIds.includes(Number(data)) ||
+      request.instancesIds.includes(Number(data))
+    ) {
+      if (data) {
+        setScans((prevScans) => {
+          if (data && !prevScans.includes(data)) {
+            if (activeTab === 1) {
+              if (prevScans.length === request.quantity - 1) {
+                setAcceptButtonIsDisable(false);
+              } else setAcceptButtonIsDisable(true);
+            }
+            if (activeTab === 2) {
+              if (prevScans.length === request.quantity - 1) {
+                setReturnButtonIsDisable(true);
+              } else setReturnButtonIsDisable(true);
+            }
+
+            setItems([...prevScans, data]);
+            return [...prevScans, data];
+          } else {
+            setItems([prevScans]);
+            return prevScans;
+          }
+        });
+      }
+    } else {
+      setError({
+        title: "The Item not in list",
+        message: "The data you entered is not in the list.",
+      });
+      if (activeTab === 2) {
+        setReturnButtonIsDisable(false);
+      }
+    }
+  };
 
   const handleResultQRChange = (result, error) => {
     if (!!result) {
@@ -83,6 +139,9 @@ const RowDetailsQR = ({
       // console.info(error);
     }
   };
+  if (!availdabelQuantity || !request || !instances) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <Box className="expanded-row">
@@ -91,51 +150,81 @@ const RowDetailsQR = ({
       </Typography>
       <Box className="expanded-row__content">
         <Box className="expanded-row__info">
-          {activeTab === 2 &&
-            ((<h1>you must to return</h1>), (<ul>{listItems}</ul>))}
-          {scans.length}/{request.quantity}
+          {items.length}/{request.quantity}
           <Typography className="expanded-row__instance__title">
             Requested Item Info
           </Typography>
-          <FormControl
-            sx={{ m: 1, width: 300, fullWidth: true, size: "medium" }}
-          >
-            <InputLabel id="multiple-chip">Item</InputLabel>
-            <Select
-              labelId="ID"
-              id="ID-multiple"
-              multiple
-              value={scans}
-              onChange={handleChange}
-              input={<OutlinedInput id="select-multiple" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {scans.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  // style={getStyles(name, items)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {activeTab === 1 && (
+            <FormControl sx={{ m: 1, width: 300 }}>
+              <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                value={items}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}>
+                {availdabelQuantity.availableItemsIds.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, items, theme)}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          {activeTab === 2 && (
+            <FormControl sx={{ m: 1, width: 300 }}>
+              <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                value={items}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}>
+                {instances
+                  ? instances.map((name) => (
+                      <MenuItem
+                        key={name}
+                        value={name}
+                        style={getStyles(name, items, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))
+                  : instances.map((name) => (
+                      <MenuItem
+                        key={name}
+                        value={name}
+                        style={getStyles(name, items, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))}
+              </Select>
+            </FormControl>
+          )}
           <div style={{ width: "300px", height: "300px" }}>
-            <QrReader onResult={handleResultQRChange} />
+            <QrReader onResult={handleResultQRChange} delay={500} />
           </div>
-          <d>scans={scans.length} </d>
-          <d>items={items.length}</d>
-          {scans && scans.map((item) => <p>{item}</p>)}
-          -------------------------------------------
-          {items && items.map((item) => <p>{item}</p>)}
+          {error && <ErrorModal title={error.title} message={error.message} />}
         </Box>
         {user && (
           <Box className="expanded-row__user">
@@ -145,7 +234,7 @@ const RowDetailsQR = ({
             <Typography>Username: {user.username}</Typography>
             <Typography>Email: {user.email}</Typography>
             <Typography>Year: {user.year}</Typography>
-            <Typography>User: {user.Role}</Typography>
+            <Typography>User: {user.role}</Typography>
           </Box>
         )}
       </Box>

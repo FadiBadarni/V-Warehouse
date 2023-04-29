@@ -39,4 +39,10 @@ public class RequestsController {
         borrowRequestService.borrowAddItemInstances(requestId,itemInstances);
     }
 
+    @GetMapping("/borrow-Instances/{requestId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Long> borrowInstances(@PathVariable UUID requestId) {
+         return  borrowRequestService.borrowInstances(requestId);
+    }
+
 }

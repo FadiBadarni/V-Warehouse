@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,7 +21,7 @@ public interface BorrowRequestRepository extends JpaRepository<BorrowRequest, UU
 //    List<BorrowRequest> findAllByStatusAndItemInstanceIdsContains(RequestStatus status, Long itemInstanceId);
 
     @Query("SELECT br FROM BorrowRequest br WHERE br.itemId = :itemId AND br.status = :status")
-    List<BorrowRequest> findPendingRequestsByItemId(@Param("itemId") Long itemId, @Param("status") RequestStatus status);
+    List<BorrowRequest> findRequestsByItemIdAndStatus(@Param("itemId") Long itemId, @Param("status") RequestStatus status);
 
     List<BorrowRequest> findByUserId(Long userId);
 

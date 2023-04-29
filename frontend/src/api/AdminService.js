@@ -157,4 +157,23 @@ export const broadcastMessageToAllUsers = async (message) => {
   );
 };
 
+export const getAvaildabelQuantity = async (itemid, startDate, returnDate) => {
+  return apiWrapper(
+    async () =>
+      await axiosInstance.get(`get_available_quantity/${itemid}`, {
+        params: { startDate, returnDate },
+      }),
+    "Broadcast message sent successfully",
+    "Error sending broadcast message:"
+  );
+};
+
+export const getBorrowInstances = async (requestId) => {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/borrow-Instances/${requestId}`),
+    "Broadcast message sent successfully",
+    "Error sending broadcast message:"
+  );
+};
+
 export { axiosInstance };

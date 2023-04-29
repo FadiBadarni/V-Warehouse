@@ -1,17 +1,21 @@
 package com.example.visualvortex.services.Item;
 
 
+import com.example.visualvortex.dtos.ItemDTOS.AvailableInstanceQuantity;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
 import com.example.visualvortex.entities.Item.ItemInstance;
 import com.example.visualvortex.entities.Item.ItemState;
+import com.example.visualvortex.entities.Request.BorrowRequest;
+import com.example.visualvortex.entities.Request.RequestStatus;
 import com.example.visualvortex.entities.Schedule;
+import com.example.visualvortex.repositories.BorrowRequestRepository;
 import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +27,7 @@ public class ItemInstanceService {
 
     private final ItemInstanceRepository itemInstanceRepository;
     private final ScheduleRepository scheduleRepository;
+    private final BorrowRequestRepository borrowRequestRepository;
 
     public List<ItemInstanceDTO> getAllItemInstances() {
         List<ItemInstance> itemInstances = itemInstanceRepository.findAll();
@@ -83,12 +88,6 @@ public class ItemInstanceService {
         return itemInstanceRepository.countItemInstancesByItemIdAndIntendedDates(itemId,intendedStartDate, intendedReturnDate);
     }
 
-    public List<Object[]> findScheduleIdsByItemIdAndDate(long itemId, LocalDate date)
-    {
-//        LocalDate localDate= LocalDate.parse(date);
-        return  itemInstanceRepository. findItemInstancesByItemIdAndDate(itemId, date,date.plusDays(1));
-    }
-
     public List<ItemInstance> findAll() {
         return itemInstanceRepository.findAll();
     }
@@ -99,5 +98,66 @@ public class ItemInstanceService {
 
     public List<ItemInstance> findByItemTypeId(long id) {
         return itemInstanceRepository.findAllByItemId(id);
+    }
+
+    public AvailableInstanceQuantity getAvailableQuantity(Long itemId, String startDate, String returnDate) {
+        List<ItemInstance>   itemInstanceList=itemInstanceRepository.findAllByItemId(itemId);
+        List<Long> idList = new ArrayList<>(itemInstanceList.stream()
+                .filter(itemInstance -> itemInstance.getState() == ItemState.AVAILABLE)
+                .map(ItemInstance::getId)
+                .toList());
+
+        LocalDateTime startDateO = LocalDateTime.parse(startDate, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        LocalDateTime returnDateO = LocalDateTime.parse(returnDate, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        List<Schedule>  scheduleList=scheduleRepository.findByItemTypeId(itemId);
+        List<BorrowRequest>  borrowRequestsPENDING=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
+        List<BorrowRequest>  borrowRequestsAWAITINGPICKUP=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
+
+        for (Schedule schedule:scheduleList) {
+            LocalDateTime scheduleReturnDate=schedule.getIntendedReturnDate();
+            LocalDateTime scheduleStartDate =schedule.getIntendedStartDate();
+            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
+                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
+                idList.remove(schedule.getItemInstance().getId());
+            }
+
+            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
+                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
+                idList.remove(schedule.getItemInstance().getId());
+            }
+        }
+
+        int count =0;
+        for (BorrowRequest borrowRequest: borrowRequestsAWAITINGPICKUP) {
+            LocalDateTime scheduleReturnDate=borrowRequest.getIntendedReturnDate();
+            LocalDateTime scheduleStartDate =borrowRequest.getIntendedStartDate();
+            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
+                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
+                count += borrowRequest.getQuantity();
+            }
+
+            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
+                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
+                count += borrowRequest.getQuantity();
+            }
+        }
+        int pendingCount=0;
+        for (BorrowRequest borrowRequest: borrowRequestsPENDING) {
+            LocalDateTime scheduleReturnDate=borrowRequest.getIntendedReturnDate();
+            LocalDateTime scheduleStartDate =borrowRequest.getIntendedStartDate();
+            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
+                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
+                pendingCount += borrowRequest.getQuantity();
+            }
+
+            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
+                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
+                pendingCount += borrowRequest.getQuantity();
+            }
+        }
+
+
+        return AvailableInstanceQuantity.builder().availableQuantity(idList.size()-count)
+                .pendingQuantity(pendingCount).availableItemsIds(idList).build();
     }
 }

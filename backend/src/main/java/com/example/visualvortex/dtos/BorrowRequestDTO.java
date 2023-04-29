@@ -28,4 +28,5 @@ public class BorrowRequestDTO {
     private String signatureData;
     private RequestStatus status;
     private UUID requestId;
+    private  List<Long> instancesIds;
 }
