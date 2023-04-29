@@ -15,7 +15,6 @@ import customStatus from "./Utils/CustomStatus";
 import { getItemInstancesByRequestId } from "../../../api/BorrowService";
 import { getAvaildabelQuantity } from "../../../api/AdminService";
 
-
 const RequestsTableRow = ({
   request,
   index,
@@ -55,7 +54,6 @@ const RequestsTableRow = ({
     };
     fetchData();
   }, []);
-
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -99,14 +97,28 @@ const RequestsTableRow = ({
             )}
           </IconButton>
         </TableCell>
+        {}
         <TableCell>{request.userId}</TableCell>
         <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
         <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
         <TableCell>{request.itemId}</TableCell>
         {availdabelQuantity && activeTab === 0 ? (
-          <TableCell>
-            {availdabelQuantity.availableQuantity + "/" + request.quantity}
-          </TableCell>
+          <>
+            {availdabelQuantity.availableQuantity < request.quantity ? (
+              <TableCell style={{ borderBottom: "3px solid red" }}>
+                {availdabelQuantity.availableQuantity} / {request.quantity}
+              </TableCell>
+            ) : availdabelQuantity.pendingQuantity - request.quantity >
+              request.quantity ? (
+              <TableCell style={{ borderBottom: "3px solid yellow" }}>
+                {availdabelQuantity.availableQuantity + "/" + request.quantity}
+              </TableCell>
+            ) : (
+              <TableCell style={{ borderBottom: "3px solid green" }}>
+                {availdabelQuantity.availableQuantity + "/" + request.quantity}
+              </TableCell>
+            )}
+          </>
         ) : (
           <TableCell>{request.quantity}</TableCell>
         )}

@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Typography, Box } from "@mui/material";
 import "./RowDetails.scss";
 
-const RowDetails = ({ request, user,availdabelQuantity }) => {
-
-
+const RowDetails = ({ request, user, availdabelQuantity }) => {
   return (
     <Box className="expanded-row">
       <Typography className="expanded-row__title" variant="h6">
@@ -40,7 +38,7 @@ const RowDetails = ({ request, user,availdabelQuantity }) => {
             <Typography>Username: {user.username}</Typography>
             <Typography>Email: {user.email}</Typography>
             <Typography>Year: {user.year}</Typography>
-            <Typography>User: {user.Role}</Typography>
+            <Typography>User: {user.role}</Typography>
           </Box>
         )}
       </Box>

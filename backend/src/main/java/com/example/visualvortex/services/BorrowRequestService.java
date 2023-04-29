@@ -503,16 +503,17 @@ public class BorrowRequestService {
                 if(scheduleList!= null)
                 {
                     for(Schedule schedule:scheduleList) {
-                        LocalDateTime orderStart =schedule.getIntendedStartDate();
-                        LocalDateTime orderEnd = schedule.getIntendedReturnDate();
+                        if (schedule.isActive()) {
+                            LocalDateTime orderStart = schedule.getIntendedStartDate();
+                            LocalDateTime orderEnd = schedule.getIntendedReturnDate();
 
-                        if(collisionTime(selectStartTime,currentDateTime,orderStart,orderEnd))
-                        {
-                            List<ItemInstance> help=new ArrayList<>();
-                            for(ItemInstance instanceData:copydata)
-                                if(instanceData.getId()!=schedule.getItemInstance().getId())
-                                    help.add(instanceData);
-                            copydata=new ArrayList<>(help);
+                            if (collisionTime(selectStartTime, currentDateTime, orderStart, orderEnd)) {
+                                List<ItemInstance> help = new ArrayList<>();
+                                for (ItemInstance instanceData : copydata)
+                                    if (instanceData.getId() != schedule.getItemInstance().getId())
+                                        help.add(instanceData);
+                                copydata = new ArrayList<>(help);
+                            }
                         }
                     }
                 }
