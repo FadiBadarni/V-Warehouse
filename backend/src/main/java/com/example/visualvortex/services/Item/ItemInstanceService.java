@@ -114,16 +114,12 @@ public class ItemInstanceService {
         List<BorrowRequest>  borrowRequestsAWAITINGPICKUP=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
 
         for (Schedule schedule:scheduleList) {
-            LocalDateTime scheduleReturnDate=schedule.getIntendedReturnDate();
-            LocalDateTime scheduleStartDate =schedule.getIntendedStartDate();
-            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
-                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
-                idList.remove(schedule.getItemInstance().getId());
-            }
-
-            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
-                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
-                idList.remove(schedule.getItemInstance().getId());
+            if(schedule.isActive()) {
+                LocalDateTime scheduleReturnDate = schedule.getIntendedReturnDate();
+                LocalDateTime scheduleStartDate = schedule.getIntendedStartDate();
+                if (collisionTime(startDateO,returnDateO, scheduleStartDate,scheduleReturnDate)) {
+                    idList.remove(schedule.getItemInstance().getId());
+                }
             }
         }
 
@@ -131,33 +127,32 @@ public class ItemInstanceService {
         for (BorrowRequest borrowRequest: borrowRequestsAWAITINGPICKUP) {
             LocalDateTime scheduleReturnDate=borrowRequest.getIntendedReturnDate();
             LocalDateTime scheduleStartDate =borrowRequest.getIntendedStartDate();
-            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
-                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
+            if (collisionTime(startDateO,returnDateO, scheduleStartDate,scheduleReturnDate))
                 count += borrowRequest.getQuantity();
-            }
-
-            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
-                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
-                count += borrowRequest.getQuantity();
-            }
         }
         int pendingCount=0;
         for (BorrowRequest borrowRequest: borrowRequestsPENDING) {
             LocalDateTime scheduleReturnDate=borrowRequest.getIntendedReturnDate();
             LocalDateTime scheduleStartDate =borrowRequest.getIntendedStartDate();
-            if ((startDateO.isEqual(scheduleStartDate) || startDateO.isAfter(scheduleStartDate))
-                    && (startDateO.isEqual(scheduleReturnDate) || startDateO.isBefore(scheduleReturnDate))) {
+            if (collisionTime(startDateO,returnDateO, scheduleStartDate,scheduleReturnDate))
                 pendingCount += borrowRequest.getQuantity();
-            }
-
-            if ((returnDateO.isEqual(scheduleStartDate) || returnDateO.isAfter(scheduleStartDate))
-                    && (returnDateO.isEqual(scheduleReturnDate) || returnDateO.isBefore(scheduleReturnDate))) {
-                pendingCount += borrowRequest.getQuantity();
-            }
         }
 
 
         return AvailableInstanceQuantity.builder().availableQuantity(idList.size()-count)
                 .pendingQuantity(pendingCount).availableItemsIds(idList).build();
     }
+
+    public boolean between(LocalDateTime current, LocalDateTime start, LocalDateTime end) {
+        return current.isEqual(start)  || (current.isAfter(start) && current.isBefore(end));
+    }
+
+    public boolean collisionTime(LocalDateTime time1start, LocalDateTime time1end, LocalDateTime time2start, LocalDateTime time2end) {
+
+        return between(time1start,time2start,time2end) ||
+                between(time1end,time2start,time2end) ||
+                between( time2start,time1start,time1end)||
+                between(time2end,time1start,time1end);
+    }
+
 }

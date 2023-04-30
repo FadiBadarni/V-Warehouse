@@ -398,22 +398,9 @@ public class BorrowRequestService {
 
     public AvailableTime getEveryTimeSchedule(long itemId ,int quantity, LocalDateTime localDateTime) {
         List<ItemInstance> itemInstanceTable=itemInstanceService.findByItemTypeId(itemId);
-
-        List<BorrowRequest> borrowRequestsTable=borrowRequestRepository.findAll();
-        List<BorrowRequest> awaitingPickupBorrowRequestsTable = borrowRequestsTable.stream()
-                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
-                .collect(Collectors.toList());
-
-        List<BorrowRequest> bendingBorrowRequestsTable = borrowRequestsTable.stream()
-                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
-                .collect(Collectors.toList());
-
-
-        List<BorrowRequest> awaitingReturnBorrowRequestsTable = borrowRequestsTable.stream()
-                .filter(request -> request.getStatus() == RequestStatus.AWAITING_RETURN && request.getItemId() == itemId)
-                .collect(Collectors.toList());
-
-
+        List<BorrowRequest>  bendingBorrowRequestsTable=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
+        List<BorrowRequest>  awaitingPickupBorrowRequestsTable=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
+        List<BorrowRequest> awaitingReturnBorrowRequestsTable=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId,RequestStatus.AWAITING_RETURN);
         return startData(awaitingReturnBorrowRequestsTable,localDateTime,quantity,itemInstanceTable,awaitingPickupBorrowRequestsTable,bendingBorrowRequestsTable);
 
     }
@@ -472,13 +459,8 @@ public class BorrowRequestService {
     }
 
     public AvailableTime getEveryTimeToReturnInSchedule(int quantity,LocalDateTime localDateTimeStart,LocalDateTime localDateTimeReturn, List<ItemInstance> data,long itemId) {
-        List<BorrowRequest> borrowRequests=borrowRequestRepository.findAll();
-        List<BorrowRequest> awaitingPickupBorrow = borrowRequests.stream()
-                .filter(request -> request.getStatus() == RequestStatus.AWAITING_PICKUP && request.getItemId() == itemId)
-                .collect(Collectors.toList());
-        List<BorrowRequest> bendingBorrow =borrowRequests.stream()
-                .filter(request -> request.getStatus() == RequestStatus.PENDING && request.getItemId() == itemId)
-                .collect(Collectors.toList());
+        List<BorrowRequest>  bendingBorrow=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
+        List<BorrowRequest>   awaitingPickupBorrow=borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
         return returnData(quantity,localDateTimeStart,localDateTimeReturn,data,awaitingPickupBorrow,bendingBorrow);
     }
 

@@ -70,12 +70,6 @@ public class ItemManagementController {
         return itemInstanceService.getAvailableQuantity(itemId,startDate,returnDate);
     }
 
-//    @GetMapping("/get_schedule-item-instance-ids/{itemId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<Long> getScheduleItemInstanceIds(@PathVariable Long itemId, @RequestParam String startDate,
-//                                                                @RequestParam String returnDate) {
-//
-//        return  scheduleService.getScheduleItemInstanceIds(itemId,startDate,returnDate);
-//    }
+
 
 }

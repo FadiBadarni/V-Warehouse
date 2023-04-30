@@ -34,14 +34,13 @@ const RequestsTableRow = ({
   // items
 }) => {
   const customized = customStatus(request.status);
-  const [itemInstances, setItemInstances] = useState([]);
+  // const [itemInstances, setItemInstances] = useState([]);
   const [items, setItems] = useState([]);
   const { i18n, t } = useTranslation("borrowRequests");
   const [acceptButtonIsDisabled, setAcceptButtonIsDisabled] = useState(true);
   const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
 
   const [availdabelQuantity, setAvaildabelQuantity] = useState();
-  const [scheduleItemIstanceIDs, setScheduleItemIstanceIDs] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,16 +65,16 @@ const RequestsTableRow = ({
     return new Intl.DateTimeFormat(i18n.language, options).format(date);
   };
 
-  useEffect(() => {
-    if (activeTab === 2)
-      if (expandedRow === index) {
-        getItemInstancesByRequestId(request.requestId)
-          .then((instances) => setItemInstances(instances))
-          .catch((error) =>
-            console.error("Error fetching item instances:", error)
-          );
-      }
-  }, [expandedRow, index, request.requestId, activeTab]);
+  // useEffect(() => {
+  //   if (activeTab === 2)
+  //     if (expandedRow === index) {
+  //       getItemInstancesByRequestId(request.requestId)
+  //         .then((instances) => setItemInstances(instances))
+  //         .catch((error) =>
+  //           console.error("Error fetching item instances:", error)
+  //         );
+  //     }
+  // }, [expandedRow, index, request.requestId, activeTab]);
 
   return (
     <React.Fragment>
@@ -108,7 +107,8 @@ const RequestsTableRow = ({
               <TableCell style={{ borderBottom: "3px solid red" }}>
                 {availdabelQuantity.availableQuantity} / {request.quantity}
               </TableCell>
-            ) : availdabelQuantity.pendingQuantity - request.quantity >
+            ) : availdabelQuantity.availableQuantity -
+                (availdabelQuantity.pendingQuantity - request.quantity) <
               request.quantity ? (
               <TableCell style={{ borderBottom: "3px solid yellow" }}>
                 {availdabelQuantity.availableQuantity + "/" + request.quantity}
@@ -223,6 +223,7 @@ const RequestsTableRow = ({
                   request={request}
                   user={user}
                   availdabelQuantity={availdabelQuantity}
+                  itemId={request.itemId}
                 />
               </Box>
             )}
