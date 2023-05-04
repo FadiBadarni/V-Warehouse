@@ -95,16 +95,13 @@ public class BorrowRequestController {
     }
 
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/borrow-requests/get_every_time_schedule/{quantity}")
     public AvailableTime startTime(@PathVariable int quantity,
                                    @RequestParam String localDateTime,
-                                   @RequestParam long itemId) {
+                                   @RequestParam List<Long> itemId) {
         LocalDateTime localDateTimeO = LocalDateTime.parse(localDateTime, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         return borrowRequestService.getEveryTimeSchedule(itemId, quantity, localDateTimeO);
-        //return borrowRequestService.getAvailableSchedules(itemId, quantity, localDateTimeO);
     }
-
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/borrow-requests/get_every_time_to-return/{quantity}")
@@ -112,12 +109,11 @@ public class BorrowRequestController {
             @PathVariable int quantity,
             @RequestParam String localDateTimeStart,
             @RequestParam String localDateTimeReturn,
-            @RequestParam long itemId,
+            @RequestParam List<Long> itemId,
             @RequestBody List<ItemInstance> itemInstances) {
 
         LocalDateTime localDateTimeStartO = LocalDateTime.parse(localDateTimeStart, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         LocalDateTime localDateTimeReturnO = LocalDateTime.parse(localDateTimeReturn, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        //return borrowRequestService.getAvailableReturnTimes(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
         return borrowRequestService.getEveryTimeToReturnInSchedule(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
 
     }

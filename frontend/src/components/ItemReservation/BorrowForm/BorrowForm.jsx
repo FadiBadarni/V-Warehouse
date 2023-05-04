@@ -88,7 +88,7 @@ const BorrowForm = ({
     const result = await getllTheTimethatCanStart(
       selectedInstanceIds,
       date.toISOString(),
-      itemIdValue
+      [2752,2753]
     );
     const listForAllstartDate = result.startDates;
     const listOfKeys = Object.keys(listForAllstartDate);

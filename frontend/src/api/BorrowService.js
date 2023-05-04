@@ -78,7 +78,7 @@ export async function getllTheTimethatCanStart(
       await axiosInstance.get(
         `/borrow-requests/get_every_time_schedule/${quantity}`,
         {
-          params: { localDateTime: localDateTime, itemId: itemId },
+          params: { localDateTime: localDateTime, itemId: itemId.join(',') },
         }
       ),
     "Every time schedule fetched successfully",
