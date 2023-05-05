@@ -11,7 +11,7 @@
 
     &__item {
 
-        background-color: transparent;
+        background-color: darken($color: rgba(230, 230, 230, 0.637), $amount: 5%);
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.384);
         color: black;
@@ -22,10 +22,17 @@
         overflow: hidden;
         height: 150px;
         position: relative;
-        background-image: url("../../assets/gridbg.jpg");
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+        flex-direction: row;
+
+        &__image {
+            flex: 1;
+            width: 50%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
 
         .truncate {
             display: -webkit-box;
@@ -43,7 +50,7 @@
 
         .attributes {
             max-width: 13rem;
-            margin-top: 2rem;
+            margin-top: 0.8rem;
             font-weight: bold;
 
             .rtl & {
@@ -66,10 +73,11 @@
         margin-bottom: 10px;
         height: 100%;
         margin-top: 1.5rem;
+        flex: 1;
 
         h3 {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         p {

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Pagination from "@mui/material/Pagination";
+import images from "../../constants/images";
 
 const Items = ({ items, selectedTag }) => {
   const { t } = useTranslation("warehouse");
@@ -47,6 +48,18 @@ const Items = ({ items, selectedTag }) => {
               initial="initial"
               whileHover="hover"
             >
+              <div
+                className="warehouse__item__image"
+                style={{
+                  backgroundImage: `url(${
+                    images[item.name.toLowerCase().replace(/ /g, "_")] ||
+                    images.notFound
+                  })`,
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+                }}
+              />
               <div className="warehouse__item-details">
                 <h3>{item.name}</h3>
                 <p className="truncate">{item.description}</p>
