@@ -1,7 +1,7 @@
 package com.example.visualvortex.entities.Request;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;

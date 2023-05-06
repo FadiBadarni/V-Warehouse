@@ -1,9 +1,7 @@
 package com.example.visualvortex.entities.Item;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
-
+import javax.persistence.*;
 @Entity
 @Table(name = "item_attributes")
 @NoArgsConstructor

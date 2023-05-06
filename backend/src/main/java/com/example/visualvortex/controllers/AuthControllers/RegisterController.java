@@ -4,10 +4,12 @@ import com.example.visualvortex.dtos.UserDTOS.RegistrationDto;
 import com.example.visualvortex.errors.PasswordDoNotMatchs;
 import com.example.visualvortex.errors.UserAlreadyExists;
 import com.example.visualvortex.services.User.UserService;
-import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")

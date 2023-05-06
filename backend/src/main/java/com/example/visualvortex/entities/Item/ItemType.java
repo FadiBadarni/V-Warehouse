@@ -1,7 +1,6 @@
 package com.example.visualvortex.entities.Item;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.Set;

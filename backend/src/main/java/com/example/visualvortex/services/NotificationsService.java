@@ -63,7 +63,7 @@ public class NotificationsService {
     public void broadcastNotificationToAllUsers(String message) {
         Iterable<User> allUsersIterable = userRepository.findAll();
         List<User> allUsers = StreamSupport.stream(allUsersIterable.spliterator(), false)
-                .toList();
+                .collect(Collectors.toList());
         allUsers.forEach(user -> createNotification(user.getId(), message));
     }
 

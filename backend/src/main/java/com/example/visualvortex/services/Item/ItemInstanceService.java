@@ -105,7 +105,7 @@ public class ItemInstanceService {
         List<Long> idList = new ArrayList<>(itemInstanceList.stream()
                 .filter(itemInstance -> itemInstance.getState() == ItemState.AVAILABLE)
                 .map(ItemInstance::getId)
-                .toList());
+                .collect(Collectors.toList()));
 
         LocalDateTime startDateO = LocalDateTime.parse(startDate, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         LocalDateTime returnDateO = LocalDateTime.parse(returnDate, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);

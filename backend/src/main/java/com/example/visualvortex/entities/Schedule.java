@@ -3,7 +3,7 @@ package com.example.visualvortex.entities;
 import com.example.visualvortex.entities.Item.ItemInstance;
 import com.example.visualvortex.entities.Item.ItemType;
 import com.example.visualvortex.entities.User.User;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,6 @@ public class Schedule {
     private ItemType itemType;
 
     @Column(nullable = false)
-    private boolean isActive = true;
-
+    private boolean isActive;
 
 }

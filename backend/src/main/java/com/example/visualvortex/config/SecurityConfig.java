@@ -3,7 +3,6 @@ package com.example.visualvortex.config;
 import com.example.visualvortex.security.JwtFilter;
 import com.example.visualvortex.security.LoginSuccessHandler;
 import com.example.visualvortex.services.User.CustomerUserdetailsService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,11 +41,11 @@ public class SecurityConfig {
     SecurityFilterChain getSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(authorizer -> {
-                    authorizer.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                            .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                            .anyRequest().authenticated();
-                })
+//                .authorizeRequests(authorizer -> {
+//                    authorizer.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+//                            .antMatchers("/admin/**").hasAuthority("ADMIN")
+//                            .anyRequest().authenticated();
+//                })
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()

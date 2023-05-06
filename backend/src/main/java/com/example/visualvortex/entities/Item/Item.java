@@ -1,9 +1,10 @@
 package com.example.visualvortex.entities.Item;
 
 
-import jakarta.persistence.*;
+
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Item {
     private ItemType itemType;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
-    private List<ItemInstance> itemInstances = new ArrayList<>();;
+    private List<ItemInstance> itemInstances;
 
 
 }

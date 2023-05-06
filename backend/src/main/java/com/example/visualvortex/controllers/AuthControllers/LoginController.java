@@ -4,12 +4,12 @@ import com.example.visualvortex.dtos.UserDTOS.LoginDto;
 import com.example.visualvortex.dtos.UserDTOS.UserDTO;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.services.User.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 

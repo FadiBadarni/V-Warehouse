@@ -26,4 +26,6 @@ public interface BorrowRequestRepository extends JpaRepository<BorrowRequest, UU
     List<BorrowRequest> findByUserId(Long userId);
 
     BorrowRequest findByRequestId(UUID requestId);
+
+    BorrowRequest getReferenceById(UUID requestId);
 }

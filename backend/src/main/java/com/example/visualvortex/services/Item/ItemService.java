@@ -141,7 +141,7 @@ public class ItemService {
                         instance.getId(),
                         instance.getState(),
                         instance.getItem().getId()))
-                .toList();
+                .collect(Collectors.toList());
 
         return ItemDTO.builder()
                 .id(item.getId())

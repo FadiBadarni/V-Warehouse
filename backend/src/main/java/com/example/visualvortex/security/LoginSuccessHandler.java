@@ -1,15 +1,17 @@
 package com.example.visualvortex.security;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
@@ -23,7 +25,12 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         redirectStrategy.sendRedirect(request, response, isAdminUser(authentication) ? "/admin" : "/home");
     }
 
+
     private boolean isAdminUser(Authentication authentication) {
-        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ADMIN");
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList())
+                .contains("ADMIN");
     }
+
 }
