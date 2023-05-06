@@ -88,7 +88,7 @@ const RowDetailsQR = ({
       const borrowInstances = await getBorrowInstances(request.requestId);
       setInstances(borrowInstances);
     };
-    if (activeTab == 2) fetchBorrowInstances();
+    if (activeTab === 2) fetchBorrowInstances();
   }, []);
 
   const addItem = (data) => {
