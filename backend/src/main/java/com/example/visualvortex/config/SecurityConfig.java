@@ -41,17 +41,18 @@ public class SecurityConfig {
     SecurityFilterChain getSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
-//                .authorizeRequests(authorizer -> {
-//                    authorizer.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-//                            .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                            .anyRequest().authenticated();
-//                })
+                .authorizeRequests(authorizer -> {
+                    authorizer
+                            .antMatchers(PUBLIC_ENDPOINTS).permitAll()
+                            .antMatchers("/admin/**").hasAuthority("ADMIN")
+                            .anyRequest().authenticated();
+                })
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                        (request, response, authException)
-                                -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                        (request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and();
         return httpSecurity.build();
     }
