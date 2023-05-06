@@ -15,6 +15,15 @@ export async function getWarehouseItemById(id) {
     "An error occurred while fetching warehouse item by ID:"
   );
 }
+
+export async function getWarehouseItemsByIds(ids) {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/warehouseItemsByIds?ids=${ids}`),
+    "Warehouse items fetched successfully",
+    "An error occurred while fetching warehouse items by IDs:"
+  );
+}
+
 export async function fetchedItemTypes() {
   return apiWrapper(
     async () => await axiosInstance.get(`/itemTypes`),
@@ -23,7 +32,7 @@ export async function fetchedItemTypes() {
   );
 }
 
-export async function fetchedQuantityItemsByTypeId(id) {
+export async function itemInstancesCountById(id) {
   return apiWrapper(
     async () => await axiosInstance.get(`/quantityItemsByType/${id}`),
     "Warehouse item fetched successfully",

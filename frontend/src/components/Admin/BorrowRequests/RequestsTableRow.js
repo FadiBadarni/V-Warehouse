@@ -12,7 +12,11 @@ import RowDetailsQR from "./RowDetailsQR";
 import RowDetails from "./RowDetails";
 import { useTranslation } from "react-i18next";
 import customStatus from "./Utils/CustomStatus";
-import { getItemInstancesByRequestId } from "../../../api/BorrowService";
+import {
+  getItemInstancesByRequestId,
+  getItemsIdsByRequestId,
+  getItemInstancesByItemId,
+} from "../../../api/BorrowService";
 
 const RequestsTableRow = ({
   request,
@@ -36,8 +40,9 @@ const RequestsTableRow = ({
   const [itemInstances, setItemInstances] = useState([]);
   const [items, setItems] = useState([]);
   const { i18n, t } = useTranslation("borrowRequests");
-  const [acceptButtonIsDisabled, setAcceptButtonIsDisabled] = useState(true);
   const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
+  const [allInstances, setAllInstances] = useState([]);
+  const [allItemIds, setAllItemIds] = useState([]);
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -60,6 +65,23 @@ const RequestsTableRow = ({
           );
       }
   }, [expandedRow, index, request.requestId, activeTab]);
+
+  useEffect(() => {
+    if (expandedRow === index) {
+      getItemsIdsByRequestId(request.requestId)
+        .then((itemsIds) => {
+          setAllItemIds(itemsIds);
+          const itemInstancesPromises = itemsIds.map((itemId) =>
+            getItemInstancesByItemId(itemId)
+          );
+          return Promise.all(itemInstancesPromises);
+        })
+        .then((allItemInstances) => {
+          setAllInstances(allItemInstances);
+        })
+        .catch((error) => console.error("Error fetching item ids:", error));
+    }
+  }, [expandedRow, index, request.requestId]);
 
   return (
     <React.Fragment>
@@ -128,7 +150,6 @@ const RequestsTableRow = ({
                 event.stopPropagation();
                 handlePickupConfirm(request, items);
               }}
-              disabled={acceptButtonIsDisabled}
             >
               Confirm
             </Button>
@@ -185,9 +206,9 @@ const RequestsTableRow = ({
                   user={user}
                   setItems={setItems}
                   items={items}
-                  setAcceptButtonIsDisable={setAcceptButtonIsDisabled}
                   activeTab={activeTab}
-                  itemInstances={itemInstances}
+                  allInstances={allInstances}
+                  allItemIds={allItemIds}
                   setReturnButtonIsDisable={setReturnButtonIsDisable}
                 />
               </Box>

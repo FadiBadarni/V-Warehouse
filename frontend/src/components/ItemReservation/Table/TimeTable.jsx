@@ -1,41 +1,32 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import TimeSlot from "./TimeSlot";
 import styles from "./TimeTable.module.scss";
+import { itemInstancesCountById } from "../../../api/WarehouseService";
 
 const TimeTable = ({
   selectedDate,
-  occupiedDates,
   onTimeSelected,
   minTime,
   maxTime,
-  disableOccupied,
-  pendingDates,
+  awaitingPickupRequests,
+  itemIds,
 }) => {
   const [selectedTime, setSelectedTime] = useState(null);
+  const [itemInstancesCount, setItemInstancesCount] = useState(new Map());
 
-  const isTimeOccupied = useCallback(
-    (time) => {
-      const occupied = occupiedDates.some(
-        ({ intendedStartDate, intendedReturnDate }) => {
-          const occupiedStart = dayjs(intendedStartDate);
-          const occupiedEnd = dayjs(intendedReturnDate);
-          return time.isBetween(occupiedStart, occupiedEnd, "minute", "[]");
-        }
-      );
+  useEffect(() => {
+    const fetchInstancesCount = async () => {
+      const instancesCountMap = new Map();
+      for (const itemId of itemIds) {
+        const response = await itemInstancesCountById(itemId);
+        instancesCountMap.set(itemId, response);
+      }
+      setItemInstancesCount(instancesCountMap);
+    };
 
-      const pending = pendingDates.some(
-        ({ intendedStartDate, intendedReturnDate }) => {
-          const pendingStart = dayjs(intendedStartDate);
-          const pendingEnd = dayjs(intendedReturnDate);
-          return time.isBetween(pendingStart, pendingEnd, "minute", "[]");
-        }
-      );
-
-      return disableOccupied ? { occupied, pending } : { occupied };
-    },
-    [occupiedDates, disableOccupied, pendingDates]
-  );
+    fetchInstancesCount();
+  }, [itemIds]);
 
   const handleTimeSelected = useCallback(
     (time) => {
@@ -45,6 +36,18 @@ const TimeTable = ({
     [onTimeSelected]
   );
 
+  const isTimeSlotInPendingRequests = (time) => {
+    return awaitingPickupRequests.some((request) => {
+      const startDate = dayjs(request.intendedStartDate);
+      const endDate = dayjs(request.intendedReturnDate);
+      const dayjsTime = dayjs(time); // Convert time to dayjs object
+      return (
+        (dayjsTime.isSame(startDate) || dayjsTime.isAfter(startDate)) &&
+        (dayjsTime.isSame(endDate) || dayjsTime.isBefore(endDate))
+      );
+    });
+  };
+
   const createTimeSlots = useCallback(() => {
     const slots = [];
     let currentTime = minTime;
@@ -52,15 +55,13 @@ const TimeTable = ({
       const time = dayjs(selectedDate)
         .hour(currentTime.hour())
         .minute(currentTime.minute());
-      const { occupied, pending } = isTimeOccupied(time);
       slots.push(
         <TimeSlot
           key={time.format("HH:mm")}
           time={time}
-          available={!occupied}
           selected={selectedTime && selectedTime.isSame(time)}
+          isPending={isTimeSlotInPendingRequests(time)}
           onClick={handleTimeSelected}
-          pending={pending}
         />
       );
       currentTime = currentTime.add(30, "minute");
@@ -71,9 +72,9 @@ const TimeTable = ({
     selectedDate,
     minTime,
     maxTime,
-    isTimeOccupied,
     selectedTime,
     handleTimeSelected,
+    awaitingPickupRequests,
   ]);
 
   return <div className={styles["time-table"]}>{createTimeSlots()}</div>;

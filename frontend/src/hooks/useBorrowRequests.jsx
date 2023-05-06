@@ -57,10 +57,10 @@ const useBorrowRequests = () => {
   const updateRequestStatusAndState = async (
     request,
     newStatus,
-    itemInstances
+    itemInstancesIds
   ) => {
-    if (itemInstances && newStatus === "AWAITING_RETURN") {
-      await addItemInstances(request.requestId, itemInstances);
+    if (itemInstancesIds && newStatus === "AWAITING_RETURN") {
+      await addItemInstances(request.requestId, itemInstancesIds);
     }
     try {
       const updatedRequest = await updateRequestStatus(

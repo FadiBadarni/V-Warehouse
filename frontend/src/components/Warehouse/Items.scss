@@ -107,6 +107,26 @@
     .pagination {
         margin-top: 16px;
     }
+
+    .check-button {
+        position: fixed;
+        width: 100%;
+        height: 3.5rem;
+        bottom: 0;
+        left: 0;
+        text-align: center;
+        z-index: 1000;
+        background-color: $sce-primary-color;
+        color: $sce-text-color;
+        font-size: 1.4rem;
+        text-transform: capitalize !important;
+        transition: .4s ease-in-out;
+
+        &:hover {
+            background-color: $sce-primary-color;
+            filter: brightness(150%);
+        }
+    }
 }
 
 

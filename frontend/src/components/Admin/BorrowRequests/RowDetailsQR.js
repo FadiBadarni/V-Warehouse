@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-// import { Typography, Box,MenuItem,Select,InputLabel,FormControl,OutlinedInput } from "@mui/material";
-import "./RowDetails.scss";
 import { QrReader } from "react-qr-reader";
 import {
   Typography,
@@ -12,15 +10,16 @@ import {
   Chip,
   Select,
 } from "@mui/material";
+import "./RowDetails.scss";
 
 const RowDetailsQR = ({
   request,
   user,
   items,
   setItems,
-  setAcceptButtonIsDisable,
   activeTab,
-  itemInstances,
+  allInstances,
+  allItemIds,
   setReturnButtonIsDisable,
 }) => {
   const ITEM_HEIGHT = 48;
@@ -33,30 +32,25 @@ const RowDetailsQR = ({
       },
     },
   };
-
   const [scans, setScans] = useState([]);
-
   const addItem = (data) => {
     if (data) {
       setScans((prevScans) => {
-        if (data && !prevScans.includes(data)) {
-          if (activeTab === 1) {
-            if (prevScans.length === request.quantity - 1) {
-              setAcceptButtonIsDisable(false);
-            } else setAcceptButtonIsDisable(true);
-          }
-          if (activeTab === 2) {
-            if (prevScans.length === request.quantity - 1) {
-              setReturnButtonIsDisable(false);
-            } else setReturnButtonIsDisable(true);
-          }
-
-          setItems([...prevScans, data]);
-          return [...prevScans, data];
-        } else {
-          setItems([prevScans]);
+        // Check if the item is already scanned
+        if (prevScans.includes(data)) {
           return prevScans;
         }
+
+        const updatedScans = prevScans.concat(data);
+
+        if (activeTab === 2) {
+          if (updatedScans.length === allItemIds.length) {
+            setReturnButtonIsDisable(false);
+          } else setReturnButtonIsDisable(true);
+        }
+
+        setItems(updatedScans);
+        return updatedScans;
       });
     }
   };
@@ -66,12 +60,9 @@ const RowDetailsQR = ({
       target: { value },
     } = event;
     setItems(typeof value === "string" ? value.split(",") : value);
-    if (scans.length === request.quantity) {
-      setAcceptButtonIsDisable(false);
-    } else setAcceptButtonIsDisable(true);
   };
 
-  const listItems = itemInstances.map((item) => (
+  const listItems = allInstances.map((item) => (
     <li key={item.id}>{item.id}</li>
   ));
 
@@ -84,6 +75,33 @@ const RowDetailsQR = ({
     }
   };
 
+  const handleSelectChange = (e, index) => {
+    console.log(
+      "Selected instance ID:",
+      e.target.value,
+      "for item index:",
+      index
+    );
+  };
+
+  const renderSelects = () => {
+    return allInstances.map((itemInstances, index) => (
+      <div key={index}>
+        <h4>Item ID: {itemInstances[0].itemId}</h4>
+        <Select
+          onChange={(e) => handleSelectChange(e, index)}
+          value={itemInstances[0].id}
+        >
+          {itemInstances.map((instance) => (
+            <MenuItem key={instance.id} value={instance.id}>
+              {instance.id}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+    ));
+  };
+
   return (
     <Box className="expanded-row">
       <Typography className="expanded-row__title" variant="h6">
@@ -92,15 +110,15 @@ const RowDetailsQR = ({
       <Box className="expanded-row__content">
         <Box className="expanded-row__info">
           {activeTab === 2 &&
-            ((<h1>you must to return</h1>), (<ul>{listItems}</ul>))}
-          {scans.length}/{request.quantity}
+            ((<h1>you must return</h1>), (<ul>{listItems}</ul>))}
+          {scans.length}/{allItemIds.length}
           <Typography className="expanded-row__instance__title">
-            Requested Item Info
+            Scanned Items
           </Typography>
           <FormControl
             sx={{ m: 1, width: 300, fullWidth: true, size: "medium" }}
           >
-            <InputLabel id="multiple-chip">Item</InputLabel>
+            <InputLabel id="multiple-chip">Scanned Items</InputLabel>
             <Select
               labelId="ID"
               id="ID-multiple"
@@ -118,11 +136,7 @@ const RowDetailsQR = ({
               MenuProps={MenuProps}
             >
               {scans.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  // style={getStyles(name, items)}
-                >
+                <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
@@ -131,10 +145,10 @@ const RowDetailsQR = ({
           <div style={{ width: "300px", height: "300px" }}>
             <QrReader onResult={handleResultQRChange} />
           </div>
-          <d>scans={scans.length} </d>
-          <d>items={items.length}</d>
+          {renderSelects()}
+          <p>scans={scans.length} </p>
+          <p>items={items.length}</p>
           {scans && scans.map((item) => <p>{item}</p>)}
-          -------------------------------------------
           {items && items.map((item) => <p>{item}</p>)}
         </Box>
         {user && (

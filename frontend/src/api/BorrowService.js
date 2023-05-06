@@ -50,57 +50,19 @@ export async function getItemInstancesByRequestId(requestId) {
   );
 }
 
-export async function getScheduleByItemId(itemId) {
+export async function getItemsIdsByRequestId(requestId) {
   return apiWrapper(
-    () => axiosInstance.get(`borrow-requests/schedule/${itemId}`),
+    () => axiosInstance.get(`/borrow-requests/${requestId}/itemsIds`),
+    "Items Ids fetched successfully",
+    "An error occurred while fetching items Ids:"
+  );
+}
+
+export async function getItemInstancesByItemId(itemId) {
+  return apiWrapper(
+    () => axiosInstance.get(`/items/${itemId}/instances`),
     "Item instances fetched successfully",
     "An error occurred while fetching item instances:"
-  );
-}
-
-export async function findScheduleIdsByItemIdAndDate(id, date) {
-  return apiWrapper(
-    async () =>
-      await axiosInstance.get(`/indScheduleIdsByItemIdAndDate/${id}`, {
-        params: { date: date },
-      }),
-    "Warehouse item fetched successfully",
-    "An error occurred while fetching warehouse item by ID:"
-  );
-}
-export async function getllTheTimethatCanStart(
-  quantity,
-  localDateTime,
-  itemId
-) {
-  return apiWrapper(
-    async () =>
-      await axiosInstance.get(
-        `/borrow-requests/get_every_time_schedule/${quantity}`,
-        {
-          params: { localDateTime: localDateTime, itemId: itemId },
-        }
-      ),
-    "Every time schedule fetched successfully",
-    "An error occurred while fetching every time schedule:"
-  );
-}
-
-export async function getAllTheTimeToReturn(
-  quantity,
-  localDateTimeStart,
-  localDateTimeReturn,
-  itemId,
-  data
-) {
-  return apiWrapper(
-    async () =>
-      await axiosInstance.post(
-        `/borrow-requests/get_every_time_to-return/${quantity}?localDateTimeStart=${localDateTimeStart}&localDateTimeReturn=${localDateTimeReturn}&itemId=${itemId}`,
-        data
-      ),
-    "Every time schedule fetched successfully",
-    "An error occurred while fetching every time schedule:"
   );
 }
 

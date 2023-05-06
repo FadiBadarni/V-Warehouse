@@ -1,20 +1,17 @@
 import React from "react";
 import styles from "./TimeSlot.module.scss";
 
-const TimeSlot = ({ time, available, selected, onClick, pending }) => {
-  const slotClass = available ? styles.available : styles.unavailable;
+const TimeSlot = ({ time, selected, isPending, onClick }) => {
   const selectedClass = selected ? styles.selected : "";
-  const pendingClass = pending ? styles.pending : "";
-
-  const tooltipText = available ? "Available" : pending ? "Queue" : "Taken";
+  const pendingClass = isPending ? styles.pending : "";
 
   return (
     <div
-      className={`${styles["time-slot"]} ${slotClass} ${selectedClass} ${pendingClass}`}
+      className={`${styles["time-slot"]} ${selectedClass} ${pendingClass}`}
       onClick={() => {
-        if (available) onClick(time);
+        onClick(time);
       }}
-      title={tooltipText}
+      title="Click to select time"
     >
       {time.format("HH:mm")}
     </div>

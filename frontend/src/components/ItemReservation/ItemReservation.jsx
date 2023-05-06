@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ItemInfo from "./ItemInfo";
@@ -10,29 +9,39 @@ import SignatureBackdrop from "./SignatureBackdrop";
 import { useTranslation } from "react-i18next";
 import { getUserIdFromLocalStorage } from "../../api/UserService";
 import { createBorrowRequest } from "../../api/BorrowService";
-import useItemDetails from "../../hooks/useItemDetails";
+import { getWarehouseItemsByIds } from "../../api/WarehouseService";
+import { useLocation } from "react-router-dom";
+import useBorrowRequests from "../../hooks/useBorrowRequests";
 
 import dayjs from "dayjs";
 import "./ItemReservation.scss";
 
 const BorrowedItemDetails = () => {
   const { t } = useTranslation("itemReservation");
-
-  const { id } = useParams();
+  const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [signaturePad, setSignaturePad] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
   const [intendedStartDate, setIntendedStartDate] = useState("");
   const [intendedReturnDate, setIntendedReturnDate] = useState("");
   const [borrowReason, setBorrowReason] = useState("");
-  const [quantity, setQuantity] = useState([]);
-
+  const { awaitingPickupRequests } = useBorrowRequests();
   const navigate = useNavigate();
 
-  const { itemDetails, fetchItemDetails } = useItemDetails();
+  const [fetchedItems, setFetchedItems] = useState([]);
+  const fetchSelectedItems = async (ids) => {
+    try {
+      const items = await getWarehouseItemsByIds(ids);
+      setFetchedItems(items);
+    } catch (error) {
+      console.error("Error fetching selected items:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchItemDetails(id);
-  }, [id, fetchItemDetails]);
+    const selectedIds = location.pathname.split("/").pop();
+    fetchSelectedItems(selectedIds);
+  }, [location.pathname]);
 
   const handleSendRequest = () => {
     setShowModal(true);
@@ -56,11 +65,10 @@ const BorrowedItemDetails = () => {
       const userId = getUserIdFromLocalStorage();
       const borrowRequestData = {
         userId,
-        itemId: id,
+        itemIds: location.pathname.split("/").pop().split(","),
         intendedStartDate,
         intendedReturnDate,
         borrowingReason: borrowReason,
-        quantity: quantity,
         signatureData: base64Signature,
       };
       const result = await createBorrowRequest(borrowRequestData);
@@ -99,7 +107,7 @@ const BorrowedItemDetails = () => {
     return true;
   };
 
-  if (!itemDetails || Object.keys(itemDetails).length === 0) {
+  if (!fetchedItems || Object.keys(fetchedItems).length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -107,7 +115,7 @@ const BorrowedItemDetails = () => {
     <div className="item-details">
       <div className="item-details-container">
         <h1 className="page-title">{t("itemReservation.title")}</h1>
-        <ItemInfo item={itemDetails}></ItemInfo>
+        <ItemInfo fetchedItems={fetchedItems}></ItemInfo>
 
         <LatePolicy></LatePolicy>
         <BorrowForm
@@ -119,9 +127,8 @@ const BorrowedItemDetails = () => {
           setBorrowReason={setBorrowReason}
           handleSendRequest={handleSendRequest}
           isFormValid={isFormValid}
-          quantity={itemDetails.quantity}
-          setQuantity={setQuantity}
-          itemId={itemDetails.id}
+          itemIds={location.pathname.split("/").pop().split(",")}
+          awaitingPickupRequests={awaitingPickupRequests}
         />
         <AnimatePresence>
           {showModal && (
