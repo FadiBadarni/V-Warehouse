@@ -46,6 +46,15 @@ public class ItemController {
         return itemService.itemToItemDTO(item);
     }
 
+    @GetMapping("/warehouseItemsByIds")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemDTO> getItemsByIds(@RequestParam("ids") List<Long> ids) {
+        List<Item> items = itemService.getItemsByIds(ids);
+        return items.stream()
+                .map(itemService::itemToItemDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("itemTypes")
     @ResponseStatus(HttpStatus.OK)
     public List<String> getItemById() {
@@ -59,17 +68,18 @@ public class ItemController {
 
         return itemInstanceService.quantityItemsBy(id);
     }
+
     @GetMapping("/countItemInstancesByItemId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public long  countItemInstancesByItemId(@PathVariable Long id) {
-        return  itemInstanceService.countItemInstancesByItemId(id);
+    public long countItemInstancesByItemId(@PathVariable Long id) {
+        return itemInstanceService.countItemInstancesByItemId(id);
     }
 
 
     @GetMapping("/countItemInstancesByItemIdAndIntendedDates/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public long  countItemInstancesByItemIdAndIntendedDates(@PathVariable Long id) {
-        return  itemInstanceService.countItemInstancesByItemIdAndIntendedDates(id,new Date(123),new Date(1123));
+    public long countItemInstancesByItemIdAndIntendedDates(@PathVariable Long id) {
+        return itemInstanceService.countItemInstancesByItemIdAndIntendedDates(id, new Date(123), new Date(1123));
     }
 
 

@@ -21,17 +21,17 @@ public class BorrowRequest {
     private UUID requestId;
 
     private Long userId;
-    private Long itemId;
+
+    @ElementCollection
+    @CollectionTable(name = "request_item_ids", joinColumns = @JoinColumn(name = "request_id"))
+    @Column(name = "item_id")
+    private List<Long> itemIds;
 
     @Column(nullable = false, columnDefinition = "timestamp without time zone default NOW()::timestamp(0)")
     private LocalDateTime intendedStartDate, intendedReturnDate;
 
     @Column(nullable = false)
     private String borrowingReason;
-
-    @Column
-    @CollectionTable(name = "quantity")
-    private int quantity;
 
     @Column
     @ElementCollection

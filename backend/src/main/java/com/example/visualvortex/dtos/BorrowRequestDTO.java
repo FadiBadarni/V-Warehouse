@@ -22,9 +22,8 @@ public class BorrowRequestDTO {
     private LocalDateTime intendedReturnDate;
     private LocalDateTime requestTime;
     private String borrowingReason;
-    private int quantity;
     private Long userId;
-    private Long itemId;
+    private List<Long> itemIds;
     private String signatureData;
     private RequestStatus status;
     private UUID requestId;

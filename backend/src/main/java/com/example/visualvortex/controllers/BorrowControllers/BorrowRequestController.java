@@ -7,6 +7,7 @@ import com.example.visualvortex.dtos.ScheduleDTO;
 import com.example.visualvortex.entities.Item.ItemInstance;
 import com.example.visualvortex.entities.Request.BorrowRequest;
 import com.example.visualvortex.services.BorrowRequestService;
+import com.example.visualvortex.services.Item.ItemInstanceService;
 import lombok.RequiredArgsConstructor;
 import com.example.visualvortex.services.FirebaseService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.*;
 public class BorrowRequestController {
 
     private final BorrowRequestService borrowRequestService;
-    private final FirebaseService firebaseService;
+    private final ItemInstanceService itemInstanceService;
 
     @GetMapping("/borrow-requests")
     @ResponseStatus(HttpStatus.OK)
@@ -38,44 +39,10 @@ public class BorrowRequestController {
 
     }
 
-    @GetMapping("/borrow-requests/pendingByItemId/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<BorrowRequest> getPendingRequestsByItemId(@PathVariable Long itemId) {
-        return borrowRequestService.getPendingRequestsByItemId(itemId);
-    }
-
     @PostMapping("/borrow-requests")
-    public ResponseEntity<BorrowRequestDTO> createBorrowRequest2(@RequestBody Map<String, String> borrowRequestData) {
-
-
-        long userId = Integer.parseInt(borrowRequestData.get("userId"));
-        long itemId = Integer.parseInt(borrowRequestData.get("itemId"));
-        LocalDateTime intendedStartDate = LocalDateTime.parse(borrowRequestData.get("intendedStartDate"), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        LocalDateTime intendedReturnDate = LocalDateTime.parse(borrowRequestData.get("intendedReturnDate"), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-
-
-        int quantity = Integer.parseInt(borrowRequestData.get("quantity"));
-        BorrowRequestDTO borrowRequestDTO = BorrowRequestDTO.builder()
-                .userId(userId)
-                .itemId(itemId)
-                .intendedReturnDate(intendedReturnDate)
-                .signatureData(borrowRequestData.get("signatureData"))
-                .borrowingReason(borrowRequestData.get("borrowingReason"))
-                .intendedStartDate(intendedStartDate)
-                .quantity(quantity)
-                .build();
-
-        Optional<String> idOptional = firebaseService.save(borrowRequestDTO.getSignatureData());
-
-        if (idOptional.isPresent()) {
-            String id = idOptional.get();
-            borrowRequestDTO.setSignatureData(id);
-            BorrowRequestDTO newBorrowRequestDTO = borrowRequestService.createBorrowRequest(borrowRequestDTO);
-            return new ResponseEntity<>(newBorrowRequestDTO, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+    @ResponseStatus(HttpStatus.OK)
+    public BorrowRequestDTO createBorrowRequest2(@RequestBody Map<String, Object> borrowRequestData) {
+        return borrowRequestService.createBorrowRequest2(borrowRequestData);
     }
 
 
@@ -85,50 +52,30 @@ public class BorrowRequestController {
         return new ResponseEntity<>(relevantDates, HttpStatus.OK);
     }
 
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/borrow-requests/schedule/{itemId}")
-    public List<ScheduleDTO> getScheduleByItemId(@PathVariable Long itemId) {
-        List<ScheduleDTO> x = borrowRequestService.getAllScheduleByItemID(itemId);
-        System.out.println(x);
-        return x;
-    }
-
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/borrow-requests/get_every_time_schedule/{quantity}")
-    public AvailableTime startTime(@PathVariable int quantity,
-                                   @RequestParam String localDateTime,
-                                   @RequestParam long itemId) {
-        LocalDateTime localDateTimeO = LocalDateTime.parse(localDateTime, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        return borrowRequestService.getAvailableSchedules(itemId, quantity, localDateTimeO);
-    }
-
-
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/borrow-requests/get_every_time_to-return/{quantity}")
-    public AvailableTime getEveryTimeSchedule(
-            @PathVariable int quantity,
-            @RequestParam String localDateTimeStart,
-            @RequestParam String localDateTimeReturn,
-            @RequestParam long itemId,
-            @RequestBody List<ItemInstance> itemInstances) {
-
-        LocalDateTime localDateTimeStartO = LocalDateTime.parse(localDateTimeStart, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        LocalDateTime localDateTimeReturnO = LocalDateTime.parse(localDateTimeReturn, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        return borrowRequestService.getAvailableReturnTimes(quantity, localDateTimeStartO, localDateTimeReturnO, itemInstances, itemId);
-    }
-
-
     @GetMapping("/borrow-requests/{requestId}/instances")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemInstanceDTO> getItemInstancesByRequestId(@PathVariable UUID requestId) {
         return borrowRequestService.getItemInstancesByRequestId(requestId);
     }
 
+    @GetMapping("/items/{itemId}/instances")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemInstanceDTO> getItemInstancesByItemId(@PathVariable Long itemId) {
+        List<ItemInstanceDTO> t = itemInstanceService.getItemInstancesByItemId(itemId);
+        return itemInstanceService.getItemInstancesByItemId(itemId);
+    }
+
+
     @PutMapping("/borrow-requests/{requestId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public void cancelBorrowRequest(@PathVariable UUID requestId) {
         borrowRequestService.cancelBorrowRequest(requestId);
     }
+
+    @GetMapping("/borrow-requests/{requestId}/itemsIds")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Long> getItemsIdsByRequestId(@PathVariable UUID requestId) {
+        return borrowRequestService.getItemsIdsByRequestId(requestId);
+    }
+
 }

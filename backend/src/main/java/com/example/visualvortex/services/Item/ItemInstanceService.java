@@ -74,19 +74,17 @@ public class ItemInstanceService {
 
     }
 
-    public int countItemInstancesByItemId(Long itemId)
-    {
+    public int countItemInstancesByItemId(Long itemId) {
         return itemInstanceRepository.countItemInstancesByItemId(itemId);
     }
 
-    public int countItemInstancesByItemIdAndIntendedDates(Long itemId, Date intendedStartDate, Date intendedReturnDate){
-        return itemInstanceRepository.countItemInstancesByItemIdAndIntendedDates(itemId,intendedStartDate, intendedReturnDate);
+    public int countItemInstancesByItemIdAndIntendedDates(Long itemId, Date intendedStartDate, Date intendedReturnDate) {
+        return itemInstanceRepository.countItemInstancesByItemIdAndIntendedDates(itemId, intendedStartDate, intendedReturnDate);
     }
 
-    public List<Object[]> findScheduleIdsByItemIdAndDate(long itemId, LocalDate date)
-    {
+    public List<Object[]> findScheduleIdsByItemIdAndDate(long itemId, LocalDate date) {
 //        LocalDate localDate= LocalDate.parse(date);
-        return  itemInstanceRepository. findItemInstancesByItemIdAndDate(itemId, date,date.plusDays(1));
+        return itemInstanceRepository.findItemInstancesByItemIdAndDate(itemId, date, date.plusDays(1));
     }
 
     public List<ItemInstance> findAll() {
@@ -100,4 +98,16 @@ public class ItemInstanceService {
     public List<ItemInstance> findByItemTypeId(long id) {
         return itemInstanceRepository.findAllByItemId(id);
     }
+
+    public List<ItemInstanceDTO> getItemInstancesByItemId(Long itemId) {
+        List<ItemInstance> itemInstances = itemInstanceRepository.findAllByItemId(itemId);
+
+        return itemInstances.stream()
+                .map(instance -> new ItemInstanceDTO(
+                        instance.getId(),
+                        instance.getState(),
+                        instance.getItem().getId()))
+                .collect(Collectors.toList());
+    }
+
 }

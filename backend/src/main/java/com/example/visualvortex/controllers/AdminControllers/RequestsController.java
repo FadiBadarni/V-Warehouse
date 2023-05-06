@@ -30,13 +30,4 @@ public class RequestsController {
         return borrowRequestService.updateRequestStatus(requestId, status);
     }
 
-
-    @PutMapping("/borrow-additemInstances/{requestId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void borrowAddItemInstances(@PathVariable UUID requestId,@RequestParam  List<Long> itemInstances) {
-        System.out.println(requestId);
-        System.out.println(itemInstances);
-        borrowRequestService.borrowAddItemInstances(requestId,itemInstances);
-    }
-
 }

@@ -36,6 +36,10 @@ public class ItemService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory item not found with ID: " + id));
     }
 
+    public List<Item> getItemsByIds(List<Long> ids) {
+        return itemRepository.findAllById(ids);
+    }
+
     public List<ItemInstanceDTO> saveItem(ItemDTO itemDTO) {
         ItemType itemType;
 
@@ -152,8 +156,6 @@ public class ItemService {
                 .itemInstances(itemInstanceDTOs)
                 .build();
     }
-
-
 
 
 }
