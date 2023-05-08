@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { DatePicker } from "@mui/x-date-pickers";
 import TimeTable from "../Table/TimeTable";
 import dayjs from "dayjs";
+import { getAllStartTime, getAllRetrunTime } from "../../../api/BorrowService";
 
 const BorrowForm = ({
   setIntendedStartDate,
@@ -22,13 +23,25 @@ const BorrowForm = ({
   const { t } = useTranslation("itemReservation");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
+  const [starttime, setStarttime] = useState(null);
 
-  const handleStartDateChange = (date) => {
+  const handleStartDateChange = async (date) => {
+    const starttime = await getAllStartTime(date.toISOString(), itemIds);
+    setStarttime(starttime);
     setSelectedStartDate(date);
     setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
   };
 
-  const handleReturnDateChange = (date) => {
+  const handleReturnDateChange = async (date) => {
+    const y = selectedStartDate.toISOString();
+    const formattedDate = `${y.slice(0, 16)}`;
+    const x = starttime.startDates[formattedDate];
+    const retruntime = await getAllRetrunTime(
+      selectedStartDate.toISOString(),
+      date.toISOString(),
+      itemIds,
+      x
+    );
     setSelectedReturnDate(date);
     setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
   };
@@ -72,8 +85,7 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <Box mb={4}>
                   <Typography variant="h5">
                     {t("itemReservation.timeSlots")}
@@ -147,8 +159,7 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}
-          >
+            disabled={!isFormValid()}>
             {t("itemReservation.sendRequest")}
           </button>
         </div>

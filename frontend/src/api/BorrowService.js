@@ -40,6 +40,40 @@ export async function getItemInstancesByItemId(itemId) {
   );
 }
 
+export async function getAllStartTime(localDateTime, itemIds) {
+  return apiWrapper(
+    () =>
+      axiosInstance.get("/borrow-requests/get_all_start_time", {
+        params: {
+          localDateTime: localDateTime,
+          itemIds: itemIds.toString(),
+        },
+      }),
+    "Start time fetched successfully",
+    "An error occurred while fetching start time:"
+  );
+}
+
+export async function getAllRetrunTime(
+  startTime,
+  returnTime,
+  itemIds,
+  itemInstances
+) {
+  const params = {
+    localDateTimeStart: startTime,
+    localDateTimeReturn: returnTime,
+    itemIds: itemIds,
+    itemInstances: itemInstances,
+  };
+
+  return apiWrapper(
+    () => axiosInstance.post("/borrow-requests/get_all_return_time", params),
+    "Start time fetched successfully",
+    "An error occurred while fetching start time:"
+  );
+}
+
 export async function cancelBorrowRequest(requestId) {
   return apiWrapper(
     () => axiosInstance.put(`/borrow-requests/${requestId}/cancel`),

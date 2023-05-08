@@ -5,11 +5,11 @@ import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
 import com.example.visualvortex.dtos.ScheduleDTO;
 import com.example.visualvortex.entities.Item.ItemInstance;
-import com.example.visualvortex.entities.Request.BorrowRequest;
 import com.example.visualvortex.services.BorrowRequestService;
 import com.example.visualvortex.services.Item.ItemInstanceService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import com.example.visualvortex.services.FirebaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,4 +79,35 @@ public class BorrowRequestController {
         return borrowRequestService.getItemsIdsByRequestId(requestId);
     }
 
+    @GetMapping("/borrow-requests/get_all_start_time")
+    public AvailableTime selectStartDate(
+            @RequestParam("localDateTime") String localDateTime,
+            @RequestParam("itemIds") List<String> itemIds) {
+        LocalDateTime localDateTimeO = LocalDateTime.parse(localDateTime, DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        List<Long> longList = itemIds.stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        return borrowRequestService.getAllStartTimeThatCanBeSelected(longList, localDateTimeO);
+    }
+
+
+
+    @PostMapping("/borrow-requests/get_all_return_time")
+    @ResponseStatus(HttpStatus.OK)
+    public AvailableTime selectReturnDate(@RequestBody Map<String, Object> params)
+    {
+        List<String> longList= (List<String>) params.get("itemIds");
+        List<Long> itemIds = longList.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        HashMap<Long, List<ItemInstance>> itemInstances = objectMapper.convertValue(params.get("itemInstances"), new TypeReference<HashMap<Long, List<ItemInstance>>>() {});
+
+//        HashMap<Long,List<ItemInstance>> itemInstances = (HashMap<Long,List<ItemInstance>>) params.get("itemInstances");
+        LocalDateTime localDateTimeStartO = LocalDateTime.parse(params.get("localDateTimeStart").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        LocalDateTime localDateTimeReturnO = LocalDateTime.parse(params.get("localDateTimeReturn").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        return borrowRequestService.getAllReturnTimeThatCanBeSelected(localDateTimeStartO, localDateTimeReturnO, itemInstances,itemIds);
+
+    }
 }

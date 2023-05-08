@@ -22,8 +22,9 @@ public class BorrowRequest {
 
     private Long userId;
 
-    @ElementCollection
+
     @CollectionTable(name = "request_item_ids", joinColumns = @JoinColumn(name = "request_id"))
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "item_id")
     private List<Long> itemIds;
 
@@ -34,7 +35,7 @@ public class BorrowRequest {
     private String borrowingReason;
 
     @Column
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "requests_instances")
     private List<Long> itemInstanceIds;
 

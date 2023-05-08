@@ -40,9 +40,10 @@ public class BorrowRequestService {
     private final FirebaseService firebaseService;
 
     public List<BorrowRequestDTO> getAllRequests() {
-        return borrowRequestRepository.findAll().stream()
+        return  borrowRequestRepository.findAll().stream()
                 .map(this::convertToBorrowRequestDTO)
                 .collect(Collectors.toList());
+
     }
 
     public List<BorrowRequestDTO> getPendingRequestsByItemInstance(Long itemInstanceId) {
@@ -54,8 +55,8 @@ public class BorrowRequestService {
         List<Long> itemIds = ((List<?>) borrowRequestData.get("itemIds")).stream()
                 .map(id -> Long.parseLong(id.toString()))
                 .collect(Collectors.toList());
-        LocalDateTime intendedStartDate = LocalDateTime.parse(borrowRequestData.get("intendedStartDate").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
-        LocalDateTime intendedReturnDate = LocalDateTime.parse(borrowRequestData.get("intendedReturnDate").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
+        LocalDateTime intendedStartDate = LocalDateTime.parse(borrowRequestData.get("intendedStartDate").toString(), DateTimeFormatter.ISO_DATE_TIME);
+        LocalDateTime intendedReturnDate = LocalDateTime.parse(borrowRequestData.get("intendedReturnDate").toString(), DateTimeFormatter.ISO_DATE_TIME);
         String borrowingReason = borrowRequestData.get("borrowingReason").toString();
         String signatureData = borrowRequestData.get("signatureData").toString();
 
@@ -260,4 +261,172 @@ public class BorrowRequestService {
         borrowRequest.setItemInstanceIds(itemInstances);
         borrowRequestRepository.save(borrowRequest);
     }
+
+    public AvailableTime getAllStartTimeThatCanBeSelected(List<Long> itemIds, LocalDateTime localDateTime) {
+        AvailableTime.itemIds=itemIds;
+        List<AvailableTime> availableTimes=new ArrayList<>();
+        for (long itemId:itemIds) {
+            List<ItemInstance> itemInstanceTable = itemInstanceService.findByItemTypeId(itemId);
+            List<BorrowRequest> bendingBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
+            List<BorrowRequest> awaitingPickupBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
+            List<BorrowRequest> awaitingReturnBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_RETURN);
+            availableTimes.add(startData(itemId,localDateTime,itemInstanceTable,awaitingReturnBorrowRequestsTable,awaitingPickupBorrowRequestsTable,bendingBorrowRequestsTable));
+        }
+        AvailableTime x = AvailableTime.BuildAvailableTimeFromList(availableTimes);
+        return x;
+    }
+
+
+
+    public AvailableTime startData(long itemId, LocalDateTime startTime,List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingReturnBorrowRequestsTable, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
+    {
+        LocalDateTime startDate = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 23, 59);
+
+        HashMap< LocalDateTime, List<ItemInstance>> data=new HashMap<>();
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+        LocalDateTime currentDateTime = startDate;
+
+        while (currentDateTime.isBefore(endDateTime)) {
+
+            List<ItemInstance> availableIds = new ArrayList<>(itemInstanceList);
+            for (BorrowRequest awaitingReturn : awaitingReturnBorrowRequestsTable) {
+                LocalDateTime orderStart =  awaitingReturn.getIntendedStartDate();
+                LocalDateTime orderEnd =  awaitingReturn.getIntendedReturnDate();
+
+                if (between(currentDateTime,orderStart,orderEnd)){
+                    List<Long> itemInstanceIds = awaitingReturn.getItemInstanceIds();
+                    for (Long itemInstanceId : itemInstanceIds)
+                        availableIds.removeAll(itemInstanceService.getInstancesById(itemInstanceId));
+                }
+            }
+            int count=0;
+            for(BorrowRequest awaitingborrowRequest:awaitingBorrowRequestsTable)
+                if(between(currentDateTime,awaitingborrowRequest.getIntendedStartDate(),awaitingborrowRequest.getIntendedReturnDate()))
+                    count++;
+
+            if( availableIds.size()>count ){
+                data.put(currentDateTime,availableIds);
+                count=0;
+                for(BorrowRequest bendingBorrowRequest:bendingBorrowRequestsTable)
+                    if(between(currentDateTime,bendingBorrowRequest.getIntendedStartDate(),bendingBorrowRequest.getIntendedReturnDate()))
+                        count++;
+                if(availableIds.size()<=count)
+                    bendinglist.add(currentDateTime);
+            }
+
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        HashMap<LocalDateTime,List<Long>> hashMapBendingList=new HashMap<>();
+        for (LocalDateTime date:bendinglist)
+            hashMapBendingList.put(date, Collections.singletonList(itemId));
+
+        HashMap<LocalDateTime, HashMap<Long,List<ItemInstance>>> hashMapStartDay=new HashMap<>();
+
+        for (LocalDateTime date:data.keySet()) {
+            HashMap<Long,List<ItemInstance>> help= new HashMap<>();
+            help.put(itemId,data.get(date));
+            hashMapStartDay.put(date, help);
+        }
+        return AvailableTime.builder().bendingStartDates(hashMapBendingList).startDates(hashMapStartDay).build();
+    }
+
+
+    public boolean between(LocalDateTime current, LocalDateTime start, LocalDateTime end) {
+        return current.isEqual(start)  || (current.isAfter(start) && current.isBefore(end));
+    }
+
+    public boolean collisionTime(LocalDateTime time1start, LocalDateTime time1end, LocalDateTime time2start, LocalDateTime time2end) {
+        return between(time1start,time2start,time2end) ||
+                between(time1end,time2start,time2end) ||
+                between( time2start,time1start,time1end)||
+                between(time2end,time1start,time1end);
+    }
+
+
+    public AvailableTime getAllReturnTimeThatCanBeSelected(LocalDateTime localDateTimeStart, LocalDateTime localDateTimeReturn, HashMap<Long,List<ItemInstance>> data, List<Long> itemIds) {
+        AvailableTime.itemIds=itemIds;
+        List<AvailableTime> availableTimes=new ArrayList<>();
+        for (Long itemId:itemIds) {
+            List<BorrowRequest> bendingBorrow = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
+            List<BorrowRequest> awaitingPickupBorrow = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
+            availableTimes.add(returnData(itemId, localDateTimeStart, localDateTimeReturn, data.get(itemId), awaitingPickupBorrow, bendingBorrow));
+        }
+        AvailableTime x = AvailableTime.BuildAvailableTimeFromList(availableTimes);
+        return x;
+    }
+
+    public  AvailableTime returnData(Long itemId, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
+                                     List<BorrowRequest> awaitingPickupBorrow, List<BorrowRequest> bendingBorrow) {
+
+        LocalDateTime startDate ;
+        if(selectStartTime.toLocalDate().isEqual(localDateTimeEnd.toLocalDate()))
+            startDate = selectStartTime;
+        else  startDate = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 0, 0);
+
+        LocalDateTime endDateTime = LocalDateTime.of(localDateTimeEnd.getYear(), localDateTimeEnd.getMonth(), localDateTimeEnd.getDayOfMonth(), 23, 59);
+        LocalDateTime currentDateTime = startDate;
+        List<LocalDateTime> localDateTimeList=new ArrayList<>();
+
+        List< LocalDateTime>bendinglist =new ArrayList<>();
+        while (currentDateTime.isBefore(endDateTime)) {
+            List<ItemInstance> copydata=new ArrayList<>(data);
+            for( ItemInstance itemInstance:data)
+            {
+                List<Schedule> scheduleList=scheduleRepository.findByItemInstance(itemInstance);
+                if(scheduleList!= null)
+                {
+                    for(Schedule schedule:scheduleList) {
+                        if (schedule.isActive()) {
+                            LocalDateTime orderStart = schedule.getIntendedStartDate();
+                            LocalDateTime orderEnd = schedule.getIntendedReturnDate();
+
+                            if (collisionTime(selectStartTime, currentDateTime, orderStart, orderEnd)) {
+                                List<ItemInstance> help = new ArrayList<>();
+                                for (ItemInstance instanceData : copydata)
+                                    if (instanceData.getId() != schedule.getItemInstance().getId())
+                                        help.add(instanceData);
+                                copydata = new ArrayList<>(help);
+                            }
+                        }
+                    }
+                }
+            }
+            int count=0;
+            for(BorrowRequest borrowRequestItem:awaitingPickupBorrow) {
+                LocalDateTime start =  borrowRequestItem.getIntendedStartDate();
+                LocalDateTime end = borrowRequestItem.getIntendedReturnDate();
+                if(collisionTime(selectStartTime,currentDateTime,start,end))
+                    count ++;
+            }
+            if (copydata.size() >count){
+                localDateTimeList.add(currentDateTime);
+                count=0;
+
+                for(BorrowRequest borrowRequest:bendingBorrow) {
+                    LocalDateTime start = borrowRequest.getIntendedStartDate();
+                    LocalDateTime end = borrowRequest.getIntendedReturnDate();
+                    if(collisionTime(selectStartTime,currentDateTime,start,end))
+                        count ++;
+                }
+                if (copydata.size() <= count ) {
+                    bendinglist.add(currentDateTime);
+                }
+            }
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+        HashMap<LocalDateTime,List<Long>> hashReturnData=new HashMap<>();
+        for(LocalDateTime date:localDateTimeList)
+            hashReturnData.put(date, Collections.singletonList(itemId));
+
+
+        HashMap<LocalDateTime,List<Long>> hashBendingList=new HashMap<>();
+        for(LocalDateTime date:bendinglist)
+            hashBendingList.put(date, Collections.singletonList(itemId));
+
+        return  AvailableTime.builder().returnDates(hashReturnData).bendingReturnDates(hashBendingList).build();
+    }
+
+
+
 }
