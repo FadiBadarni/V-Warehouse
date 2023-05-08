@@ -21,12 +21,6 @@ public interface ItemInstanceRepository extends JpaRepository<ItemInstance, Long
     int countItemInstancesByItemId(Long itemId);
 
 
-    @Query(value = "SELECT tabel1.id, tabel1.startDate, tabel1.returnDate " +
-            "FROM (SELECT item_instances.id as id, schedule.intended_start_date as startDate, item_id as item, intended_return_date as returnDate " +
-            "FROM item_instances INNER JOIN schedule ON item_instances.id = schedule.item_instance_id) as tabel1 " +
-            "WHERE item = ?1 AND id NOT IN (SELECT item_instance_id FROM schedule WHERE (intended_start_date < ?2 AND intended_return_date > ?3))", nativeQuery = true)
-    List<Object[]> findItemInstancesByItemIdAndDate(long itemId, LocalDate date,LocalDate date2);
-
 
 
 }

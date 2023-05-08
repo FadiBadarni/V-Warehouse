@@ -111,4 +111,11 @@ public class BorrowRequestController {
         return borrowRequestService.getAllReturnTimeThatCanBeSelected(localDateTimeStartO, localDateTimeReturnO,  itemInstances,itemIds);
 
     }
+
+
+    @GetMapping("/getCountInstancesTime/{id}")
+    public Long getCountInstancesTime(@PathVariable UUID id) {
+        return borrowRequestService.getAvailableCountInTime(id);
+
+    }
 }

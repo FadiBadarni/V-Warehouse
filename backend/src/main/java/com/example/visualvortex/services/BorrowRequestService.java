@@ -109,6 +109,8 @@ public class BorrowRequestService {
         return convertToBorrowRequestDTO(savedBorrowRequest);
     }
 
+
+
     public BorrowRequestDTO updateRequestStatus(UUID requestId, RequestStatus status) {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
@@ -216,16 +218,6 @@ public class BorrowRequestService {
                 .build();
     }
 
-    private boolean isBorrowRequestValid(BorrowRequest request, LocalDateTime currentDateTime, LocalDateTime startDateTime) {
-        LocalDateTime requestStart = request.getIntendedStartDate();
-        LocalDateTime requestEnd = request.getIntendedReturnDate();
-        boolean isStartValid = (requestStart.isAfter(startDateTime) || requestStart.isEqual(startDateTime));
-        boolean isWithinCurrentTime = (requestStart.isBefore(currentDateTime) || requestStart.isEqual(currentDateTime));
-        boolean isEndValid = (requestEnd.isBefore(currentDateTime) && (requestEnd.isAfter(startDateTime) || requestEnd.isEqual(startDateTime)));
-
-        return (isStartValid && isWithinCurrentTime) || isEndValid;
-    }
-
     public List<BorrowRequestDTO> getRequestsByUserId(Long userId) {
         return borrowRequestRepository.findByUserId(userId).stream()
                 .map(this::convertToBorrowRequestDTO)
@@ -262,6 +254,31 @@ public class BorrowRequestService {
         borrowRequestRepository.save(borrowRequest);
     }
 
+
+
+    public Long getAvailableCountInTime(UUID uuid) {
+
+        BorrowRequest borrowRequest = borrowRequestRepository.findByRequestId(uuid);
+        LocalDateTime start=borrowRequest.getIntendedStartDate();
+        LocalDateTime end=borrowRequest.getIntendedReturnDate();
+        List<BorrowRequestDTO> borrowRequests= getAllRequests();
+        borrowRequests.stream()
+                .filter(request -> request.getIntendedReturnDate().isAfter(start) && request.getIntendedReturnDate().isBefore(end))
+                .collect(Collectors.toList());
+
+        List<Long> itemIds= borrowRequest.getItemIds();
+
+        for (Long id:itemIds) {
+
+            List<ItemInstance> itemInstanceList= itemService.getAllInstanceById(id);
+
+        }
+
+        return null;
+
+
+    }
+
     public AvailableTime getAllStartTimeThatCanBeSelected(List<Long> itemIds, LocalDateTime localDateTime) {
         AvailableTime.itemIds=itemIds;
          HashMap<Long,AvailableTime> availableTimes=new HashMap<>();
@@ -278,7 +295,7 @@ public class BorrowRequestService {
 
 
 
-    public AvailableTime startData(long itemId, LocalDateTime startTime,List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingReturnBorrowRequestsTable, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
+    private AvailableTime startData(long itemId, LocalDateTime startTime,List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingReturnBorrowRequestsTable, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
     {
         LocalDateTime startDate = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 23, 59);
@@ -358,7 +375,7 @@ public class BorrowRequestService {
         return x;
     }
 
-    public  AvailableTime returnData(Long itemId, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
+    private  AvailableTime returnData(Long itemId, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
                                      List<BorrowRequest> awaitingPickupBorrow, List<BorrowRequest> bendingBorrow) {
 
         LocalDateTime startDate ;

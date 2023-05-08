@@ -82,10 +82,6 @@ public class ItemInstanceService {
         return itemInstanceRepository.countItemInstancesByItemIdAndIntendedDates(itemId, intendedStartDate, intendedReturnDate);
     }
 
-    public List<Object[]> findScheduleIdsByItemIdAndDate(long itemId, LocalDate date) {
-//        LocalDate localDate= LocalDate.parse(date);
-        return itemInstanceRepository.findItemInstancesByItemIdAndDate(itemId, date, date.plusDays(1));
-    }
 
     public List<ItemInstance> findAll() {
         return itemInstanceRepository.findAll();

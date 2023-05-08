@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 import "./RowDetails.scss";
-import { getWarehouseItemsByIds } from "../../../api/WarehouseService";
+import { getWarehouseItemsByIds,getCountInstancesTime } from "../../../api/WarehouseService";
 
 const RowDetails = ({ request, user }) => {
   const [ItemIfo, setItemInfo] = useState();
@@ -11,6 +11,14 @@ const RowDetails = ({ request, user }) => {
       const x = request.itemIds;
       const ItemIfo = await getWarehouseItemsByIds(x);
       setItemInfo(ItemIfo);
+    };
+    fetchItemInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchItemInfo = async () => {
+      const ItemIfo = await getCountInstancesTime( request.requestId);
+      // setItemInfo(ItemIfo);
     };
     fetchItemInfo();
   }, []);
@@ -26,12 +34,10 @@ const RowDetails = ({ request, user }) => {
             ItemIfo.map((item) => (
               <Box className="expanded-row__user">
                 <Typography className="expanded-row__title" variant="h6">
-                  {" "}
                   {item.name}
                 </Typography>
                 <Typography className="expanded-row__title" variant="h6">
-                  {" "}
-                  {item.description}
+                  {item.quantity}
                 </Typography>
               </Box>
             ))}
