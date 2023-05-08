@@ -1,32 +1,17 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import dayjs from "dayjs";
 import TimeSlot from "./TimeSlot";
 import styles from "./TimeTable.module.scss";
-import { itemInstancesCountById } from "../../../api/WarehouseService";
 
 const TimeTable = ({
   selectedDate,
   onTimeSelected,
   minTime,
   maxTime,
-  itemIds,
   starttime,
+  returnTime,
 }) => {
   const [selectedTime, setSelectedTime] = useState(null);
-  const [itemInstancesCount, setItemInstancesCount] = useState(new Map());
-
-  useEffect(() => {
-    const fetchInstancesCount = async () => {
-      const instancesCountMap = new Map();
-      for (const itemId of itemIds) {
-        const response = await itemInstancesCountById(itemId);
-        instancesCountMap.set(itemId, response);
-      }
-      setItemInstancesCount(instancesCountMap);
-    };
-
-    fetchInstancesCount();
-  }, [itemIds]);
 
   const handleTimeSelected = useCallback(
     (time) => {
@@ -44,28 +29,62 @@ const TimeTable = ({
         .hour(currentTime.hour())
         .minute(currentTime.minute());
 
-      // Check if the starttime object exists and has the required properties
       const pendingSlots =
         starttime &&
         starttime.bendingStartDates &&
         starttime.bendingStartDates.hasOwnProperty(
           time.format("YYYY-MM-DDTHH:mm")
         );
+
       const partialPendingSlots =
         starttime &&
         starttime.incompleteBendingStartDates &&
         starttime.incompleteBendingStartDates.hasOwnProperty(
           time.format("YYYY-MM-DDTHH:mm")
         );
+
       const partialPendingSlotsItemIds =
         starttime &&
         starttime.incompleteBendingStartDates &&
         starttime.incompleteBendingStartDates[time.format("YYYY-MM-DDTHH:mm")];
 
+      const partialBookedSlots =
+        starttime &&
+        starttime.incompleteStartDates &&
+        starttime.incompleteStartDates[time.format("YYYY-MM-DDTHH:mm")];
+
       const bookedSlots =
         starttime &&
         starttime.redStartDate &&
         starttime.redStartDate.hasOwnProperty(time.format("YYYY-MM-DDTHH:mm"));
+
+      const pendingReturnSlots =
+        returnTime &&
+        returnTime.bendingReturnDates &&
+        returnTime.bendingReturnDates.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
+
+      const bookedReturnSlots =
+        returnTime &&
+        returnTime.redReturnDate &&
+        returnTime.redReturnDate.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
+
+      const partialPendingReturnSlots =
+        returnTime &&
+        returnTime.incompleteBendingReturnDates &&
+        returnTime.incompleteBendingReturnDates.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
+
+      const partialBookedReturnSlots =
+        returnTime &&
+        returnTime.incompleteReturnDates &&
+        returnTime.incompleteReturnDates.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
 
       slots.push(
         <TimeSlot
@@ -76,6 +95,11 @@ const TimeTable = ({
           bookedSlots={bookedSlots}
           partialPendingSlots={partialPendingSlots}
           partialPendingSlotsItemIds={partialPendingSlotsItemIds}
+          partialBookedSlots={partialBookedSlots}
+          bookedReturnSlots={bookedReturnSlots}
+          pendingReturnSlots={pendingReturnSlots}
+          partialPendingReturnSlots={partialPendingReturnSlots}
+          partialBookedReturnSlots={partialBookedReturnSlots}
           onClick={handleTimeSelected}
         />
       );
@@ -90,6 +114,7 @@ const TimeTable = ({
     selectedTime,
     handleTimeSelected,
     starttime,
+    returnTime,
   ]);
 
   return <div className={styles["time-table"]}>{createTimeSlots()}</div>;

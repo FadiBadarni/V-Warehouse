@@ -23,20 +23,20 @@ const BorrowForm = ({
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
   const [starttime, setStarttime] = useState(null);
+  const [returnTime, setReturnTime] = useState(null);
 
   const handleStartDateChange = async (date) => {
     const starttime = await getAllStartTime(date.toISOString(), itemIds);
     setStarttime(starttime);
     setSelectedStartDate(date);
     setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-    console.log(starttime);
   };
 
   const handleReturnDateChange = async (date) => {
     const y = selectedStartDate.toISOString();
     const formattedDate = `${y.slice(0, 16)}`;
     const x = starttime.startDates[formattedDate];
-    const retruntime = await getAllRetrunTime(
+    const returnTime = await getAllRetrunTime(
       selectedStartDate.toISOString(),
       date.toISOString(),
       itemIds,
@@ -44,6 +44,8 @@ const BorrowForm = ({
     );
     setSelectedReturnDate(date);
     setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+    setReturnTime(returnTime);
+    console.log(returnTime);
   };
 
   const minDate = useMemo(() => dayjs().startOf("day"), []);
@@ -138,6 +140,7 @@ const BorrowForm = ({
                       : getTimeBoundaries(selectedReturnDate).minTime
                   }
                   maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
+                  returnTime={returnTime}
                 />
               </div>
             )}

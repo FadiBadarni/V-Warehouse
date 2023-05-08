@@ -40,3 +40,24 @@
 .partialPending {
   background-color: rgb(92, 214, 245);
 }
+
+.partialBooked {
+  background-color: rgb(255, 182, 72);
+}
+
+.bookedReturn {
+  background-color: lightcoral;
+  cursor: not-allowed;
+}
+
+.pendingReturn {
+  background-color: yellow;
+}
+
+.partialPendingReturn {
+  background-color: rgb(92, 214, 245);
+}
+
+.partialBookedReturn {
+  background-color: rgb(255, 182, 72);
+}
