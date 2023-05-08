@@ -16,6 +16,8 @@ import java.util.List;
 @Builder
 public class AvailableTime {
     public static List<Long> itemIds;
+    public static LocalDateTime localDateTimeReturn;
+    public static LocalDateTime localDateTimeStart;
     private HashMap<LocalDateTime, HashMap<Long, List<ItemInstance>>> startDates;
     private HashMap<LocalDateTime, List<Long>> bendingStartDates;
     private HashMap<LocalDateTime, List<Long>> redStartDate;
@@ -29,7 +31,7 @@ public class AvailableTime {
     private HashMap<LocalDateTime, List<Long>> redReturnDate;
 
 
-    public static AvailableTime BuildAvailableTimeFromList(List<AvailableTime> availableTimes) {
+    public static AvailableTime BuildAvailableTimeFromList(HashMap<Long,AvailableTime> availableTimes) {
 
         HashMap<LocalDateTime, HashMap<Long, List<ItemInstance>>> startDates = null;
         HashMap<LocalDateTime, List<Long>> bendingStartDates = null;
@@ -42,7 +44,7 @@ public class AvailableTime {
         HashMap<LocalDateTime, List<Long>> returnDates = null;
         HashMap<LocalDateTime, List<Long>> bendingReturnDates = null;
         HashMap<LocalDateTime, List<Long>> redReturnDate = null;
-        if (availableTimes.get(0).getStartDates() != null) {
+        if (availableTimes.values().stream().iterator().next().getStartDates() != null) {
             startDates = buildStartDates(availableTimes);
             redStartDate = buildRedDate(startDates);
             bendingStartDates = multiBindingStartDates(availableTimes);
@@ -73,16 +75,16 @@ public class AvailableTime {
 
     }
 
-    private static HashMap<LocalDateTime, List<Long>> buildIncompleteBendingReturnDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> buildIncompleteBendingReturnDates(HashMap<Long,AvailableTime> availableTimes) {
         //كل الاوقات الي فهيا اكثر من عنصر اصفر بس مش الكل
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getReturnDates().keySet().iterator().next();
+        LocalDateTime localDateTime = localDateTimeReturn;
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
-            for (AvailableTime availableTime : availableTimes) {
-                HashMap<LocalDateTime, List<Long>> x = availableTime.getBendingReturnDates();
+            for (Long availableTime : availableTimes.keySet()) {
+                HashMap<LocalDateTime, List<Long>> x = availableTimes.get(availableTime).getBendingReturnDates();
                 List<Long> y = x.get(currentDateTime);
                 if (y != null) {
                     count += y.size();
@@ -96,16 +98,16 @@ public class AvailableTime {
         return map;
     }
 
-    private static HashMap<LocalDateTime, List<Long>> buildBendingReturnDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> buildBendingReturnDates(HashMap<Long,AvailableTime> availableTimes) {
 //كل الاوقات الي فهيا كل النسخ اصفر
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getReturnDates().keySet().iterator().next();
+        LocalDateTime localDateTime =localDateTimeReturn;
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
-            for (AvailableTime availableTime : availableTimes) {
-                HashMap<LocalDateTime, List<Long>> x = availableTime.getBendingReturnDates();
+            for (Long availableTime : availableTimes.keySet()) {
+                HashMap<LocalDateTime, List<Long>> x =availableTimes.get(availableTime).getBendingReturnDates();
                 List<Long> y = x.get(currentDateTime);
                 if (y != null) {
                     count += y.size();
@@ -121,11 +123,11 @@ public class AvailableTime {
 
     private static HashMap<LocalDateTime, List<Long>> buildIncompleteReturnDates(HashMap<LocalDateTime, List<Long>> returnDates) {
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = returnDates.keySet().iterator().next();
+        LocalDateTime localDateTime = localDateTimeReturn;
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
-            if (returnDates.get(currentDateTime).size() > itemIds.size()) {
+            if (returnDates.get(currentDateTime) !=null && returnDates.get(currentDateTime).size() > itemIds.size()) {
                 List<Long> help = new ArrayList<>(itemIds);
                 help.removeAll(returnDates.get(currentDateTime));
                 map.put(currentDateTime, help);
@@ -135,16 +137,16 @@ public class AvailableTime {
         return map;
     }
 
-    private static HashMap<LocalDateTime, List<Long>> buildReturnRedDate(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> buildReturnRedDate(HashMap<Long,AvailableTime> availableTimes) {
         //كل اوقات الي موجود فيها عنصر واحد او اكثر
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getReturnDates().keySet().iterator().next();
+        LocalDateTime localDateTime =localDateTimeReturn;
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
-            for (AvailableTime availableTime : availableTimes) {
-                HashMap<LocalDateTime, List<Long>> x = availableTime.getReturnDates();
+            for (Long availableTime : availableTimes.keySet()) {
+                HashMap<LocalDateTime, List<Long>> x = availableTimes.get(availableTime).getReturnDates();
                 List<Long> y = x.get(currentDateTime);
                 if (y != null) {
                     count += y.size();
@@ -158,20 +160,22 @@ public class AvailableTime {
         return map;
     }
 
-    private static HashMap<LocalDateTime, List<Long>> buildReturnDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> buildReturnDates(HashMap<Long,AvailableTime> availableTimes) {
 
         //كل اوقات الي موجود فيها عنصر واحد او اكثر
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getReturnDates().keySet().iterator().next();
+        LocalDateTime localDateTime = localDateTimeReturn;
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
             List<Long> ids = new ArrayList<>();
-            for (AvailableTime availableTime : availableTimes) {
+            for (Long availableTime : availableTimes.keySet()) {
 
-                List<Long> x = availableTime.getReturnDates().get(currentDateTime);
-                ids.addAll(x);
+                List<Long> x = availableTimes.get(availableTime).getReturnDates().get(currentDateTime);
+                if(x!=null) {
+                    ids.addAll(x);
+                }
             }
             if (ids.size() >= 1) {
 
@@ -182,24 +186,28 @@ public class AvailableTime {
         return map;
     }
 
-    private static HashMap<LocalDateTime, List<Long>> buildIncompleteBendingStartDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> buildIncompleteBendingStartDates(HashMap<Long,AvailableTime> availableTimes) {
 
         //كل الاوقات الي فهيا اكثر من عنصر اصفر بس مش الكل
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getStartDates().keySet().iterator().next();
+        LocalDateTime localDateTime = availableTimes.values().stream().iterator().next().getStartDates().keySet().iterator().next();
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
-            for (AvailableTime availableTime : availableTimes) {
-                HashMap<LocalDateTime, List<Long>> x = availableTime.getBendingStartDates();
+            List<Long> pending=new ArrayList<>();
+            for (Long availableTime : availableTimes.keySet()) {
+
+                HashMap<LocalDateTime, List<Long>> x = availableTimes.get(availableTime).getBendingStartDates();
                 List<Long> y = x.get(currentDateTime);
                 if (y != null) {
                     count += y.size();
+                    pending.add(availableTime);
                 }
             }
             if (count < itemIds.size() && count > 0) {
-                map.put(currentDateTime, itemIds);
+
+                map.put(currentDateTime, pending);
             }
             currentDateTime = currentDateTime.plusMinutes(30);
         }
@@ -221,11 +229,11 @@ public class AvailableTime {
         return redDate;
     }
 
-    private static HashMap<LocalDateTime, HashMap<Long, List<ItemInstance>>> buildStartDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, HashMap<Long, List<ItemInstance>>> buildStartDates(HashMap<Long,AvailableTime> availableTimes) {
 
         //كل اوقات الي موجود فيها عنصر واحد او اكثر
         HashMap<LocalDateTime, HashMap<Long, List<ItemInstance>>> startDates = new HashMap<>();
-        for (AvailableTime availableTime : availableTimes) {
+        for (AvailableTime availableTime : availableTimes.values()) {
             for (LocalDateTime localDateTimeKey : availableTime.getStartDates().keySet()) {
                 if (startDates.containsKey(localDateTimeKey)) {
                     HashMap<Long, List<ItemInstance>> x = availableTime.getStartDates().get(localDateTimeKey);
@@ -241,16 +249,16 @@ public class AvailableTime {
         return startDates;
     }
 
-    private static HashMap<LocalDateTime, List<Long>> multiBindingStartDates(List<AvailableTime> availableTimes) {
+    private static HashMap<LocalDateTime, List<Long>> multiBindingStartDates(HashMap<Long,AvailableTime> availableTimes) {
 //كل الاوقات الي فهيا كل النسخ اصفر
         HashMap<LocalDateTime, List<Long>> map = new HashMap<>();
-        LocalDateTime localDateTime = availableTimes.get(0).getStartDates().keySet().iterator().next();
+        LocalDateTime localDateTime = availableTimes.values().stream().iterator().next().getStartDates().keySet().iterator().next();
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
             int count = 0;
-            for (AvailableTime availableTime : availableTimes) {
-                HashMap<LocalDateTime, List<Long>> x = availableTime.getBendingStartDates();
+            for (Long keys : availableTimes.keySet()) {
+                HashMap<LocalDateTime, List<Long>> x =availableTimes.get(keys).getBendingStartDates();
                 List<Long> y = x.get(currentDateTime);
                 if (y != null) {
                     count += y.size();
@@ -271,11 +279,10 @@ public class AvailableTime {
         LocalDateTime currentDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), 23, 59);
         while (currentDateTime.isBefore(endDateTime)) {
-            if (startDates.get(currentDateTime) != null && startDates.get(currentDateTime).size() > itemIds.size()) {
+            if (startDates.get(currentDateTime) != null && startDates.get(currentDateTime).size() < itemIds.size() ) {
                 List<Long> help = new ArrayList<>(itemIds);
-                for (Long l : startDates.get(currentDateTime).keySet()) {
-                    help.removeAll(startDates.get(currentDateTime).get(l));
-                }
+                help.removeAll(startDates.get(currentDateTime).keySet());
+
                 map.put(currentDateTime, help);
             }
             currentDateTime = currentDateTime.plusMinutes(30);

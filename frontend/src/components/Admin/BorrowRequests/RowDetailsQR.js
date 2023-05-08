@@ -159,7 +159,7 @@ const RowDetailsQR = ({
             <Typography>Username: {user.username}</Typography>
             <Typography>Email: {user.email}</Typography>
             <Typography>Year: {user.year}</Typography>
-            <Typography>User: {user.Role}</Typography>
+            <Typography>User: {user.role}</Typography>
           </Box>
         )}
       </Box>

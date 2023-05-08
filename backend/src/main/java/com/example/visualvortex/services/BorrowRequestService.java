@@ -264,13 +264,13 @@ public class BorrowRequestService {
 
     public AvailableTime getAllStartTimeThatCanBeSelected(List<Long> itemIds, LocalDateTime localDateTime) {
         AvailableTime.itemIds=itemIds;
-        List<AvailableTime> availableTimes=new ArrayList<>();
+         HashMap<Long,AvailableTime> availableTimes=new HashMap<>();
         for (long itemId:itemIds) {
             List<ItemInstance> itemInstanceTable = itemInstanceService.findByItemTypeId(itemId);
             List<BorrowRequest> bendingBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
             List<BorrowRequest> awaitingPickupBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
             List<BorrowRequest> awaitingReturnBorrowRequestsTable = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_RETURN);
-            availableTimes.add(startData(itemId,localDateTime,itemInstanceTable,awaitingReturnBorrowRequestsTable,awaitingPickupBorrowRequestsTable,bendingBorrowRequestsTable));
+            availableTimes.put(itemId,startData(itemId,localDateTime,itemInstanceTable,awaitingReturnBorrowRequestsTable,awaitingPickupBorrowRequestsTable,bendingBorrowRequestsTable));
         }
         AvailableTime x = AvailableTime.BuildAvailableTimeFromList(availableTimes);
         return x;
@@ -333,7 +333,7 @@ public class BorrowRequestService {
 
 
     public boolean between(LocalDateTime current, LocalDateTime start, LocalDateTime end) {
-        return current.isEqual(start)  || (current.isAfter(start) && current.isBefore(end));
+        return current.isEqual(start) ||current.isEqual(end)   || (current.isAfter(start) && current.isBefore(end));
     }
 
     public boolean collisionTime(LocalDateTime time1start, LocalDateTime time1end, LocalDateTime time2start, LocalDateTime time2end) {
@@ -346,11 +346,13 @@ public class BorrowRequestService {
 
     public AvailableTime getAllReturnTimeThatCanBeSelected(LocalDateTime localDateTimeStart, LocalDateTime localDateTimeReturn, HashMap<Long,List<ItemInstance>> data, List<Long> itemIds) {
         AvailableTime.itemIds=itemIds;
-        List<AvailableTime> availableTimes=new ArrayList<>();
+        AvailableTime.localDateTimeReturn=localDateTimeReturn;
+        AvailableTime.localDateTimeStart=localDateTimeStart;
+        HashMap<Long,AvailableTime> availableTimes=new HashMap<>();
         for (Long itemId:itemIds) {
             List<BorrowRequest> bendingBorrow = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.PENDING);
             List<BorrowRequest> awaitingPickupBorrow = borrowRequestRepository.findRequestsByItemIdAndStatus(itemId, RequestStatus.AWAITING_PICKUP);
-            availableTimes.add(returnData(itemId, localDateTimeStart, localDateTimeReturn, data.get(itemId), awaitingPickupBorrow, bendingBorrow));
+            availableTimes.put(itemId,returnData(itemId, localDateTimeStart, localDateTimeReturn, data.get(itemId), awaitingPickupBorrow, bendingBorrow));
         }
         AvailableTime x = AvailableTime.BuildAvailableTimeFromList(availableTimes);
         return x;
