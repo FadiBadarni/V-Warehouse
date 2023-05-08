@@ -9,6 +9,11 @@ const TimeSlot = ({
   bookedSlots,
   partialPendingSlots,
   partialPendingSlotsItemIds,
+  partialBookedSlots,
+  bookedReturnSlots,
+  pendingReturnSlots,
+  partialPendingReturnSlots,
+  partialBookedReturnSlots,
   onClick,
 }) => {
   const [partialPendingItemNames, setPartialPendingItemNames] = useState([]);
@@ -41,6 +46,18 @@ const TimeSlot = ({
   const pendingClass = pendingSlots ? styles.pending : "";
   const bookedClass = bookedSlots ? styles.booked : "";
   const partialPendingClass = partialPendingSlots ? styles.partialPending : "";
+  const partialBookedClass = partialBookedSlots ? styles.partialBooked : "";
+  const bookedReturnClass = bookedReturnSlots ? styles.bookedReturn : "";
+  const pendingReturnSlotsClass = pendingReturnSlots
+    ? styles.pendingReturn
+    : "";
+  const partialPendingReturnSlotsClass = partialPendingReturnSlots
+    ? styles.partialPendingReturn
+    : "";
+
+  const partialBookedReturnSlotsClass = partialBookedReturnSlots
+    ? styles.partialBookedReturn
+    : "";
 
   const slotClasses = [
     styles["time-slot"],
@@ -48,9 +65,15 @@ const TimeSlot = ({
     pendingClass,
     bookedClass,
     partialPendingClass,
+    partialBookedClass,
+    bookedReturnClass,
+    pendingReturnSlotsClass,
+    partialPendingReturnSlotsClass,
+    partialBookedReturnSlotsClass,
   ].join(" ");
+
   const handleClick = () => {
-    if (!bookedSlots) {
+    if (!bookedSlots && !bookedReturnSlots) {
       onClick(time);
     }
   };
@@ -62,7 +85,17 @@ const TimeSlot = ({
       return "There is a pending request for this slot";
     } else if (partialPendingSlots) {
       const items = partialPendingItemNames.join(", ");
-      return `Items ${items} have a pending request for this slot`;
+      return `Item ${items} have a pending request for this slot`;
+    } else if (partialBookedSlots) {
+      return "This slot is partially booked";
+    } else if (bookedReturnClass) {
+      return "MUST RETURN BY THIS TIME";
+    } else if (pendingReturnSlotsClass) {
+      return "There is a pending request for this slot";
+    } else if (partialPendingReturnSlotsClass) {
+      return "There is a partial pending request for this slot";
+    } else if (partialBookedReturnSlotsClass) {
+      return "This slot is partially booked";
     } else {
       return "Click to select time";
     }
