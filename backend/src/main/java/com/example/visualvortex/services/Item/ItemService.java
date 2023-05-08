@@ -127,17 +127,17 @@ public class ItemService {
 
     public ItemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
-//        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
-//                .map(attribute -> new ItemAttributeDTO(
-//                        attribute.getId(),
-//                        attribute.getAttributeName(),
-//                        attribute.getAttributeValue()))
-//                .collect(Collectors.toSet());
+        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
+                .map(attribute -> new ItemAttributeDTO(
+                        attribute.getId(),
+                        attribute.getAttributeName(),
+                        attribute.getAttributeValue()))
+                .collect(Collectors.toSet());
 
         ItemTypeDTO itemTypeDTO = new ItemTypeDTO(
                 itemType.getId(),
                 itemType.getName(),
-                null
+                itemTypeAttributeDTOs
         );
 
         List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()
