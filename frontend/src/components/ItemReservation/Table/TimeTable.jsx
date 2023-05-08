@@ -9,8 +9,8 @@ const TimeTable = ({
   onTimeSelected,
   minTime,
   maxTime,
-  awaitingPickupRequests,
   itemIds,
+  starttime,
 }) => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [itemInstancesCount, setItemInstancesCount] = useState(new Map());
@@ -36,18 +36,6 @@ const TimeTable = ({
     [onTimeSelected]
   );
 
-  const isTimeSlotInPendingRequests = (time) => {
-    return awaitingPickupRequests.some((request) => {
-      const startDate = dayjs(request.intendedStartDate);
-      const endDate = dayjs(request.intendedReturnDate);
-      const dayjsTime = dayjs(time); // Convert time to dayjs object
-      return (
-        (dayjsTime.isSame(startDate) || dayjsTime.isAfter(startDate)) &&
-        (dayjsTime.isSame(endDate) || dayjsTime.isBefore(endDate))
-      );
-    });
-  };
-
   const createTimeSlots = useCallback(() => {
     const slots = [];
     let currentTime = minTime;
@@ -55,12 +43,39 @@ const TimeTable = ({
       const time = dayjs(selectedDate)
         .hour(currentTime.hour())
         .minute(currentTime.minute());
+
+      // Check if the starttime object exists and has the required properties
+      const pendingSlots =
+        starttime &&
+        starttime.bendingStartDates &&
+        starttime.bendingStartDates.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
+      const partialPendingSlots =
+        starttime &&
+        starttime.incompleteBendingStartDates &&
+        starttime.incompleteBendingStartDates.hasOwnProperty(
+          time.format("YYYY-MM-DDTHH:mm")
+        );
+      const partialPendingSlotsItemIds =
+        starttime &&
+        starttime.incompleteBendingStartDates &&
+        starttime.incompleteBendingStartDates[time.format("YYYY-MM-DDTHH:mm")];
+
+      const bookedSlots =
+        starttime &&
+        starttime.redStartDate &&
+        starttime.redStartDate.hasOwnProperty(time.format("YYYY-MM-DDTHH:mm"));
+
       slots.push(
         <TimeSlot
           key={time.format("HH:mm")}
           time={time}
           selected={selectedTime && selectedTime.isSame(time)}
-          isPending={isTimeSlotInPendingRequests(time)}
+          pendingSlots={pendingSlots}
+          bookedSlots={bookedSlots}
+          partialPendingSlots={partialPendingSlots}
+          partialPendingSlotsItemIds={partialPendingSlotsItemIds}
           onClick={handleTimeSelected}
         />
       );
@@ -74,7 +89,7 @@ const TimeTable = ({
     maxTime,
     selectedTime,
     handleTimeSelected,
-    awaitingPickupRequests,
+    starttime,
   ]);
 
   return <div className={styles["time-table"]}>{createTimeSlots()}</div>;
