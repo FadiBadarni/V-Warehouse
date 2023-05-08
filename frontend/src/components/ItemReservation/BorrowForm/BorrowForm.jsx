@@ -18,7 +18,6 @@ const BorrowForm = ({
   handleSendRequest,
   isFormValid,
   itemIds,
-  awaitingPickupRequests,
 }) => {
   const { t } = useTranslation("itemReservation");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -30,6 +29,7 @@ const BorrowForm = ({
     setStarttime(starttime);
     setSelectedStartDate(date);
     setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+    console.log(starttime);
   };
 
   const handleReturnDateChange = async (date) => {
@@ -85,7 +85,8 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}>
+                transition={{ duration: 0.5 }}
+              >
                 <Box mb={4}>
                   <Typography variant="h5">
                     {t("itemReservation.timeSlots")}
@@ -99,7 +100,7 @@ const BorrowForm = ({
                       minTime={getTimeBoundaries(selectedStartDate).minTime}
                       maxTime={getTimeBoundaries(selectedStartDate).maxTime}
                       itemIds={itemIds}
-                      awaitingPickupRequests={awaitingPickupRequests}
+                      starttime={starttime}
                     />
                   </Grid>
                   <Grid item xs={12} md={2}></Grid>
@@ -137,7 +138,6 @@ const BorrowForm = ({
                       : getTimeBoundaries(selectedReturnDate).minTime
                   }
                   maxTime={getTimeBoundaries(selectedReturnDate).maxTime}
-                  awaitingPickupRequests={awaitingPickupRequests}
                 />
               </div>
             )}
@@ -159,7 +159,8 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}>
+            disabled={!isFormValid()}
+          >
             {t("itemReservation.sendRequest")}
           </button>
         </div>

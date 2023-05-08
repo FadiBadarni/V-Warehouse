@@ -9,7 +9,7 @@
   width: 100px;
   text-align: center;
   transition: all 0.3s;
-
+  cursor: pointer;
   border-color: green;
   background-color: #d9f9d9;
 
@@ -30,4 +30,13 @@
 
 .pending {
   background-color: yellow;
+}
+
+.booked {
+  background-color: lightcoral;
+  cursor: not-allowed;
+}
+
+.partialPending {
+  background-color: rgb(92, 214, 245);
 }

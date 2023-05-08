@@ -45,6 +45,7 @@ const useItemDetails = () => {
           i18n.language
         );
         setItemDetails(translatedItemDetails);
+        return translatedItemDetails;
       } catch (error) {
         console.error("Error fetching item details:", error);
       }
