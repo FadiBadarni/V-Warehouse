@@ -87,8 +87,7 @@ const RequestsTableRow = ({
     <React.Fragment>
       <TableRow
         onClick={() => handleRowClick(index, request.itemId, request)}
-        sx={{ cursor: "pointer" }}
-      >
+        sx={{ cursor: "pointer" }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -96,8 +95,7 @@ const RequestsTableRow = ({
             onClick={(event) => {
               event.stopPropagation();
               setExpandedRow(expandedRow === index ? -1 : index);
-            }}
-          >
+            }}>
             {expandedRow === index ? (
               <KeyboardArrowUp />
             ) : (
@@ -109,9 +107,7 @@ const RequestsTableRow = ({
         <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
         <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
         <TableCell>{request.borrowingReason}</TableCell>
-        <TableCell>
-          {request.itemInstanceIds + "/" + request.quantity}
-        </TableCell>
+        <TableCell>{request.itemIds.join(", ")}</TableCell>
         <TableCell>{formatDate(request.requestTime)}</TableCell>
 
         {handleAccept && handleReject && (
@@ -123,8 +119,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleAccept(request);
-              }}
-            >
+              }}>
               {t("borrowRequests.pendingRequests.approve")}
             </Button>
             <Button
@@ -133,8 +128,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleReject(request);
-              }}
-            >
+              }}>
               {t("borrowRequests.pendingRequests.reject")}
             </Button>
           </TableCell>
@@ -149,8 +143,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handlePickupConfirm(request, items);
-              }}
-            >
+              }}>
               Confirm
             </Button>
             <Button
@@ -160,8 +153,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handlePickupCancel(request);
-              }}
-            >
+              }}>
               Cancel
             </Button>
           </TableCell>
@@ -176,8 +168,7 @@ const RequestsTableRow = ({
                 event.stopPropagation();
                 handleReturn(request);
               }}
-              disabled={returnButtonIsDisable}
-            >
+              disabled={returnButtonIsDisable}>
               confirm
             </Button>
             <Button
@@ -186,8 +177,7 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handleOverDue(request);
-              }}
-            >
+              }}>
               OverDue
             </Button>
           </TableCell>

@@ -81,6 +81,7 @@ const BorrowRequests = () => {
             handleReject={handleReject}
             handleRowClick={handleRowClick}
             expandedRow={expandedPendingRow}
+            setExpandedRow={setExpandedPendingRow}
             user={user}
             activeTab={activeTab}
           />
