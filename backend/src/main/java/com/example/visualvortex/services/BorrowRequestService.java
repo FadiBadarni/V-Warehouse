@@ -265,17 +265,15 @@ public class BorrowRequestService {
         BorrowRequest borrowRequest = borrowRequestRepository.findByRequestId(uuid);
         LocalDateTime start=borrowRequest.getIntendedStartDate();
         LocalDateTime end=borrowRequest.getIntendedReturnDate();
-        List<BorrowRequestDTO> pendingRequests= getAllRequests();
-        pendingRequests.stream()
+        List<BorrowRequestDTO> pendingRequests = getAllRequests().stream()
                 .filter(request -> collisionTime(request.getIntendedStartDate(), request.getIntendedReturnDate(),start,end)
-                        && request.getStatus()==RequestStatus.PENDING)
-                .collect(Collectors.toList());
-        List<BorrowRequestDTO> redRequests= getAllRequests();
-        redRequests.stream()
-                .filter(request -> collisionTime(request.getIntendedStartDate(), request.getIntendedReturnDate(),start,end)
-                        &&( request.getStatus()==RequestStatus.AWAITING_PICKUP ||  request.getStatus()==RequestStatus.AWAITING_RETURN))
+                        && request.getStatus() == RequestStatus.PENDING)
                 .collect(Collectors.toList());
 
+        List<BorrowRequestDTO> redRequests = getAllRequests().stream()
+                .filter(request -> collisionTime(request.getIntendedStartDate(), request.getIntendedReturnDate(),start,end)
+                        && (request.getStatus() == RequestStatus.AWAITING_PICKUP || request.getStatus() == RequestStatus.AWAITING_RETURN))
+                .collect(Collectors.toList());
         List<Long> itemIds= borrowRequest.getItemIds();
 
         HashMap<Long,Integer> pendingMap=new HashMap<>();

@@ -1,6 +1,6 @@
 package com.example.visualvortex.controllers;
 
-import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
+import com.example.visualvortex.dtos.ItemDTOS.InstanceDTO;
 import com.example.visualvortex.services.Item.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class ItemManagementControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testAddItem() throws Exception {
         // Define the input and expected output
-        ItemDTO inputDto = new ItemDTO();
+        InstanceDTO inputDto = new InstanceDTO();
         inputDto.setName("Test Item");
         inputDto.setDescription("Test Description");
         inputDto.setQuantity(10);

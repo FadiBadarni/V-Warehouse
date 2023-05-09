@@ -9,11 +9,9 @@ const QRCodePrint = ({ generatedQRCodes, isPrintButtonDisabled }) => {
     const qrCodesContainer = document.createElement("div");
     qrCodesContainer.classList.add("qr-codes-print-container");
 
-    generatedQRCodes.forEach((qrCode, index) => {
-      const qrCodeWrapper = document.createElement("div");
-      ReactDOM.render(qrCode, qrCodeWrapper);
-      qrCodesContainer.appendChild(qrCodeWrapper);
-    });
+    const qrCodeWrapper = document.createElement("div");
+    ReactDOM.render(generatedQRCodes, qrCodeWrapper);
+    qrCodesContainer.appendChild(qrCodeWrapper);
 
     const printContent = `
       <html>
@@ -44,15 +42,13 @@ const QRCodePrint = ({ generatedQRCodes, isPrintButtonDisabled }) => {
         fullWidth
         className="print-button"
         onClick={printQRCodes}
-        disabled={isPrintButtonDisabled}
-      >
+        disabled={isPrintButtonDisabled}>
         Print QR Codes
       </Button>
       <iframe
         ref={iframeRef}
         title="print-iframe"
-        style={{ display: "none" }}
-      ></iframe>
+        style={{ display: "none" }}></iframe>
     </div>
   );
 };

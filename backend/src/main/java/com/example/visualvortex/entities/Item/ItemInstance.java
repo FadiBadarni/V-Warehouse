@@ -14,7 +14,6 @@ import lombok.*;
 public class ItemInstance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Enumerated(EnumType.STRING)

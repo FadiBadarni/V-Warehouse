@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { isValidElement, useState } from "react";
 import { TextField, Button, Grid } from "@mui/material";
 import {
   addEquipmentItem,
   fetchItemNames,
   getItemByName,
+  searchForSeralNumber,
 } from "../../../api/AdminService";
 import CheckMark from "./CheckMark";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -17,12 +18,13 @@ const EquipmentForm = () => {
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [serialNumber, setSerialNumber] = useState("");
   const [itemType, setItemType] = useState("");
   const [isExistingItem, setIsExistingItem] = useState(false);
   const [generatedQRCodes, setGeneratedQRCodes] = useState([]);
 
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
+  const [isValidSerialNumber, setIsValidSerialNumber] = useState(false);
 
   const [attributes, setAttributes] = useState([
     { attributeName: "", attributeValue: "" },
@@ -87,58 +89,81 @@ const EquipmentForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const filterSerialNumber = serialNumber.replace(/[^0-9]/g, "");
     const item = {
+      serialNumber: filterSerialNumber,
       name,
       description,
-      quantity,
       itemType: { name: itemType, attributes },
     };
-    const itemInstances = await addEquipmentItem(item);
-    console.log(itemInstances);
-    if (itemInstances) {
-      console.log("Item added successfully:", itemInstances);
+    // const itemInstances = await addEquipmentItem(item);
+    // console.log(itemInstances);
+    // if (itemInstances) {
+    //   console.log("Item added successfully:", itemInstances);
 
-      // Reset fields
-      setName("");
-      setDescription("");
-      setQuantity("");
-      setItemType("");
-      setAttributes([{ attributeName: "", attributeValue: "" }]);
-      setIsExistingItem(false);
-      setIsPrintButtonDisabled(false); // Enable the print button
+    // Reset fields
+    await addEquipmentItem(item);
 
-      // Clear item names and item types to reload them on next focus
-      setItemNames([]);
-      setItemTypes([]);
+    setName("");
+    setDescription("");
+    setSerialNumber("");
+    setItemType("");
+    setAttributes([{ attributeName: "", attributeValue: "" }]);
+    setIsExistingItem(false);
+    setIsPrintButtonDisabled(false); // Enable the print button
 
-      // Generate QR codes for each created item instance
-      const qrCodes = itemInstances.map((itemInstance) => {
-        const qrCodeData = {
-          instanceId: itemInstance.id,
-          itemId: itemInstance.itemId,
-        };
+    // Clear item names and item types to reload them on next focus
+    setItemNames([]);
+    setItemTypes([]);
 
-        return (
-          <Grid item xs={6} sm={4} md={3} lg={2} key={itemInstance.id}>
-            <div className="qr-code-container">
-              <QRCode value={JSON.stringify(qrCodeData)} size={128} />
-              <div className="qr-code-details">
-                <div>{itemInstance.itemId}</div>
-                <div>{name}</div>
-              </div>
+    // Generate QR codes for each created item instance
+    const qrCodes = (itemInstance) => {
+      const qrCodeData = {
+        instanceId: filterSerialNumber,
+      };
+      return (
+        <Grid item xs={6} sm={4} md={3} lg={2} key={itemInstance.id}>
+          <div className="qr-code-container">
+            <QRCode value={JSON.stringify(qrCodeData)} size={128} />
+            <div className="qr-code-details">
+              <div>{itemInstance.itemId}</div>
+              <div>{name}</div>
             </div>
-          </Grid>
-        );
-      });
+          </div>
+        </Grid>
+      );
+    };
 
-      setGeneratedQRCodes(qrCodes);
+    setGeneratedQRCodes(qrCodes);
 
-      setShowCheckMark(true);
-      setTimeout(() => setShowCheckMark(false), 3000);
-    } else {
-      console.error("Failed to add the item.");
-      // Show an error message to the user
+    setShowCheckMark(true);
+    setTimeout(() => setShowCheckMark(false), 3000);
+    // } else {
+    //   console.error("Failed to add the item.");
+    //   // Show an error message to the user
+    // }
+  };
+
+  const handleSerialChange = async (e) => {
+    const unformattedValue = e.target.value.replace(/-/g, "");
+    const formattedValue = unformattedValue
+      .replace(/\D/g, "")
+      .replace(/(\d{4})/g, "$1-")
+      .slice(0, 19);
+    // Check if the pressed key is backspace and remove the hyphen accordingly
+    if (e.nativeEvent.inputType === "deleteContentBackward") {
+      const lastChar = formattedValue[formattedValue.length - 1];
+      if (lastChar === "-") {
+        const strippedValue = formattedValue.slice(0, -1);
+        setSerialNumber(strippedValue);
+        return;
+      }
     }
+    setSerialNumber(formattedValue);
+    const isValidSeralNumber = await searchForSeralNumber(
+      formattedValue.replace(/[^0-9]/g, "")
+    );
+    setIsValidSerialNumber(isValidSeralNumber);
   };
 
   return (
@@ -203,13 +228,23 @@ const EquipmentForm = () => {
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
-            id="quantity"
-            label="Quantity"
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            inputProps={{ min: 1 }}
+            id="serialNumber"
+            label="Serial Number"
+            type="text"
+            value={serialNumber}
+            onChange={handleSerialChange}
+            inputProps={{ maxLength: 19 }}
+            style={{ color: "#009688", fontSize: "16px", fontWeight: "bold" }}
+            placeholder="xxxx-xxxx-xxxx-xxxx"
           />
+          {serialNumber.length >= 4 &&
+            (isValidSerialNumber ? (
+              <p style={{ color: "green", fontWeight: "bold" }}>OK</p>
+            ) : (
+              <p style={{ color: "red", fontWeight: "bold" }}>
+                Invalid serial number
+              </p>
+            ))}
         </Grid>
 
         {attributes.map((attribute, index) => (
@@ -244,8 +279,7 @@ const EquipmentForm = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            disabled={isExistingItem}
-          >
+            disabled={isExistingItem}>
             Add Attribute
           </Button>
         </Grid>
@@ -258,8 +292,7 @@ const EquipmentForm = () => {
             className="item-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth
-          >
+            fullWidth>
             Add Item
           </Button>
         </Grid>
