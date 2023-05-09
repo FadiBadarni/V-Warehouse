@@ -3,12 +3,13 @@ import { useTranslation } from "react-i18next";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextArea } from "semantic-ui-react";
-import { Box, Typography, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { motion } from "framer-motion";
 import { DatePicker } from "@mui/x-date-pickers";
 import TimeTable from "../Table/TimeTable";
 import dayjs from "dayjs";
 import { getAllStartTime, getAllRetrunTime } from "../../../api/BorrowService";
+import ColorLegend from "./ColorLegend";
 
 const BorrowForm = ({
   setIntendedStartDate,
@@ -87,6 +88,8 @@ const BorrowForm = ({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="borrow-form">
         <h3 className="borrow-form__title">{t("itemReservation.request")}</h3>
+        <ColorLegend />
+
         <div className="borrow-form__request">
           <div className="borrow-form__field">
             <div className="borrow-form__inputName">
@@ -96,7 +99,6 @@ const BorrowForm = ({
             </div>
             <DatePicker
               className="borrow-form__date-picker"
-              label="Start date"
               value={selectedStartDate}
               onChange={handleStartDateChange}
               minDate={minDate}
@@ -110,12 +112,11 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}>
-                <Box mb={4}>
-                  <Typography variant="h5">
-                    {t("itemReservation.timeSlots")}
-                  </Typography>
-                </Box>
+                transition={{ duration: 0.5 }}
+              >
+                <p className="borrow-form__label">
+                  {t("itemReservation.startTimeSlots")}
+                </p>
                 <Grid container spacing={2} alignItems="flex-start">
                   <Grid item xs={12} md={12}>
                     <TimeTable
@@ -140,7 +141,6 @@ const BorrowForm = ({
             </div>
             <DatePicker
               className="borrow-form__datetime-picker"
-              label="Return date"
               value={selectedReturnDate}
               onChange={handleReturnDateChange}
               minDate={selectedStartDate || minDate}
@@ -150,7 +150,7 @@ const BorrowForm = ({
               <div className="borrow-form__field">
                 <div className="borrow-form__inputName">
                   <p className="borrow-form__label">
-                    {t("itemReservation.timeSlots")}
+                    {t("itemReservation.returnTimeSlots")}
                   </p>
                 </div>
                 <TimeTable
@@ -184,7 +184,8 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}>
+            disabled={!isFormValid()}
+          >
             {t("itemReservation.sendRequest")}
           </button>
         </div>

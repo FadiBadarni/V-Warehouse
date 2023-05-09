@@ -101,3 +101,78 @@
 
 
 }
+
+.color-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+    background-color: transparent;
+
+    h4 {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s ease;
+        padding: 5px;
+        border-radius: 5px;
+        position: relative;
+
+        &:hover {
+            background-color: darken($color: $sce-background-color, $amount: 20%);
+            border-radius: 5px;
+
+            span {
+                box-shadow: 0 0 0 3px currentColor;
+            }
+        }
+
+        span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transition: box-shadow 0.3s ease;
+        }
+
+    }
+
+    :nth-child(2) {
+        span {
+            background-color: lightcoral;
+        }
+    }
+
+    :nth-child(3) {
+        span {
+            background-color: orange;
+        }
+    }
+
+    :nth-child(4) {
+        span {
+            background-color: green;
+        }
+    }
+
+    :nth-child(5) {
+        span {
+            background-color: cyan;
+        }
+    }
+
+    :nth-child(6) {
+        span {
+            background-color: orange;
+        }
+    }
+}

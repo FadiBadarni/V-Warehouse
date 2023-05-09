@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 
@@ -19,7 +20,9 @@ const LatePolicy = () => {
       variants={fadeIn}
     >
       <h3>{t("itemReservation.policyTitle")}</h3>
-      <p>{t("itemReservation.policy")}</p>
+      <Link to="/terms">
+        <p className="late-policy__agreement">{t("itemReservation.policy")}</p>
+      </Link>
     </motion.div>
   );
 };
