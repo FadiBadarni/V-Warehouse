@@ -72,6 +72,7 @@ const Items = ({ items, selectedTag }) => {
             variants={itemHover}
             initial="initial"
             whileHover="hover"
+            onClick={() => handleSelection(item.id)}
           >
             <div
               className="warehouse__item__image"
@@ -101,6 +102,7 @@ const Items = ({ items, selectedTag }) => {
                   e.stopPropagation();
                   handleSelection(item.id);
                 }}
+                onClick={(e) => e.stopPropagation()}
               />
             </div>
 

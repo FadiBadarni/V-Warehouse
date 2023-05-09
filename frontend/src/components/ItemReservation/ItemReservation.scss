@@ -30,6 +30,7 @@
 }
 
 .late-policy {
+
     background-color: darken($color: $sce-background-color, $amount: 5%);
     padding: 20px;
     border-radius: 5px;
@@ -37,6 +38,24 @@
     margin-bottom: 30px;
     width: 100%;
     margin: 0 auto;
+
+    &__agreement {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        border-bottom: 2px solid $sce-primary-color;
+        width: fit-content;
+        margin: 0 auto;
+        font-weight: bold;
+        color: $sce-text-color-dark;
+        transition: .3s all ease-in-out;
+
+        &:hover {
+            filter: brightness(200%);
+            cursor: help;
+        }
+    }
 }
 
 

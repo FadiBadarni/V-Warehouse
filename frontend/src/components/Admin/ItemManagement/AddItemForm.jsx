@@ -1,4 +1,4 @@
-import React, { isValidElement, useState } from "react";
+import React, { useState } from "react";
 import { TextField, Button, Grid } from "@mui/material";
 import {
   addEquipmentItem,
@@ -279,7 +279,8 @@ const EquipmentForm = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            disabled={isExistingItem}>
+            disabled={isExistingItem}
+          >
             Add Attribute
           </Button>
         </Grid>
@@ -292,7 +293,8 @@ const EquipmentForm = () => {
             className="item-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth>
+            fullWidth
+          >
             Add Item
           </Button>
         </Grid>

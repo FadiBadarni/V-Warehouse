@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ItemInfo from "./ItemInfo";
@@ -12,12 +12,13 @@ import { createBorrowRequest } from "../../api/BorrowService";
 import { getWarehouseItemsByIds } from "../../api/WarehouseService";
 import { useLocation } from "react-router-dom";
 import useBorrowRequests from "../../hooks/useBorrowRequests";
+import { translateText } from "../../api/TranslationService";
 
 import dayjs from "dayjs";
 import "./ItemReservation.scss";
 
 const BorrowedItemDetails = () => {
-  const { t } = useTranslation("itemReservation");
+  const { t, i18n } = useTranslation("itemReservation");
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [signaturePad, setSignaturePad] = useState(null);
@@ -27,21 +28,42 @@ const BorrowedItemDetails = () => {
   const [borrowReason, setBorrowReason] = useState("");
   const { awaitingPickupRequests } = useBorrowRequests();
   const navigate = useNavigate();
-
   const [fetchedItems, setFetchedItems] = useState([]);
-  const fetchSelectedItems = async (ids) => {
-    try {
-      const items = await getWarehouseItemsByIds(ids);
-      setFetchedItems(items);
-    } catch (error) {
-      console.error("Error fetching selected items:", error);
-    }
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchSelectedItems = useCallback(
+    async (ids) => {
+      try {
+        const items = await getWarehouseItemsByIds(ids);
+        if (i18n.language !== "en") {
+          const translatedItems = await Promise.all(
+            items.map(async (item) => {
+              const translatedDescription = await translateText(
+                item.description,
+                i18n.language
+              );
+              return {
+                ...item,
+                name: item.name,
+                description: translatedDescription,
+              };
+            })
+          );
+          setFetchedItems(translatedItems);
+        } else {
+          setFetchedItems(items);
+        }
+      } catch (error) {
+        console.error("Error fetching selected items:", error);
+      }
+    },
+    [i18n.language]
+  );
 
   useEffect(() => {
     const selectedIds = location.pathname.split("/").pop();
     fetchSelectedItems(selectedIds);
-  }, [location.pathname]);
+  }, [location.pathname, fetchSelectedItems]);
 
   const handleSendRequest = () => {
     setShowModal(true);
@@ -60,6 +82,7 @@ const BorrowedItemDetails = () => {
     if (signaturePad.isEmpty()) {
       alert("Please provide a signature.");
     } else {
+      setIsSubmitting(true);
       const base64Signature = signaturePad.toDataURL();
 
       const userId = getUserIdFromLocalStorage();
@@ -75,6 +98,7 @@ const BorrowedItemDetails = () => {
       if (result) {
         alert("Borrow request sent successfully.");
         navigate("/warehouse");
+        setIsSubmitting(false);
         window.location.reload();
       } else {
         alert("Failed to send borrow request.");
@@ -141,6 +165,7 @@ const BorrowedItemDetails = () => {
               handleClear={handleClear}
               handleSubmit={handleSubmit}
               handleClose={handleClose}
+              isSubmitting={isSubmitting}
             />
           )}
         </AnimatePresence>

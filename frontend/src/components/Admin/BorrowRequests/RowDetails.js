@@ -12,7 +12,7 @@ const RowDetails = ({ request, user, instancesCount }) => {
       setItemInfo(ItemIfo);
     };
     fetchItemInfo();
-  }, []);
+  }, [request.itemIds]);
 
   return (
     <Box className="expanded-row">
@@ -28,7 +28,8 @@ const RowDetails = ({ request, user, instancesCount }) => {
                 <Box className="expanded-row__details">
                   <Typography
                     className="expanded-row__title"
-                    variant="subtitle2">
+                    variant="subtitle2"
+                  >
                     {"Available: "}
                     <Typography
                       component="span"
@@ -38,7 +39,8 @@ const RowDetails = ({ request, user, instancesCount }) => {
                             ? "red"
                             : "green",
                         fontSize: "1.2rem",
-                      }}>
+                      }}
+                    >
                       {instancesCount.available[item.id]}
                     </Typography>
                     {" From " + item.quantity}
@@ -52,7 +54,8 @@ const RowDetails = ({ request, user, instancesCount }) => {
                             ? "red"
                             : "green",
                         fontSize: "1.2rem",
-                      }}>
+                      }}
+                    >
                       {instancesCount.required[item.id]}
                     </span>
                   </Typography>

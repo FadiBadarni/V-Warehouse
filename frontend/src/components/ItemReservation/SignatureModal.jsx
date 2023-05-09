@@ -12,6 +12,7 @@ const SignatureModal = ({
   handleClear,
   handleSubmit,
   handleClose,
+  isSubmitting,
 }) => {
   const { t } = useTranslation("itemReservation");
 
@@ -35,7 +36,7 @@ const SignatureModal = ({
           <button onClick={handleClear}>
             {t("itemReservation.clearButton")}
           </button>
-          <button onClick={handleSubmit} disabled={!canSubmit}>
+          <button onClick={handleSubmit} disabled={!canSubmit || isSubmitting}>
             {t("itemReservation.submitButton")}
           </button>
           <button onClick={handleClose}>
