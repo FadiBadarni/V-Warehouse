@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { translateText } from "../../api/TranslationService";
 import { fetchedItemTypes } from "../../api/WarehouseService";
 import Items from "./Items";
+import Skeleton from "@mui/material/Skeleton";
+
 import "./Warehouse.scss";
 
 const Warehouse = () => {
@@ -43,6 +45,7 @@ const Warehouse = () => {
             return item;
           })
         );
+
         setItems(translatedItems);
       } catch (error) {
         if (error.message === "Unauthorized") {
@@ -63,7 +66,38 @@ const Warehouse = () => {
   }, [isAuthenticated, navigate, loading, i18n.language, fetchItems]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="warehouse-background">
+        <div className="warehouse">
+          <header className="warehouse__header">
+            <Skeleton variant="text" width={210} height={40} />
+            <Skeleton variant="text" width={300} height={40} />
+          </header>
+          <div className="warehouse__tag-container">
+            {[...Array(5)].map((item, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                width={80}
+                height={30}
+                style={{ borderRadius: 4, marginRight: 10 }}
+              />
+            ))}
+          </div>
+          <div style={{ marginTop: "20px" }}>
+            {[...Array(3)].map((item, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                width={"100%"}
+                height={200}
+                style={{ marginBottom: "20px", borderRadius: 4 }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
