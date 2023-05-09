@@ -157,4 +157,21 @@ export const broadcastMessageToAllUsers = async (message) => {
   );
 };
 
+export const updateEquipmentItem = async (
+  instanceId,
+  instanceState,
+  instanceType
+) => {
+  return apiWrapper(
+    async () =>
+      await axiosInstance.put("/update-item", {
+        instanceId,
+        instanceState,
+        instanceType,
+      }),
+    "Equipment item updated successfully",
+    "Error updating equipment item:"
+  );
+};
+
 export { axiosInstance };

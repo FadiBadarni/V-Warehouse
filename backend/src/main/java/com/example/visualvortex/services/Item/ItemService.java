@@ -162,4 +162,8 @@ public class ItemService {
     public List<ItemInstance> getAllInstanceById(Long id) {
         return itemInstanceRepository.findAllByItemId(id);
     }
+
+    public Item updateItem(Item item) {
+        return null;
+    }
 }

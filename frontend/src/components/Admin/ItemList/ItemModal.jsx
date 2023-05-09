@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "semantic-ui-react";
 import { MenuItem, Select, Button } from "@mui/material";
-
+import { updateEquipmentItem } from "../../../api/AdminService";
 const ItemModal = ({
   modalOpen,
   toggleModal,
@@ -9,6 +9,19 @@ const ItemModal = ({
   setSelectedItem,
   itemTypes,
 }) => {
+  const handleSubmit = async () => {
+    try {
+      await updateEquipmentItem(
+        selectedItem.id,
+        selectedItem.state,
+        selectedItem.itemType.name
+      );
+      toggleModal(); // close the modal after successful update
+      // You might want to refresh your list of items here or show a success message
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
+  };
   return (
     <Modal open={modalOpen} onClose={toggleModal}>
       <div className="item-modal">
@@ -85,6 +98,7 @@ const ItemModal = ({
           <Button
             variant="contained"
             color="primary"
+            onClick={handleSubmit}
             className="item-modal__button"
           >
             Update

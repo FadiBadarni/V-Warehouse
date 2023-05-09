@@ -2,10 +2,15 @@ package com.example.visualvortex.services.Item;
 
 
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
+import com.example.visualvortex.dtos.ItemDTOS.UpdateItemDTO;
+import com.example.visualvortex.entities.Item.Item;
 import com.example.visualvortex.entities.Item.ItemInstance;
 import com.example.visualvortex.entities.Item.ItemState;
+import com.example.visualvortex.entities.Item.ItemType;
 import com.example.visualvortex.entities.Schedule;
 import com.example.visualvortex.repositories.ItemInstanceRepository;
+import com.example.visualvortex.repositories.ItemRepository;
+import com.example.visualvortex.repositories.ItemTypeRepository;
 import com.example.visualvortex.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +28,8 @@ public class ItemInstanceService {
 
     private final ItemInstanceRepository itemInstanceRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ItemTypeRepository itemTypeRepository;
+    private final ItemRepository itemRepository;
 
     public List<ItemInstanceDTO> getAllItemInstances() {
         List<ItemInstance> itemInstances = itemInstanceRepository.findAll();
@@ -104,6 +111,27 @@ public class ItemInstanceService {
                         instance.getState(),
                         instance.getItem().getId()))
                 .collect(Collectors.toList());
+    }
+
+    public void updateItemInstance(UpdateItemDTO updateItemDTO) {
+        // Find the instance
+        ItemInstance instance = itemInstanceRepository.findById(updateItemDTO.getInstanceId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid instance ID: " + updateItemDTO.getInstanceId()));
+
+        // Find the ItemType
+        ItemType itemType = itemTypeRepository.findByName(updateItemDTO.getInstanceType())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid item type name: " + updateItemDTO.getInstanceType()));
+
+        // Update the instance's state
+        instance.setState(ItemState.valueOf(updateItemDTO.getInstanceState()));
+
+        // Update the item's type
+        Item item = instance.getItem();
+        item.setItemType(itemType);
+
+        // Save the updated instance and item
+        itemInstanceRepository.save(instance);
+        itemRepository.save(item);
     }
 
 }
