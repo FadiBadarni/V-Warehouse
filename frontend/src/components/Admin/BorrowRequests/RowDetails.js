@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 import "./RowDetails.scss";
-import { getWarehouseItemsByIds,getCountInstancesTime } from "../../../api/WarehouseService";
+import {
+  getWarehouseItemsByIds,
+  getCountInstancesTime,
+} from "../../../api/WarehouseService";
 
 const RowDetails = ({ request, user }) => {
   const [ItemIfo, setItemInfo] = useState();
-
+  const [InstancesCount, setInstancesCount] = useState();
   useEffect(() => {
     const fetchItemInfo = async () => {
       const x = request.itemIds;
@@ -17,7 +20,8 @@ const RowDetails = ({ request, user }) => {
 
   useEffect(() => {
     const fetchItemInfo = async () => {
-      const ItemIfo = await getCountInstancesTime( request.requestId);
+      const InstancesCount = await getCountInstancesTime(request.requestId);
+      setInstancesCount(InstancesCount);
       // setItemInfo(ItemIfo);
     };
     fetchItemInfo();
@@ -31,14 +35,44 @@ const RowDetails = ({ request, user }) => {
       <Box className="expanded-row__content">
         <Box className="expanded-row__info">
           {ItemIfo &&
+            InstancesCount &&
             ItemIfo.map((item) => (
               <Box className="expanded-row__user">
-                <Typography className="expanded-row__title" variant="h6">
-                  {item.name}
+                <Typography className="expanded-row__title" variant="subtitle1">
+                  {"{" + item.id + "}  " + item.name}
                 </Typography>
-                <Typography className="expanded-row__title" variant="h6">
-                  {item.quantity}
-                </Typography>
+                <Box className="expanded-row__details">
+                  <Typography
+                    className="expanded-row__title"
+                    variant="subtitle2">
+                    {"Available: "}
+                    <Typography
+                      component="span"
+                      style={{
+                        color:
+                          InstancesCount.available[item.id] === 0
+                            ? "red"
+                            : "green",
+                      }}>
+                      {InstancesCount.available[item.id]}
+                    </Typography>
+                    {" From " + item.quantity}
+                  </Typography>
+                  <Typography
+                    className="expanded-row__title"
+                    variant="subtitle2">
+                    {"Required: "}
+                    <span
+                      style={{
+                        color:
+                          item.quantity < InstancesCount.required[item.id]
+                            ? "red"
+                            : "green",
+                      }}>
+                      {InstancesCount.required[item.id]}
+                    </span>
+                  </Typography>
+                </Box>
               </Box>
             ))}
         </Box>

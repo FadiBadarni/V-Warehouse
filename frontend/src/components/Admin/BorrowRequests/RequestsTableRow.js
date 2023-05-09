@@ -41,6 +41,7 @@ const RequestsTableRow = ({
   const [items, setItems] = useState([]);
   const { i18n, t } = useTranslation("borrowRequests");
   const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
+  const [acceptButtonIsDisable, setAcceptButtonIsDisable] = useState(true);
   const [allInstances, setAllInstances] = useState([]);
   const [allItemIds, setAllItemIds] = useState([]);
 
@@ -143,7 +144,8 @@ const RequestsTableRow = ({
               onClick={(event) => {
                 event.stopPropagation();
                 handlePickupConfirm(request, items);
-              }}>
+              }}
+              disabled={acceptButtonIsDisable}>
               Confirm
             </Button>
             <Button
@@ -200,6 +202,7 @@ const RequestsTableRow = ({
                   allInstances={allInstances}
                   allItemIds={allItemIds}
                   setReturnButtonIsDisable={setReturnButtonIsDisable}
+                  setAcceptButtonIsDisable={setAcceptButtonIsDisable}
                 />
               </Box>
             ) : (
