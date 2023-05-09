@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -158,4 +159,7 @@ public class ItemService {
     }
 
 
+    public List<ItemInstance> getAllInstanceById(Long id) {
+        return itemInstanceRepository.findAllByItemId(id);
+    }
 }

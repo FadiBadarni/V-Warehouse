@@ -30,22 +30,31 @@ const BorrowForm = ({
     setStarttime(starttime);
     setSelectedStartDate(date);
     setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+    if (selectedReturnDate) {
+      handleReturnDateChange(selectedReturnDate);
+    }
   };
 
   const handleReturnDateChange = async (date) => {
     const y = selectedStartDate.toISOString();
     const formattedDate = `${y.slice(0, 16)}`;
     const x = starttime.startDates[formattedDate];
-    const returnTime = await getAllRetrunTime(
+
+    getAllRetrunTime(
       selectedStartDate.toISOString(),
       date.toISOString(),
       itemIds,
       x
-    );
-    setSelectedReturnDate(date);
-    setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-    setReturnTime(returnTime);
-    console.log(returnTime);
+    )
+      .then((returnTime) => {
+        setReturnTime(returnTime);
+        setSelectedReturnDate(date);
+        setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+        console.log(returnTime);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const minDate = useMemo(() => dayjs().startOf("day"), []);
@@ -87,8 +96,7 @@ const BorrowForm = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <Box mb={4}>
                   <Typography variant="h5">
                     {t("itemReservation.timeSlots")}
@@ -162,8 +170,7 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}
-          >
+            disabled={!isFormValid()}>
             {t("itemReservation.sendRequest")}
           </button>
         </div>

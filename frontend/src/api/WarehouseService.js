@@ -32,9 +32,18 @@ export async function fetchedItemTypes() {
   );
 }
 
+//can delete it  but you must to delete in java too
 export async function itemInstancesCountById(id) {
   return apiWrapper(
     async () => await axiosInstance.get(`/quantityItemsByType/${id}`),
+    "Warehouse item fetched successfully",
+    "An error occurred while fetching warehouse item by ID:"
+  );
+}
+
+export async function getCountInstancesTime(id) {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/getCountInstancesTime/${id}`),
     "Warehouse item fetched successfully",
     "An error occurred while fetching warehouse item by ID:"
   );

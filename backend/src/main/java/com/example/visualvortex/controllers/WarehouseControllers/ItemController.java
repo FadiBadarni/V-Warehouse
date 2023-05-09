@@ -62,6 +62,8 @@ public class ItemController {
         return itemTypeService.listType();
     }
 
+
+    //delete
     @GetMapping("/quantityItemsByType/{id}")
     @ResponseStatus(HttpStatus.OK)
     public int quantityItemsByType(@PathVariable Long id) {
@@ -69,6 +71,8 @@ public class ItemController {
         return itemInstanceService.quantityItemsBy(id);
     }
 
+
+    //delete
     @GetMapping("/countItemInstancesByItemId/{id}")
     @ResponseStatus(HttpStatus.OK)
     public long countItemInstancesByItemId(@PathVariable Long id) {
@@ -76,11 +80,14 @@ public class ItemController {
     }
 
 
+    //delete
     @GetMapping("/countItemInstancesByItemIdAndIntendedDates/{id}")
     @ResponseStatus(HttpStatus.OK)
     public long countItemInstancesByItemIdAndIntendedDates(@PathVariable Long id) {
         return itemInstanceService.countItemInstancesByItemIdAndIntendedDates(id, new Date(123), new Date(1123));
     }
+
+
 
 
 }

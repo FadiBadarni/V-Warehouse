@@ -1,5 +1,6 @@
 package com.example.visualvortex.controllers.BorrowControllers;
 
+import com.example.visualvortex.dtos.AvailableCounts;
 import com.example.visualvortex.dtos.AvailableTime;
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
@@ -40,6 +41,7 @@ public class BorrowRequestController {
 
     }
 
+ //delete
     @PostMapping("/borrow-requests")
     @ResponseStatus(HttpStatus.OK)
     public BorrowRequestDTO createBorrowRequest2(@RequestBody Map<String, Object> borrowRequestData) {
@@ -109,6 +111,13 @@ public class BorrowRequestController {
         LocalDateTime localDateTimeStartO = LocalDateTime.parse(params.get("localDateTimeStart").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         LocalDateTime localDateTimeReturnO = LocalDateTime.parse(params.get("localDateTimeReturn").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         return borrowRequestService.getAllReturnTimeThatCanBeSelected(localDateTimeStartO, localDateTimeReturnO,  itemInstances,itemIds);
+
+    }
+
+
+    @GetMapping("/getCountInstancesTime/{id}")
+    public AvailableCounts getCountInstancesTime(@PathVariable UUID id) {
+        return borrowRequestService.getAvailableCountInTime(id);
 
     }
 }

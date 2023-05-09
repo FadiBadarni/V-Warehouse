@@ -1,5 +1,6 @@
 package com.example.visualvortex.services;
 
+import com.example.visualvortex.dtos.AvailableCounts;
 import com.example.visualvortex.dtos.AvailableTime;
 import com.example.visualvortex.dtos.BorrowRequestDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
@@ -18,6 +19,7 @@ import com.example.visualvortex.repositories.ScheduleRepository;
 import com.example.visualvortex.services.Item.ItemInstanceService;
 import com.example.visualvortex.services.Item.ItemService;
 import com.example.visualvortex.services.User.UserService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -109,6 +111,8 @@ public class BorrowRequestService {
         return convertToBorrowRequestDTO(savedBorrowRequest);
     }
 
+
+
     public BorrowRequestDTO updateRequestStatus(UUID requestId, RequestStatus status) {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
@@ -176,6 +180,8 @@ public class BorrowRequestService {
                 .status(borrowRequest.getStatus())
                 .requestTime(borrowRequest.getRequestTime())
                 .requestId(borrowRequest.getRequestId())
+                .signatureData(borrowRequest.getSignatureData())
+                .itemInstanceIds(borrowRequest.getItemInstanceIds())
                 .build();
     }
 
@@ -216,16 +222,6 @@ public class BorrowRequestService {
                 .build();
     }
 
-    private boolean isBorrowRequestValid(BorrowRequest request, LocalDateTime currentDateTime, LocalDateTime startDateTime) {
-        LocalDateTime requestStart = request.getIntendedStartDate();
-        LocalDateTime requestEnd = request.getIntendedReturnDate();
-        boolean isStartValid = (requestStart.isAfter(startDateTime) || requestStart.isEqual(startDateTime));
-        boolean isWithinCurrentTime = (requestStart.isBefore(currentDateTime) || requestStart.isEqual(currentDateTime));
-        boolean isEndValid = (requestEnd.isBefore(currentDateTime) && (requestEnd.isAfter(startDateTime) || requestEnd.isEqual(startDateTime)));
-
-        return (isStartValid && isWithinCurrentTime) || isEndValid;
-    }
-
     public List<BorrowRequestDTO> getRequestsByUserId(Long userId) {
         return borrowRequestRepository.findByUserId(userId).stream()
                 .map(this::convertToBorrowRequestDTO)
@@ -262,6 +258,49 @@ public class BorrowRequestService {
         borrowRequestRepository.save(borrowRequest);
     }
 
+
+
+    public AvailableCounts getAvailableCountInTime(UUID uuid) {
+
+        BorrowRequest borrowRequest = borrowRequestRepository.findByRequestId(uuid);
+        LocalDateTime start=borrowRequest.getIntendedStartDate();
+        LocalDateTime end=borrowRequest.getIntendedReturnDate();
+        List<BorrowRequestDTO> pendingRequests= getAllRequests();
+        pendingRequests.stream()
+                .filter(request -> collisionTime(request.getIntendedStartDate(), request.getIntendedReturnDate(),start,end)
+                        && request.getStatus()==RequestStatus.PENDING)
+                .collect(Collectors.toList());
+        List<BorrowRequestDTO> redRequests= getAllRequests();
+        redRequests.stream()
+                .filter(request -> collisionTime(request.getIntendedStartDate(), request.getIntendedReturnDate(),start,end)
+                        &&( request.getStatus()==RequestStatus.AWAITING_PICKUP ||  request.getStatus()==RequestStatus.AWAITING_RETURN))
+                .collect(Collectors.toList());
+
+        List<Long> itemIds= borrowRequest.getItemIds();
+
+        HashMap<Long,Integer> pendingMap=new HashMap<>();
+        HashMap<Long,Integer> redMap=new HashMap<>();
+        for (Long id:itemIds) {
+             int pendingCount=0;
+             int redCount=itemService.getAllInstanceById(id).size();;
+            for (BorrowRequestDTO pending:pendingRequests) {
+                if (pending.getItemIds().indexOf(id) != 0)
+                    pendingCount++;
+            }
+
+            for (BorrowRequestDTO red:redRequests) {
+                if (red.getItemIds().indexOf(id) != 0)
+                   redCount--;
+            }
+            pendingMap.put(id,pendingCount);
+            redMap.put(id,redCount);
+        }
+
+        return AvailableCounts.builder().required(pendingMap).available(redMap).build();
+
+
+    }
+
     public AvailableTime getAllStartTimeThatCanBeSelected(List<Long> itemIds, LocalDateTime localDateTime) {
         AvailableTime.itemIds=itemIds;
          HashMap<Long,AvailableTime> availableTimes=new HashMap<>();
@@ -278,7 +317,7 @@ public class BorrowRequestService {
 
 
 
-    public AvailableTime startData(long itemId, LocalDateTime startTime,List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingReturnBorrowRequestsTable, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
+    private AvailableTime startData(long itemId, LocalDateTime startTime,List<ItemInstance> itemInstanceList, List<BorrowRequest> awaitingReturnBorrowRequestsTable, List<BorrowRequest> awaitingBorrowRequestsTable, List<BorrowRequest>  bendingBorrowRequestsTable)
     {
         LocalDateTime startDate = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 23, 59);
@@ -358,7 +397,7 @@ public class BorrowRequestService {
         return x;
     }
 
-    public  AvailableTime returnData(Long itemId, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
+    private  AvailableTime returnData(Long itemId, LocalDateTime selectStartTime, LocalDateTime localDateTimeEnd, List<ItemInstance> data,
                                      List<BorrowRequest> awaitingPickupBorrow, List<BorrowRequest> bendingBorrow) {
 
         LocalDateTime startDate ;

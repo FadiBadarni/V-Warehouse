@@ -3,6 +3,7 @@ package com.example.visualvortex.dtos;
 
 import com.example.visualvortex.entities.Request.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,4 +28,8 @@ public class BorrowRequestDTO {
     private String signatureData;
     private RequestStatus status;
     private UUID requestId;
+    private List<Long> itemInstanceIds;
+
+
+
 }
