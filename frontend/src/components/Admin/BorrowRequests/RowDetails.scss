@@ -1,53 +1,49 @@
 @import "../../../variables";
 
-
-
 .expanded-row {
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  &__content {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__info {
+    flex: 1;
+    padding-right: 1rem;
+    border-right: 3px solid rgba(0, 0, 0, 0.267);
 
     &__title {
-        margin-bottom: 1rem;
-        font-weight: 600;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
     }
+  }
 
-    &__content {
-        display: flex;
-        justify-content: space-between;
+  &__instance {
+    text-align: center;
+
+    &__title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
     }
+  }
 
-    &__info {
-        flex: 1;
-        padding-right: 1rem;
-        border-right: 3px solid rgba(0, 0, 0, 0.267);
+  &__user {
+    flex: 1;
+    text-align: center;
 
-        &__title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
+    &__title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
     }
-
-
-
-    &__instance {
-        text-align: center;
-
-        &__title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-    }
-
-    &__user {
-        flex: 1;
-        text-align: center;
-
-        &__title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-    }
+  }
 }

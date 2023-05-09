@@ -17,6 +17,7 @@ import {
   getItemsIdsByRequestId,
   getItemInstancesByItemId,
 } from "../../../api/BorrowService";
+import { getCountInstancesTime } from "../../../api/WarehouseService";
 
 const RequestsTableRow = ({
   request,
@@ -33,17 +34,15 @@ const RequestsTableRow = ({
   setExpandedRow,
   showState,
   activeTab,
-  // setitemsId,
-  // items
 }) => {
   const customized = customStatus(request.status);
-  const [itemInstances, setItemInstances] = useState([]);
   const [items, setItems] = useState([]);
   const { i18n, t } = useTranslation("borrowRequests");
   const [returnButtonIsDisable, setReturnButtonIsDisable] = useState(true);
   const [acceptButtonIsDisable, setAcceptButtonIsDisable] = useState(true);
   const [allInstances, setAllInstances] = useState([]);
   const [allItemIds, setAllItemIds] = useState([]);
+  const [instancesCount, setInstancesCount] = useState();
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -55,17 +54,6 @@ const RequestsTableRow = ({
     };
     return new Intl.DateTimeFormat(i18n.language, options).format(date);
   };
-
-  useEffect(() => {
-    if (activeTab === 2)
-      if (expandedRow === index) {
-        getItemInstancesByRequestId(request.requestId)
-          .then((instances) => setItemInstances(instances))
-          .catch((error) =>
-            console.error("Error fetching item instances:", error)
-          );
-      }
-  }, [expandedRow, index, request.requestId, activeTab]);
 
   useEffect(() => {
     if (expandedRow === index) {
@@ -83,6 +71,27 @@ const RequestsTableRow = ({
         .catch((error) => console.error("Error fetching item ids:", error));
     }
   }, [expandedRow, index, request.requestId]);
+
+  useEffect(() => {
+    const fetchItemInfo = async () => {
+      const InstancesCount = await getCountInstancesTime(request.requestId);
+      setInstancesCount(InstancesCount);
+    };
+    fetchItemInfo();
+  }, []);
+
+  const availabilityCheck = () => {
+    for (let i = 0; i < request.itemIds.length; i++) {
+      const itemId = request.itemIds[i];
+      if (instancesCount && instancesCount.available[itemId] === 0) {
+        return 0;
+      }
+      if (instancesCount && instancesCount.required[itemId] > request.itemIds) {
+        return 1;
+      }
+    }
+    return 2;
+  };
 
   return (
     <React.Fragment>
@@ -107,8 +116,23 @@ const RequestsTableRow = ({
         <TableCell>{request.userId}</TableCell>
         <TableCell>{formatDate(request.intendedStartDate)}</TableCell>
         <TableCell>{formatDate(request.intendedReturnDate)}</TableCell>
-        <TableCell>{request.borrowingReason}</TableCell>
         <TableCell>{request.itemIds.join(", ")}</TableCell>
+        <TableCell
+          style={{
+            borderBottom:
+              availabilityCheck() === 1
+                ? "3px solid yellow"
+                : availabilityCheck() === 0
+                ? "3px solid red"
+                : "3px solid green",
+          }}>
+          {availabilityCheck() === 1
+            ? "Check"
+            : availabilityCheck() === 0
+            ? "Not available"
+            : "Available"}
+        </TableCell>
+
         <TableCell>{formatDate(request.requestTime)}</TableCell>
 
         {handleAccept && handleReject && (
@@ -210,9 +234,7 @@ const RequestsTableRow = ({
                 <RowDetails
                   request={request}
                   user={user}
-                  itemInstances={itemInstances}
-                  setItems={setItems}
-                  items={items}
+                  instancesCount={instancesCount}
                 />
               </Box>
             )}

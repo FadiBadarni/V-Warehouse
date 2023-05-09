@@ -106,8 +106,6 @@ public class BorrowRequestController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap<Long, List<ItemInstance>> itemInstances = objectMapper.convertValue(params.get("itemInstances"), new TypeReference<HashMap<Long, List<ItemInstance>>>() {});
-
-//        HashMap<Long,List<ItemInstance>> itemInstances = (HashMap<Long,List<ItemInstance>>) params.get("itemInstances");
         LocalDateTime localDateTimeStartO = LocalDateTime.parse(params.get("localDateTimeStart").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         LocalDateTime localDateTimeReturnO = LocalDateTime.parse(params.get("localDateTimeReturn").toString(), DateTimeFormatter.ISO_DATE_TIME).plusHours(3);
         return borrowRequestService.getAllReturnTimeThatCanBeSelected(localDateTimeStartO, localDateTimeReturnO,  itemInstances,itemIds);

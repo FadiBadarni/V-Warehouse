@@ -1,11 +1,8 @@
 package com.example.visualvortex.services.Item;
 
 
-import com.example.visualvortex.dtos.ItemDTOS.ItemAttributeDTO;
-import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
-import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
+import com.example.visualvortex.dtos.ItemDTOS.*;
 import com.example.visualvortex.entities.Item.*;
-import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
 import com.example.visualvortex.repositories.ItemAttributeRepository;
 import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ItemRepository;
@@ -15,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,23 +37,23 @@ public class ItemService {
         return itemRepository.findAllById(ids);
     }
 
-    public List<ItemInstanceDTO> saveItem(ItemDTO itemDTO) {
+    public void saveItem(InstanceDTO instanceDTO) {
         ItemType itemType;
 
         // Look for existing item type by name
-        Optional<ItemType> existingItemType = itemTypeRepository.findByName(itemDTO.getItemType().getName());
+        Optional<ItemType> existingItemType = itemTypeRepository.findByName(instanceDTO.getItemType().getName());
 
         // If item type exists, use it; otherwise, create a new one
         if (existingItemType.isPresent()) {
             itemType = existingItemType.get();
         } else {
             itemType = new ItemType();
-            itemType.setName(itemDTO.getItemType().getName());
+            itemType.setName(instanceDTO.getItemType().getName());
             itemType = itemTypeRepository.save(itemType);
 
             // Save the item attributes
             Set<ItemAttribute> itemAttributes = new HashSet<>();
-            for (ItemAttributeDTO attributeDTO : itemDTO.getItemType().getAttributes()) {
+            for (ItemAttributeDTO attributeDTO : instanceDTO.getItemType().getAttributes()) {
                 ItemAttribute itemAttribute = new ItemAttribute(
                         attributeDTO.getAttributeName(),
                         attributeDTO.getAttributeValue(),
@@ -72,7 +68,7 @@ public class ItemService {
         }
 
         // Check if the item already exists in the inventory
-        Optional<Item> existingItem = itemRepository.findByNameAndItemTypeId(itemDTO.getName(), itemType.getId());
+        Optional<Item> existingItem = itemRepository.findByNameAndItemTypeId(instanceDTO.getName(), itemType.getId());
 
         // If the item exists, use it; otherwise, create a new item
         Item item;
@@ -80,35 +76,42 @@ public class ItemService {
             item = existingItem.get();
         } else {
             item = new Item();
-            item.setDescription(itemDTO.getDescription());
-            item.setName(itemDTO.getName());
+            item.setDescription(instanceDTO.getDescription());
+            item.setName(instanceDTO.getName());
             item.setItemType(itemType);
             item = itemRepository.save(item);
         }
 
         // Create the item instances
-        List<ItemInstance> itemInstances = new ArrayList<>();
-        for (int i = 0; i < itemDTO.getQuantity(); i++) {
-            ItemInstance itemInstance = new ItemInstance();
-            itemInstance.setItem(item);
-            itemInstance.setState(ItemState.AVAILABLE);
-            itemInstances.add(itemInstance);
-        }
+//        List<ItemInstance> itemInstances = new ArrayList<>();
+//
+//        for (int i = 0; i < itemDTO.getQuantity(); i++) {
+//            ItemInstance itemInstance = new ItemInstance();
+//            itemInstance.setItem(item);
+//            itemInstance.setState(ItemState.AVAILABLE);
+//            itemInstances.add(itemInstance);
+//        }
+        ItemInstance itemInstance = new ItemInstance();
+        itemInstance.setItem(item);
+        itemInstance.setState(ItemState.AVAILABLE);
+//          long x=Long.parseLong();
+        itemInstance.setId(instanceDTO.getSerialNumber());
+
 
         // Save the item instances
-        itemInstanceRepository.saveAll(itemInstances);
-        List<ItemInstance> savedItemInstances = itemInstanceRepository.saveAll(itemInstances);
+        itemInstanceRepository.save(itemInstance);
+//        ItemInstance savedItemInstances = itemInstanceRepository.save(itemInstance);
 
         // Update the item with the new instances
-        item.getItemInstances().addAll(itemInstances);
+        item.getItemInstances().add(itemInstance);
         itemRepository.save(item);
 
-        return savedItemInstances.stream()
-                .map(instance -> new ItemInstanceDTO(
-                        instance.getId(),
-                        instance.getState(),
-                        instance.getItem().getId()))
-                .collect(Collectors.toList());
+//        return savedItemInstances.stream()
+//                .map(instance -> new ItemInstanceDTO(
+//                        instance.getId(),
+//                        instance.getState(),
+//                        instance.getItem().getId()))
+//                .collect(Collectors.toList());
     }
 
 
@@ -119,14 +122,14 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public ItemDTO getItemByName(String name) {
+    public itemDTO getItemByName(String name) {
         Item item = itemRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchElementException("Inventory item not found with name: " + name));
 
         return itemToItemDTO(item);
     }
 
-    public ItemDTO itemToItemDTO(Item item) {
+    public itemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
         Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
                 .map(attribute -> new ItemAttributeDTO(
@@ -142,13 +145,14 @@ public class ItemService {
         );
 
         List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()
+                .filter(dto -> dto.getState() == ItemState.AVAILABLE)
                 .map(instance -> new ItemInstanceDTO(
                         instance.getId(),
                         instance.getState(),
                         instance.getItem().getId()))
                 .toList();
 
-        return ItemDTO.builder()
+        return itemDTO.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())

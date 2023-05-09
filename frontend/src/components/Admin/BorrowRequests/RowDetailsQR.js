@@ -12,6 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import "./RowDetails.scss";
+import UserInfo from "./UserInfo";
 
 function ErrorModal(props) {
   return (
@@ -72,7 +73,6 @@ const RowDetailsQR = ({
 
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     if (allInstances) {
       mixAllInstances = allInstances.flatMap((instanceList) =>
@@ -99,10 +99,8 @@ const RowDetailsQR = ({
               if (prevScans.length === request.itemIds.length - 1) {
                 setAcceptButtonIsDisable(false);
               } else setAcceptButtonIsDisable(true);
-              // setItems([...prevScans, data]);
               return [...prevScans, data];
             } else {
-              // setItems([prevScans]);
               return prevScans;
             }
           } else {
@@ -117,10 +115,9 @@ const RowDetailsQR = ({
               if (prevScans.length === request.itemInstanceIds.length - 1) {
                 setReturnButtonIsDisable(false);
               } else setReturnButtonIsDisable(true);
-              // setItems([...prevScans, data]);
+            
               return [...prevScans, data];
             } else {
-              // setItems([prevScans]);
               return prevScans;
             }
           } else {
@@ -130,10 +127,9 @@ const RowDetailsQR = ({
             });
           }
         }
-        // setItems([prevScans]);
+
         return prevScans;
       });
-     
     }
   };
 
@@ -188,7 +184,7 @@ const RowDetailsQR = ({
                       {item.id}
                     </MenuItem>
                   )),
-                  index < allInstances.length - 1 ? separator : null, // Append the separator after each instanceList except for the last one
+                  index < allInstances.length - 1 ? separator : null,
                 ])}
               </Select>
             </FormControl>
@@ -236,17 +232,7 @@ const RowDetailsQR = ({
           </div>
           {error && <ErrorModal title={error.title} message={error.message} />}
         </Box>
-        {user && (
-          <Box className="expanded-row__user">
-            <Typography className="expanded-row__user__title">
-              Request Sender Info
-            </Typography>
-            <Typography>Username: {user.username}</Typography>
-            <Typography>Email: {user.email}</Typography>
-            <Typography>Year: {user.year}</Typography>
-            <Typography>User: {user.role}</Typography>
-          </Box>
-        )}
+        <UserInfo request={request} user={user} />
       </Box>
     </Box>
   );

@@ -26,13 +26,27 @@ const BorrowForm = ({
   const [returnTime, setReturnTime] = useState(null);
 
   const handleStartDateChange = async (date) => {
-    const starttime = await getAllStartTime(date.toISOString(), itemIds);
-    setStarttime(starttime);
-    setSelectedStartDate(date);
-    setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-    if (selectedReturnDate) {
-      handleReturnDateChange(selectedReturnDate);
-    }
+    // const starttime = await getAllStartTime(date.toISOString(), itemIds);
+    getAllStartTime(date.toISOString(), itemIds).then((starttime) => {
+      setStarttime(starttime);
+      setSelectedStartDate(date);
+      setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+      if (selectedReturnDate) {
+        const y = date.toISOString();
+        const formattedDate = `${y.slice(0, 16)}`;
+        const x = starttime.startDates[formattedDate];
+        getAllRetrunTime(y, selectedReturnDate.toISOString(), itemIds, x)
+          .then((returnTime) => {
+            setReturnTime(returnTime);
+            setSelectedReturnDate(selectedReturnDate);
+            setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+            console.log(returnTime);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    });
   };
 
   const handleReturnDateChange = async (date) => {

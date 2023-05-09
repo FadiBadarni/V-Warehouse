@@ -174,4 +174,12 @@ export const updateEquipmentItem = async (
   );
 };
 
+export const searchForSeralNumber = async (seralNumber) => {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/search-serial-number/${seralNumber}`),
+    "Serial number found successfully",
+    "Error searching for serial number:"
+  );
+};
+
 export { axiosInstance };
