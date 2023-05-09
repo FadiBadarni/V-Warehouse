@@ -32,18 +32,13 @@ const BorrowForm = ({
       setSelectedStartDate(date);
       setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
       if (selectedReturnDate) {
-        const y =date.toISOString();
+        const y = date.toISOString();
         const formattedDate = `${y.slice(0, 16)}`;
         const x = starttime.startDates[formattedDate];
-        getAllRetrunTime(
-          y,
-          selectedReturnDate.toISOString(),
-          itemIds,
-          x
-        )
+        getAllRetrunTime(y, selectedReturnDate.toISOString(), itemIds, x)
           .then((returnTime) => {
             setReturnTime(returnTime);
-            setSelectedReturnDate(date);
+            setSelectedReturnDate(selectedReturnDate);
             setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
             console.log(returnTime);
           })
