@@ -51,8 +51,6 @@ const EquipmentForm = () => {
       ctx.drawImage(img, 0, 0, 512, 512);
       const dataUrl = canvas.toDataURL();
       setDataUrl(dataUrl);
-
-      // TODO: Use dataUrl to upload or display the resized image
     };
     img.src = URL.createObjectURL(file);
   };
@@ -209,6 +207,24 @@ const EquipmentForm = () => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Resize the image to 512x512 using canvas
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 512;
+      canvas.height = 512;
+      ctx.drawImage(img, 0, 0, 512, 512);
+      const dataUrl = canvas.toDataURL();
+      setDataUrl(dataUrl);
+    };
+    img.src = URL.createObjectURL(file);
     setDragging(false);
   };
   const fileInputRef = React.createRef();
