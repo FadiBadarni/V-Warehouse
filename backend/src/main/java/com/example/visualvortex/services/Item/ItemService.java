@@ -49,7 +49,7 @@ public class ItemService {
         String str=fileName.replace(' ','_').toLowerCase()+".png";
         // Generate a unique filename
         // Save the image to disk
-        String filePath = "C:\\V-WarehouseAbedAlla2\\frontend\\src\\assets\\items\\" + str;
+        String filePath = "frontend\\src\\assets\\items\\" + str;
         try (OutputStream stream = new FileOutputStream(filePath)) {
             stream.write(imageData);
         } catch (IOException e) {
