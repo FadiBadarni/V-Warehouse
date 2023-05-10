@@ -25,7 +25,7 @@ public class ItemService {
     private final ItemTypeRepository itemTypeRepository;
     private final ItemAttributeRepository itemAttributeRepository;
     private final ItemInstanceRepository itemInstanceRepository;
-
+    private final ItemAttributeService itemAttributeService;
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
