@@ -46,7 +46,7 @@ public class ItemService {
         String base64Data = parts[1];
         byte[] imageData = Base64.getDecoder().decode(base64Data);
 
-        String str=fileName.replace(' ','_').toLowerCase()+".png";
+        String str = fileName.replace(' ', '_').toLowerCase() + ".png";
         // Generate a unique filename
         // Save the image to disk
         String filePath = "frontend\\src\\assets\\items\\" + str;
@@ -57,8 +57,9 @@ public class ItemService {
         }
 
     }
+
     public void saveItem(InstanceDTO instanceDTO) {
-        saveImageToFile(instanceDTO.getImg(),instanceDTO.getName());
+        saveImageToFile(instanceDTO.getImg(), instanceDTO.getName());
 
         ItemType itemType;
 
@@ -154,17 +155,17 @@ public class ItemService {
 
     public itemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
-//        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
-//                .map(attribute -> new ItemAttributeDTO(
-//                        attribute.getId(),
-//                        attribute.getAttributeName(),
-//                        attribute.getAttributeValue()))
-//                .collect(Collectors.toSet());
+        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
+                .map(attribute -> new ItemAttributeDTO(
+                        attribute.getId(),
+                        attribute.getAttributeName(),
+                        attribute.getAttributeValue()))
+                .collect(Collectors.toSet());
 
         ItemTypeDTO itemTypeDTO = new ItemTypeDTO(
                 itemType.getId(),
-                itemType.getName(),null
-              //  itemTypeAttributeDTOs
+                itemType.getName(),
+                itemTypeAttributeDTOs
         );
 
         List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()

@@ -78,8 +78,13 @@ const Items = ({ items, selectedTag }) => {
               className="warehouse__item__image"
               style={{
                 backgroundImage: `url(${
-                  images[item.name.toLowerCase().replace(/ /g, "_")] ||
-                  images.notFound
+                  images[
+                    item.name
+                      .trim()
+                      .toLowerCase()
+                      .replace(/ /g, "_")
+                      .replace(/-/g, "_")
+                  ] || images.notFound
                 })`,
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

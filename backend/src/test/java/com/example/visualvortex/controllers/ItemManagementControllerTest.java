@@ -40,7 +40,6 @@ public class ItemManagementControllerTest {
         InstanceDTO inputDto = new InstanceDTO();
         inputDto.setName("Test Item");
         inputDto.setDescription("Test Description");
-        inputDto.setQuantity(10);
 //        inputDto.setType("Test Type");
 //        inputDto.setSafetyInstructions("Test Safety Instructions");
 //        inputDto.setAccompanyingEquipment("Test Accompanying Equipment");

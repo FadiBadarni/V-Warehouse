@@ -26,12 +26,13 @@ function Login() {
       const result = await loginUser(username, password);
       if (result.token) {
         window.localStorage.setItem("token", result.token);
-        login(result.token);
-        if (result.userInfo.role === "ADMIN") {
-          navigate("/admin");
-        } else {
-          navigate("/dashboard");
-        }
+        login(result.token).then(() => {
+          if (result.userInfo.role === "ADMIN") {
+            navigate("/admin");
+          } else {
+            navigate("/dashboard");
+          }
+        });
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -54,7 +55,8 @@ function Login() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}>
+                  exit={{ opacity: 0, scale: 0.8 }}
+                >
                   <div className="input-group">
                     <label htmlFor="username" className="input-label">
                       {t("login.username")}
@@ -68,7 +70,8 @@ function Login() {
                         },
                         to: { opacity: 1, transform: "translate3d(0%, 0, 0)" },
                         delay: 200,
-                      })}>
+                      })}
+                    >
                       <InputAdornment position="start">
                         <IconButton className="icon-button">
                           <AccountCircle />
@@ -97,11 +100,13 @@ function Login() {
                         },
                         to: { opacity: 1, transform: "translate3d(0%, 0, 0)" },
                         delay: 400,
-                      })}>
+                      })}
+                    >
                       <InputAdornment position="start">
                         <IconButton
                           onClick={handleShowPassword}
-                          className="icon-button">
+                          className="icon-button"
+                        >
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
@@ -120,7 +125,8 @@ function Login() {
               <div className="forgot-password">
                 <a
                   href="/auth/forgot-password"
-                  className="forgot-password-link">
+                  className="forgot-password-link"
+                >
                   {t("login.forgotPassword")}
                 </a>
               </div>

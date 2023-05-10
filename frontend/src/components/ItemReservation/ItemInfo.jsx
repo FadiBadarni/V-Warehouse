@@ -34,17 +34,25 @@ const ItemInfo = ({ fetchedItems }) => {
         <Grid item xs={12} sm={6} md={4} key={item.id}>
           <Card className="item-info">
             <CardActionArea>
-              <Magnifier
-                src={
-                  images[item.name.toLowerCase().replace(/ /g, "_")] ||
-                  images.notFound
-                }
-                width="100%"
-                mgWidth={150}
-                mgHeight={150}
-                className="item-info__image"
-              />
+              <div className="item-info__image-container">
+                <Magnifier
+                  src={
+                    images[
+                      item.name
+                        .trim()
+                        .toLowerCase()
+                        .replace(/ /g, "_")
+                        .replace(/-/g, "_")
+                    ] || images.notFound
+                  }
+                  width="100%"
+                  mgWidth={150}
+                  mgHeight={150}
+                  className="item-info__image"
+                />
+              </div>
             </CardActionArea>
+
             <CardContent>
               <Typography variant="h6" component="h2" gutterBottom>
                 {t("itemReservation.itemInfoTitle")}
