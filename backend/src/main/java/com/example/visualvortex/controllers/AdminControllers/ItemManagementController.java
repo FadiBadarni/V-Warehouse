@@ -11,6 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 
 import java.util.List;
 
@@ -75,6 +80,36 @@ public class ItemManagementController {
         return itemInstanceService.findByInstanceId(y).isEmpty();
 
     }
+
+    @GetMapping("/data_ulr/{strimage}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+        public String getImg(@PathVariable String strimage) {
+        File imageFile = new File("frontend/src/assets/items/"+ strimage+".png");
+        try {
+            BufferedImage image = ImageIO.read(imageFile);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", outputStream);
+            byte[] imageData = outputStream.toByteArray();
+            return  "data:image/png;base64," + Base64.getEncoder().encodeToString(imageData);
+        }catch (Exception e)
+        {
+            imageFile = new File("frontend/src/assets/404.jpg");
+            try {
+                BufferedImage image = ImageIO.read(imageFile);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpg", outputStream);
+                byte[] imageData = outputStream.toByteArray();
+                return  "data:image/png;base64," + Base64.getEncoder().encodeToString(imageData);
+
+            }
+            catch (Exception ee)
+            {
+                return null;
+            }
+        }
+    }
+
 
 
 

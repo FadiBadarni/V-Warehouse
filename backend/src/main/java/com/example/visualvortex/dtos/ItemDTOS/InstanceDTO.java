@@ -16,4 +16,5 @@ public class InstanceDTO {
     private String name;
     private String description;
     private ItemTypeDTO itemType;
+    private String img;
 }

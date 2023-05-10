@@ -5,6 +5,7 @@ import {
   fetchItemNames,
   getItemByName,
   searchForSeralNumber,
+  getImg,
 } from "../../../api/AdminService";
 import CheckMark from "./CheckMark";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -25,6 +26,36 @@ const EquipmentForm = () => {
 
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
   const [isValidSerialNumber, setIsValidSerialNumber] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [dataUrl, setDataUrl] = useState(null);
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    // Create a URL for the selected file to preview it
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Resize the image to 512x512 using canvas
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 512;
+      canvas.height = 512;
+      ctx.drawImage(img, 0, 0, 512, 512);
+      const dataUrl = canvas.toDataURL();
+      setDataUrl(dataUrl);
+
+      // TODO: Use dataUrl to upload or display the resized image
+    };
+    img.src = URL.createObjectURL(file);
+  };
 
   const [attributes, setAttributes] = useState([
     { attributeName: "", attributeValue: "" },
@@ -58,6 +89,9 @@ const EquipmentForm = () => {
 
   const handleSelectNameItem = async (selectedItemName) => {
     if (selectedItemName) {
+      const str = selectedItemName.toLowerCase().replace(/\s+/g, "_");
+      const dataUlr = await getImg(str);
+      setDataUrl(dataUlr);
       const selectedItem = await getItemByName(selectedItemName);
       if (selectedItem) {
         setName(selectedItem.name);
@@ -95,13 +129,8 @@ const EquipmentForm = () => {
       name,
       description,
       itemType: { name: itemType, attributes },
+      img: dataUrl,
     };
-    // const itemInstances = await addEquipmentItem(item);
-    // console.log(itemInstances);
-    // if (itemInstances) {
-    //   console.log("Item added successfully:", itemInstances);
-
-    // Reset fields
     await addEquipmentItem(item);
 
     setName("");
@@ -133,15 +162,10 @@ const EquipmentForm = () => {
         </Grid>
       );
     };
-
     setGeneratedQRCodes(qrCodes);
 
     setShowCheckMark(true);
     setTimeout(() => setShowCheckMark(false), 3000);
-    // } else {
-    //   console.error("Failed to add the item.");
-    //   // Show an error message to the user
-    // }
   };
 
   const handleSerialChange = async (e) => {
@@ -166,8 +190,58 @@ const EquipmentForm = () => {
     setIsValidSerialNumber(isValidSeralNumber);
   };
 
+  const [dragging, setDragging] = useState(false);
+  const handleDragEnter = (event) => {
+    event.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    setDragging(false);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setSelectedFile(file);
+    setDragging(false);
+  };
+  const fileInputRef = React.createRef();
+
   return (
     <form onSubmit={handleSubmit} className="item-management__form">
+      <div
+        className={`file-uploader ${dragging ? "dragging" : ""}`}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current.click()}>
+        {dataUrl ? (
+          <img
+            src={dataUrl}
+            alt="Selected"
+            style={{ width: "256px", height: "256px" }}
+          />
+        ) : (
+          <img
+            src="https://fomantic-ui.com/images/wireframe/image.png"
+            alt="Default"
+            style={{ width: "256px", height: "256px" }}
+          />
+        )}
+        <input
+          type="file"
+          onChange={handleFileSelect}
+          ref={fileInputRef}
+          hidden
+        />
+      </div>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Autocomplete
@@ -279,8 +353,7 @@ const EquipmentForm = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            disabled={isExistingItem}
-          >
+            disabled={isExistingItem}>
             Add Attribute
           </Button>
         </Grid>
@@ -293,8 +366,7 @@ const EquipmentForm = () => {
             className="item-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth
-          >
+            fullWidth>
             Add Item
           </Button>
         </Grid>

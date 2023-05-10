@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,8 +40,28 @@ public class ItemService {
         return itemRepository.findAllById(ids);
     }
 
+    private void saveImageToFile(String dataUrl, String fileName) {
+        // Extract the image data from the data URL
+        String[] parts = dataUrl.split(",");
+        String base64Data = parts[1];
+        byte[] imageData = Base64.getDecoder().decode(base64Data);
+
+        String str=fileName.replace(' ','_').toLowerCase()+".png";
+        // Generate a unique filename
+        // Save the image to disk
+        String filePath = "C:\\V-WarehouseAbedAlla2\\frontend\\src\\assets\\items\\" + str;
+        try (OutputStream stream = new FileOutputStream(filePath)) {
+            stream.write(imageData);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
     public void saveItem(InstanceDTO instanceDTO) {
+        saveImageToFile(instanceDTO.getImg(),instanceDTO.getName());
+
         ItemType itemType;
+
 
         // Look for existing item type by name
         Optional<ItemType> existingItemType = itemTypeRepository.findByName(instanceDTO.getItemType().getName());
@@ -131,17 +154,17 @@ public class ItemService {
 
     public itemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
-        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
-                .map(attribute -> new ItemAttributeDTO(
-                        attribute.getId(),
-                        attribute.getAttributeName(),
-                        attribute.getAttributeValue()))
-                .collect(Collectors.toSet());
+//        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
+//                .map(attribute -> new ItemAttributeDTO(
+//                        attribute.getId(),
+//                        attribute.getAttributeName(),
+//                        attribute.getAttributeValue()))
+//                .collect(Collectors.toSet());
 
         ItemTypeDTO itemTypeDTO = new ItemTypeDTO(
                 itemType.getId(),
-                itemType.getName(),
-                itemTypeAttributeDTOs
+                itemType.getName(),null
+              //  itemTypeAttributeDTOs
         );
 
         List<ItemInstanceDTO> itemInstanceDTOs = item.getItemInstances().stream()

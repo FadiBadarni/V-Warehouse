@@ -182,4 +182,12 @@ export const searchForSeralNumber = async (seralNumber) => {
   );
 };
 
+export const getImg = async (image) => {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/data_ulr/${image}`),
+    "img found successfully",
+    "Error searching for img:"
+  );
+};
+
 export { axiosInstance };
