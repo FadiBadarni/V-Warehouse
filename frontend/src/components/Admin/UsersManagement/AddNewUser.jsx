@@ -27,12 +27,11 @@ const NewUser = ({ handleSubmit, setYear, setEmail, setRole }) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="role"
+            id="role"
             value={role}
             label="Role"
-            onChange={(e) => handleChangedRole(e.target.value)}
-          >
+            onChange={(e) => handleChangedRole(e.target.value)}>
             <MenuItem value={"ADMIN"}>ADMIN</MenuItem>
             <MenuItem value={"USER"}>USER</MenuItem>
             <MenuItem value={"TEACHER"}>TEACHER</MenuItem>
@@ -41,12 +40,11 @@ const NewUser = ({ handleSubmit, setYear, setEmail, setRole }) => {
 
         <Grid item xs={12}>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="year"
+            id="year"
             value={year}
             label="Year"
-            onChange={(e) => handleChangedYear(e.target.value)}
-          >
+            onChange={(e) => handleChangedYear(e.target.value)}>
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
@@ -62,8 +60,7 @@ const NewUser = ({ handleSubmit, setYear, setEmail, setRole }) => {
             className="equipment-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth
-          >
+            fullWidth>
             Add New User
           </Button>
         </Grid>
