@@ -8,7 +8,7 @@ import java.util.*;
 
 @Service
 public class EmailService {
-    public void sendEmail(String recipient,String subject,String body) throws MessagingException {
+    public void sendEmail(String recipient,String subject,String body)  {
         // Set up properties for the mail session
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -28,12 +28,17 @@ public class EmailService {
 
         // Create a new message
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("testmyapp1020@gmail.com"));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
-        message.setSubject(subject);
-        message.setText(body);
+        try {
+            message.setFrom(new InternetAddress("testmyapp1020@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+            message.setSubject(subject);
+            message.setText(body);
 
-        // Send the message
-        Transport.send(message);
+            // Send the message
+            Transport.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

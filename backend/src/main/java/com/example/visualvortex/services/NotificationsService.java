@@ -20,6 +20,7 @@ public class NotificationsService {
     private final NotificationsRepository notificationsRepository;
 
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public void createNotification(Long userId, String message) {
         User user = userRepository.findById(userId)
@@ -32,6 +33,8 @@ public class NotificationsService {
         notification.setRead(false);
         Notifications savedNotification = notificationsRepository.save(notification);
         toNotificationDTO(savedNotification);
+
+        emailService.sendEmail(user.getEmail(),"SCE Virtual Warehouse",message);
     }
 
     public List<NotificationDTO> getUserNotifications(Long userId) {

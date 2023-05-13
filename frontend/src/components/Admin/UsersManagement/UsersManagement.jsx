@@ -106,28 +106,18 @@ const UsersManagement = () => {
     await deleteUser(user.id);
   };
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [username, setUserName] = useState("");
-  const [year, setYear] = useState("");
+  const [role, setRole] = useState("ADMIN");
+  const [year, setYear] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const user = {
-      email,
-      password,
-      role,
-      username,
-      year,
-    };
-    const UserResult = await createUser(user.email, user.role, user.year);
+
+    const UserResult = await createUser(email, role, year);
     if (UserResult) {
       setEmail("");
-      setUserName("");
-      setPassword("");
-      setRole("");
-      setYear("");
+      setRole("ADMIN");
+      setYear(1);
     }
   };
   const handleSearchInputChange = (event) => {
@@ -146,8 +136,7 @@ const UsersManagement = () => {
           onChange={(_, newValue) => setActiveTab(newValue)}
           indicatorColor="primary"
           variant="fullWidth"
-          className="custom-tab-indicator custom-tab-text-color"
-        >
+          className="custom-tab-indicator custom-tab-text-color">
           <Tab label="Register Users" id="tab-title" />
           <Tab label="Users List" id="tab-title" />
           <Tab label="Add user" id="tab-title" />
