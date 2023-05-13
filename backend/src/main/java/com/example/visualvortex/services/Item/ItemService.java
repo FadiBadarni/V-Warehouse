@@ -25,7 +25,7 @@ public class ItemService {
     private final ItemTypeRepository itemTypeRepository;
     private final ItemAttributeRepository itemAttributeRepository;
     private final ItemInstanceRepository itemInstanceRepository;
-
+    private final ItemAttributeService itemAttributeService;
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
@@ -53,7 +53,7 @@ public class ItemService {
         try (OutputStream stream = new FileOutputStream(filePath)) {
             stream.write(imageData);
         } catch (IOException e) {
-            System.out.println(e);
+//            System.out.println(e);
         }
 
     }
@@ -155,7 +155,9 @@ public class ItemService {
 
     public itemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
-        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemType.getAttributes().stream()
+
+
+        Set<ItemAttributeDTO> itemTypeAttributeDTOs = itemAttributeService.findByItemTypeId(itemType.getId()).stream()
                 .map(attribute -> new ItemAttributeDTO(
                         attribute.getId(),
                         attribute.getAttributeName(),
@@ -191,7 +193,5 @@ public class ItemService {
         return itemInstanceRepository.findAllByItemId(id);
     }
 
-    public Item updateItem(Item item) {
-        return null;
-    }
+
 }

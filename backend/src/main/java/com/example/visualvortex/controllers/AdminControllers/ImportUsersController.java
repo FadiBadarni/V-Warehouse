@@ -1,5 +1,6 @@
 package com.example.visualvortex.controllers.AdminControllers;
 
+import com.example.visualvortex.dtos.UserRequestDto;
 import com.example.visualvortex.services.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +39,8 @@ public class ImportUsersController {
     }
 
     @PutMapping("/create-user")
-    public   void createUser(@RequestBody Map<String, String> request) {
-            String recipient = request.get("recipient");
-           String role = request.get("role");
-           int year = Integer.parseInt(request.get("year"));
-           userService.createUser(recipient,role,year);
+    public void createUser(@RequestBody UserRequestDto userRequestDto) {
+           userService.createUser(userRequestDto.getRecipient(),userRequestDto.getRole(), userRequestDto.getYear());
     }
 
     @DeleteMapping("/delete-user/{id}")

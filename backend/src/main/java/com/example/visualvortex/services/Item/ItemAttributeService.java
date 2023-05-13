@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemAttributeService {
@@ -28,6 +29,11 @@ public class ItemAttributeService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<ItemAttribute> findByItemTypeId(Long id) {
+
+         return repository.findAll().stream().filter(itemAttribute -> itemAttribute.getItemType().getId()==id).collect(Collectors.toList());
     }
 
 
