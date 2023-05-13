@@ -90,12 +90,17 @@ const ItemList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
+        setLoading(true);
         const allItemInstances = await getAllItemInstances();
         setItems(allItemInstances);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.log(error);
         if (error.message === "Unauthorized") {
           handleTokenExpired();
@@ -145,9 +150,11 @@ const ItemList = () => {
           type={type}
         />
         <ItemsGrid
+          loading={loading}
           filteredItems={filteredItems}
           handleMoreInfoClick={handleMoreInfoClick}
         />
+
         <div className="pagination">
           <Pagination
             count={totalPages}
