@@ -36,11 +36,11 @@ const AdminLayout = ({ direction }) => {
       path: "/admin/borrow-requests",
       icon: <AssignmentIcon />,
     },
-    {
-      text: t("sidebar.statistics"),
-      path: "/admin/statistics",
-      icon: <BarChartIcon />,
-    },
+    // {
+    //   text: t("sidebar.statistics"),
+    //   path: "/admin/statistics",
+    //   icon: <BarChartIcon />,
+    // },
   ];
 
   const drawer = (

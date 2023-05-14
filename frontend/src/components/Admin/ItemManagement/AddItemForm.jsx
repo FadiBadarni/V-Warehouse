@@ -237,7 +237,8 @@ const EquipmentForm = () => {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current.click()}>
+        onClick={() => fileInputRef.current.click()}
+      >
         {dataUrl ? (
           <img
             src={dataUrl}
@@ -369,7 +370,8 @@ const EquipmentForm = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            disabled={isExistingItem}>
+            disabled={isExistingItem}
+          >
             Add Attribute
           </Button>
         </Grid>
@@ -382,7 +384,8 @@ const EquipmentForm = () => {
             className="item-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth>
+            fullWidth
+          >
             Add Item
           </Button>
         </Grid>

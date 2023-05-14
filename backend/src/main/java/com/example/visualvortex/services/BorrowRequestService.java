@@ -117,7 +117,7 @@ public class BorrowRequestService {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
 
-        if (borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP && status == RequestStatus.AWAITING_RETURN) {
+        if (borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP) {
             List<ItemInstance> associatedInstances = itemInstanceService.getInstancesByIds(borrowRequest.getItemInstanceIds());
 
             User user = userService.getUserById(borrowRequest.getUserId());
