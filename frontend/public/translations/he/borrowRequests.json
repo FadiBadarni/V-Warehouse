@@ -18,5 +18,14 @@
           "approve": "אשר",
           "reject": "דחה"
         }
+      },
+      "rowDetails":{
+        "requestId" : "מספר בקשה :",
+        "requestedItems": "פריטים מבוקשים :",
+        "startingDate": "תאריך התחלה :",
+        "returningDate" : "תאריך החזרה :",
+        "borrowingReason": "סיבת השאלה :",
+        "requestStatus": "סטטוס הבקשה :"
       }
+      
 }

@@ -2,43 +2,42 @@
 
 .expanded-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
 
-  &__title {
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
-
-  &__content {
+  &__details {
+    flex: 3;
     display: flex;
-    justify-content: space-between;
-  }
-
-  &__info {
-    flex: 1;
-    padding-right: 1rem;
-    border-right: 3px solid rgba(0, 0, 0, 0.267);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-right: 2rem;
 
     &__title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
       font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    &__information {
+      .rtl & {
+        text-align: right;
+      }
+
+      .ltr & {
+        text-align: left;
+      }
+
+      font-size: 1rem;
+      margin-bottom: 2rem;
     }
   }
 
-  &__instance {
-    text-align: center;
-
-    &__title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-    }
-  }
-
-  &__user {
+  .UserInfo {
     flex: 1;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 2rem;
 
     &__title {
       font-weight: bold;

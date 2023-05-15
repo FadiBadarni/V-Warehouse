@@ -7,14 +7,10 @@ const UserInfo = ({ request, user }) => {
     <Box className="expanded-row">
       {user && (
         <Box className="expanded-row__user">
-          <Typography className="expanded-row__user__title">
-            Request Sender Info
-          </Typography>
-          <Typography>Username: {user.username}</Typography>
-          <Typography>Email: {user.email}</Typography>
-          <Typography>Year: {user.year}</Typography>
-          <Typography>User: {user.role}</Typography>
-          <Typography>borrowing Reason: {request.borrowingReason}</Typography>
+          <div>Request Sender: {user.username}</div>
+          <div>Sender's Email: {user.email}</div>
+          <div>Sender's Role: {user.role}</div>
+          <div>Sender's Borrwing Reason: {request.borrowingReason}</div>
         </Box>
       )}
     </Box>
