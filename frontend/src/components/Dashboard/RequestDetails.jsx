@@ -78,51 +78,93 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
         showModal={activeModal === "reportIssue"}
         handleClose={closeActiveModal}
       >
-        <h3>
-          {t("dashboard.requestDetails.reportIssueFor")} {request.item.name}
-        </h3>
-        <label htmlFor="issue-title">
-          {t("dashboard.requestDetails.issueTitle")}:
-        </label>
-        <input type="text" id="issue-title" name="issue-title" />
-        <label htmlFor="issue-description">
-          {t("dashboard.requestDetails.issueDescription")}:
-        </label>
-        <textarea id="issue-description" name="issue-description"></textarea>
-        <Button primary>{t("dashboard.requestDetails.submit")}</Button>
+        <div className="issue-form">
+          <h3 className="issue-form__title">
+            {t("dashboard.requestDetails.reportIssueFor")} {request.item.name}
+          </h3>
+          <label htmlFor="issue-title" className="issue-form__label">
+            {t("dashboard.requestDetails.issueTitle")}:
+          </label>
+          <input
+            type="text"
+            id="issue-title"
+            name="issue-title"
+            className="issue-form__input"
+          />
+          <label htmlFor="issue-description" className="issue-form__label">
+            {t("dashboard.requestDetails.issueDescription")}:
+          </label>
+          <textarea
+            id="issue-description"
+            name="issue-description"
+            className="issue-form__textarea"
+          ></textarea>
+          <Button className="issue-form__submit">
+            {t("dashboard.requestDetails.submit")}
+          </Button>
+        </div>
       </CustomModal>
       <CustomModal
         showModal={activeModal === "transferOwnership"}
         handleClose={closeActiveModal}
       >
-        <h3>
-          {t("dashboard.requestDetails.transferOwnershipOf")}{" "}
-          {request.item.name}
-        </h3>
-        <p>
-          {t("dashboard.requestDetails.currentOwner")}: {request.item.owner}
-        </p>
-        <label htmlFor="new-owner">
-          {t("dashboard.requestDetails.newOwner")}:
-        </label>
-        <input type="text" id="new-owner" name="new-owner" />
-        <Button primary>{t("dashboard.requestDetails.transfer")}</Button>
+        <div className="transfer-ownership-section">
+          <h3 className="transfer-ownership-section__title">
+            {t("dashboard.requestDetails.transferOwnershipOf")}{" "}
+            {request.item.name}
+          </h3>
+          <p className="transfer-ownership-section__current-owner">
+            {t("dashboard.requestDetails.currentOwner")}: {request.item.owner}
+          </p>
+          <div className="transfer-ownership-section__input-group">
+            <label
+              htmlFor="new-owner"
+              className="transfer-ownership-section__label"
+            >
+              {t("dashboard.requestDetails.newOwner")}:
+            </label>
+            <input
+              type="text"
+              id="new-owner"
+              name="new-owner"
+              className="transfer-ownership-section__input"
+            />
+          </div>
+          <Button primary className="transfer-ownership-section__button">
+            {t("dashboard.requestDetails.transfer")}
+          </Button>
+        </div>
       </CustomModal>
       <CustomModal
         showModal={activeModal === "extendTime"}
         handleClose={closeActiveModal}
       >
-        <h3>
-          {t("dashboard.requestDetails.extendTimeFor")} {request.item.name}
-        </h3>
-        <p>
-          {t("dashboard.requestDetails.currentEndTime")}: {request.item.endTime}
-        </p>
-        <label htmlFor="additional-time">
-          {t("dashboard.requestDetails.additionalTime")}:
-        </label>
-        <input type="number" id="additional-time" name="additional-time" />
-        <Button primary>{t("dashboard.requestDetails.extend")}</Button>
+        <div className="extend-time-section">
+          <h3 className="extend-time-section__title">
+            {t("dashboard.requestDetails.extendTimeFor")} {request.item.name}
+          </h3>
+          <p className="extend-time-section__current-end-time">
+            {t("dashboard.requestDetails.currentEndTime")}:{" "}
+            {request.item.endTime}
+          </p>
+          <div className="extend-time-section__input-group">
+            <label
+              htmlFor="additional-time"
+              className="extend-time-section__label"
+            >
+              {t("dashboard.requestDetails.additionalTime")}:
+            </label>
+            <input
+              type="number"
+              id="additional-time"
+              name="additional-time"
+              className="extend-time-section__input"
+            />
+          </div>
+          <Button primary className="extend-time-section__button">
+            {t("dashboard.requestDetails.extend")}
+          </Button>
+        </div>
       </CustomModal>
     </motion.div>
   );

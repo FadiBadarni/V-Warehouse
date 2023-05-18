@@ -197,6 +197,10 @@
     border-radius: 4px;
     max-width: 600px;
     width: 100%;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 }
 
 .buttons-container {
@@ -204,6 +208,10 @@
     justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 15px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 button {
@@ -215,6 +223,7 @@ button {
     cursor: pointer;
     margin: 5px;
     transition: background-color 0.3s ease;
+
 
 }
 
@@ -241,9 +250,135 @@ button {
         height: 100%;
         max-height: 380px;
         position: relative;
+        border: 1px solid $sce-primary-color;
+
+        @media(max-width: 768px) {
+            padding: 0.5rem;
+            width: 90%;
+        }
     }
 
     .buttons-container {
         margin-top: 1rem;
+
+        @media(max-width: 768px) {
+            flex-direction: column;
+            width: 50%;
+            margin: 0 auto;
+        }
+    }
+}
+
+.issue-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+
+    &__title {
+        font-size: 24px;
+        color: $sce-primary-color;
+        margin-bottom: 20px;
+    }
+
+    &__label {
+        display: block;
+        font-size: 16px;
+        color: $sce-primary-color;
+        margin-bottom: 5px;
+    }
+
+    &__input,
+    &__textarea {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid $sce-primary-color;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+
+    &__textarea {
+        height: 70px;
+        resize: none;
+    }
+
+    &__submit {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: white;
+        background-color: $sce-secondary-color;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: darken($sce-secondary-color, 10%);
+        }
+
+
+    }
+}
+
+$defaultColor: black;
+$primaryColor: blue;
+
+.transfer-ownership-section,
+.extend-time-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+
+    &__title {
+        color: $defaultColor;
+        font-weight: 600;
+    }
+
+    &__current-owner,
+    &__current-end-time {
+        color: $defaultColor;
+        font-size: 0.9rem;
+    }
+
+    &__input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__label {
+        font-size: 0.8rem;
+        color: $defaultColor;
+    }
+
+    &__input {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    &__button {
+        padding: 0.8rem;
+        border-radius: 4px;
+        border: none;
+        background-color: $primaryColor;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: darken($primaryColor, 10%);
+        }
     }
 }
