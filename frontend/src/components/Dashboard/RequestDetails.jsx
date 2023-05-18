@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Popup } from "semantic-ui-react";
 import { motion } from "framer-motion";
 import CustomModal from "./CustomModal";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,15 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
     setActiveModal(null);
   };
 
+  const isDisabled = request.status !== "AWAITING_RETURN";
+
+  const tooltipMessage = () => {
+    if (isDisabled) return "The items are not with you";
+    return "";
+  };
+
+  console.log(request);
+
   return (
     <motion.div
       className="request-details-modal"
@@ -40,10 +49,12 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
           <strong>{t("dashboard.requestDetails.requestId")}:</strong>{" "}
           {request.requestId}
         </p>
-        <p>
-          <strong>{t("dashboard.requestDetails.itemName")}:</strong>{" "}
-          {request.item.name}
-        </p>
+        <strong>Items Associated With The Request:</strong>{" "}
+        {request.items.map((item, index) => (
+          <div key={index}>
+            <p>{item.name}</p>
+          </div>
+        ))}
         <p>
           <strong>{t("dashboard.requestDetails.status")}:</strong>{" "}
           {request.status}
@@ -58,15 +69,39 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
           })}
         </p>
         <div className="buttons-container">
-          <Button onClick={handleReportIssue}>
-            {t("dashboard.requestDetails.reportIssue")}
-          </Button>
-          <Button onClick={handleTransferOwnership}>
-            {t("dashboard.requestDetails.transferOwnership")}
-          </Button>
-          <Button onClick={handleExtendTime}>
-            {t("dashboard.requestDetails.extendTime")}
-          </Button>
+          <Popup
+            content={tooltipMessage()}
+            disabled={!isDisabled}
+            trigger={
+              <div>
+                <Button onClick={handleReportIssue} disabled={isDisabled}>
+                  {t("dashboard.requestDetails.reportIssue")}
+                </Button>
+              </div>
+            }
+          />
+          <Popup
+            content={tooltipMessage()}
+            disabled={!isDisabled}
+            trigger={
+              <div>
+                <Button onClick={handleTransferOwnership} disabled={isDisabled}>
+                  {t("dashboard.requestDetails.transferOwnership")}
+                </Button>
+              </div>
+            }
+          />
+          <Popup
+            content={tooltipMessage()}
+            disabled={!isDisabled}
+            trigger={
+              <div>
+                <Button onClick={handleExtendTime} disabled={isDisabled}>
+                  {t("dashboard.requestDetails.extendTime")}
+                </Button>
+              </div>
+            }
+          />
         </div>
         <div className="buttons-container">
           <button onClick={handleClose}>
@@ -80,7 +115,7 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
       >
         <div className="issue-form">
           <h3 className="issue-form__title">
-            {t("dashboard.requestDetails.reportIssueFor")} {request.item.name}
+            {t("dashboard.requestDetails.reportIssue")}
           </h3>
           <label htmlFor="issue-title" className="issue-form__label">
             {t("dashboard.requestDetails.issueTitle")}:
@@ -111,10 +146,11 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
         <div className="transfer-ownership-section">
           <h3 className="transfer-ownership-section__title">
             {t("dashboard.requestDetails.transferOwnershipOf")}{" "}
-            {request.item.name}
+            {/* {request.item.name} */}
           </h3>
           <p className="transfer-ownership-section__current-owner">
-            {t("dashboard.requestDetails.currentOwner")}: {request.item.owner}
+            {t("dashboard.requestDetails.currentOwner")}:
+            {/* {request.item.owner} */}
           </p>
           <div className="transfer-ownership-section__input-group">
             <label
@@ -130,7 +166,7 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
               className="transfer-ownership-section__input"
             />
           </div>
-          <Button primary className="transfer-ownership-section__button">
+          <Button className="transfer-ownership-section__button">
             {t("dashboard.requestDetails.transfer")}
           </Button>
         </div>
@@ -141,11 +177,12 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
       >
         <div className="extend-time-section">
           <h3 className="extend-time-section__title">
-            {t("dashboard.requestDetails.extendTimeFor")} {request.item.name}
+            {t("dashboard.requestDetails.extendTimeFor")}
+            {/* {request.item.name} */}
           </h3>
           <p className="extend-time-section__current-end-time">
             {t("dashboard.requestDetails.currentEndTime")}:{" "}
-            {request.item.endTime}
+            {/* {request.item.endTime} */}
           </p>
           <div className="extend-time-section__input-group">
             <label
@@ -161,7 +198,7 @@ const RequestDetails = ({ showModal, request, handleClose }) => {
               className="extend-time-section__input"
             />
           </div>
-          <Button primary className="extend-time-section__button">
+          <Button className="extend-time-section__button">
             {t("dashboard.requestDetails.extend")}
           </Button>
         </div>
