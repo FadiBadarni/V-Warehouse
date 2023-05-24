@@ -23,10 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -224,4 +222,20 @@ public class UserService implements UserDetailsService {
         repository.save(user);
     }
 
+    public Optional<User> findById(Long userId) {
+        return repository.findById(userId);
+    }
+
+    public List<User> getAllAdmin() {
+        Iterable<User> allUsers = repository.findAll();
+        List<User> adminUsers = new ArrayList<>();
+
+        for (User user : allUsers) {
+            if (user.getRole() == UserRole.ADMIN) {
+                adminUsers.add(user);
+            }
+        }
+
+        return adminUsers;
+    }
 }

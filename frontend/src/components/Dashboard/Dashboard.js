@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Modal, Button } from "semantic-ui-react";
 import { Typography, Grid } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
+
 import {
   logoutUser,
   getUserInfo,
@@ -11,7 +12,11 @@ import {
 } from "../../api/UserService";
 import { motion } from "framer-motion";
 import { getWarehouseItemById } from "../../api/WarehouseService";
-import { cancelBorrowRequest } from "../../api/BorrowService";
+import {
+  cancelBorrowRequest,
+  getAllUsersNameAndID,
+} from "../../api/BorrowService";
+
 import "semantic-ui-css/semantic.min.css";
 import RequestDetails from "./RequestDetails";
 import { useTranslation } from "react-i18next";
@@ -28,6 +33,7 @@ function Dashboard() {
   const [year, setYear] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [borrowRequests, setBorrowRequests] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [currentOngoingPage, setCurrentOngoingPage] = useState(1);
   const [currentDuePage] = useState(1);
@@ -35,6 +41,19 @@ function Dashboard() {
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+
+  useState(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllUsersNameAndID();
+        setUsers(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchBorrowRequests = async () => {
@@ -132,6 +151,9 @@ function Dashboard() {
   if (loading) {
     return <div>Loading...</div>;
   }
+  const getRequestItemNames = (request) => {
+    return request.items.map((item) => item.name).join(", ");
+  };
 
   return (
     <div className="dashboard">
@@ -149,6 +171,8 @@ function Dashboard() {
       <RequestDetails
         showModal={detailsModalOpen}
         request={selectedRequest}
+        users={users}
+        owner={username}
         handleClose={handleCloseDetailsModal}
       />
 
@@ -199,12 +223,10 @@ function Dashboard() {
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1200 120"
-              preserveAspectRatio="none"
-            >
+              preserveAspectRatio="none">
               <path
                 d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-                className="shape-fill"
-              ></path>
+                className="shape-fill"></path>
             </svg>
           </div>
 
@@ -231,12 +253,12 @@ function Dashboard() {
                         className="item-card"
                         whilehover={{
                           boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
-                        }}
-                      >
+                        }}>
                         <div className="card">
                           <div className="card-header">
                             <span>
-                              {t("dashboard.requestId")} {request.requestId}
+                              {t("dashboard.requestId")}{" "}
+                              {getRequestItemNames(request)}
                             </span>
                             {/* <span>{request.item.name}</span> */}
                           </div>
@@ -256,15 +278,13 @@ function Dashboard() {
                           </div>
                           <div className="card-actions">
                             <button
-                              onClick={() => handleMoreDetailsClick(request)}
-                            >
+                              onClick={() => handleMoreDetailsClick(request)}>
                               {t("dashboard.moreDetailsButton")}
                             </button>
                             <button
                               onClick={() =>
                                 handleCancelRequest(request.requestId)
-                              }
-                            >
+                              }>
                               {t("dashboard.cancelRequestButton")}
                             </button>
                           </div>
@@ -314,8 +334,7 @@ function Dashboard() {
                         className="item-card"
                         whilehover={{
                           boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
-                        }}
-                      >
+                        }}>
                         <div className="card">
                           <div className="card-header">
                             <span>

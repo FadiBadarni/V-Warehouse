@@ -1,0 +1,41 @@
+@import "../../../variables";
+
+.full-view-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.photo-frame {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  border: 10px solid $sce-primary-color;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.full-view-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $sce-primary-color;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.text-overlay h2 {
+  font-size: 24px;
+  color: $sce-text-color;
+  text-align: center;
+  margin: 0;
+}

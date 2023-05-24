@@ -79,18 +79,18 @@ const RequestsTableRow = ({
     fetchItemInfo();
   }, [request.requestId]);
 
-  const availabilityCheck = () => {
-    for (let i = 0; i < request.itemIds.length; i++) {
-      const itemId = request.itemIds[i];
-      if (instancesCount && instancesCount.available[itemId] === 0) {
-        return 0;
-      }
-      if (instancesCount && instancesCount.required[itemId] > request.itemIds) {
-        return 1;
-      }
-    }
-    return 2;
-  };
+  // const availabilityCheck = () => {
+  //   for (let i = 0; i < request.itemIds.length; i++) {
+  //     const itemId = request.itemIds[i];
+  //     if (instancesCount && instancesCount.available[itemId] === 0) {
+  //       return 0;
+  //     }
+  //     if (instancesCount && instancesCount.required[itemId] > request.itemIds) {
+  //       return 1;
+  //     }
+  //   }
+  //   return 2;
+  // };
 
   return (
     <React.Fragment>

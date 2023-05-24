@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
           setUser(userInfo);
         }
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        console.error("Error fetching user info :", error);
       }
     }
     setLoading(false);
@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
       userInfo.roles = decodedToken.roles;
       setUser(userInfo);
     } catch (error) {
-      console.error("Error fetching user info:", error);
+      console.error("Error fetching user info123:", error);
     }
   };
 

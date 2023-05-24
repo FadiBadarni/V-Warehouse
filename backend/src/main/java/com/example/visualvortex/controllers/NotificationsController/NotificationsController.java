@@ -35,4 +35,10 @@ public class NotificationsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/sendToAdminsNotifications/{message}")
+    @ResponseStatus(HttpStatus.OK)
+    public void sendNotificationsToAdmins(@PathVariable String message) {
+        notificationsService.sendNotificationsToAdmins(message);
+
+    }
 }

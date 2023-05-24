@@ -10,6 +10,9 @@ import SearchFilters from "./SearchFilters";
 import ItemsGrid from "./ItemsGrid";
 import ItemModal from "./ItemModal";
 import "./ItemList.scss";
+import Modal from "react-modal";
+import { QrReader } from "react-qr-reader";
+import qrImage from "../../../assets/qr.gif";
 
 const useItemFilter = (initialItems, itemsPerPage) => {
   const [filteredItems, setFilteredItems] = useState(initialItems);
@@ -30,7 +33,9 @@ const useItemFilter = (initialItems, itemsPerPage) => {
           (itemName === "" || itemName === item.itemName) &&
           (itemState === "" || itemState === item.state) &&
           (searchQuery === "" ||
-            item.itemName.toLowerCase().includes(searchQuery.toLowerCase()))
+            item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            searchQuery === "" ||
+            item.id.toString().includes(searchQuery))
       )
       .slice(start, end);
 
@@ -91,6 +96,7 @@ const ItemList = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const [loading, setLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -128,6 +134,33 @@ const ItemList = () => {
   const handleMoreInfoClick = (item) => {
     setSelectedItem(item);
     toggleModal();
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleResultQRChange = (result, error) => {
+    if (!!result) {
+      setSearchQuery(result.toString());
+      closeModal();
+    }
+    if (!!error) {
+      // console.info(error);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -171,6 +204,36 @@ const ItemList = () => {
           setSelectedItem={setSelectedItem}
           itemTypes={type}
         />
+        <button
+          className={`floating-button ${isHovered ? "hovered" : ""}`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={openModal}>
+          <div className="button-container">
+            <img
+              src={qrImage}
+              alt="Button Icon"
+              className={`button-icon ${isHovered ? "no-animation" : ""}`}
+            />
+            {isHovered && <span className="button-text">SCAN QR</span>}
+          </div>
+        </button>
+
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          className="qr-modal"
+          overlayClassName="qr-modal-overlay">
+          <h2 className="qr-modal-title">QR Scanning</h2>
+          <QrReader
+            className="qr-scanner"
+            delay={500}
+            onResult={handleResultQRChange}
+          />
+          <button className="qr-modal-close-btn blue" onClick={closeModal}>
+            Close
+          </button>
+        </Modal>
       </main>
     </div>
   );

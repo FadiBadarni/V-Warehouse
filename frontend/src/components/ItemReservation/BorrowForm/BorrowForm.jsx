@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,15 +19,44 @@ const BorrowForm = ({
   handleSendRequest,
   isFormValid,
   itemIds,
+  startDate,
+  isRoom,
 }) => {
   const { t } = useTranslation("itemReservation");
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState(null);
-  const [starttime, setStarttime] = useState(null);
+  const [starttime, setStarttime] = useState(new dayjs(startDate));
   const [returnTime, setReturnTime] = useState(null);
 
+  useEffect(() => {
+    if (startDate) {
+      const date = new dayjs(startDate);
+      getAllStartTime(date.toISOString(), itemIds).then((starttime) => {
+        setStarttime(starttime);
+        setSelectedStartDate(date);
+        setIntendedStartDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+        if (selectedReturnDate) {
+          const y = date.toISOString();
+          const formattedDate = `${y.slice(0, 16)}`;
+          const x = starttime.startDates[formattedDate];
+          getAllRetrunTime(y, selectedReturnDate.toISOString(), itemIds, x)
+            .then((returnTime) => {
+              setReturnTime(returnTime);
+              setSelectedReturnDate(selectedReturnDate);
+              setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        }
+      });
+    }
+  }, []);
+
   const handleStartDateChange = async (date) => {
-    // const starttime = await getAllStartTime(date.toISOString(), itemIds);
+    if (isRoom)
+     itemIds = "402";
+
     getAllStartTime(date.toISOString(), itemIds).then((starttime) => {
       setStarttime(starttime);
       setSelectedStartDate(date);
@@ -89,34 +118,44 @@ const BorrowForm = ({
         <ColorLegend />
 
         <div className="borrow-form__request">
-          <div className="borrow-form__field">
+          {!startDate ? (
+            <div className="borrow-form__field">
+              <div className="borrow-form__inputName">
+                <p className="borrow-form__label">
+                  {t("itemReservation.startDate")}
+                </p>
+              </div>
+              {/* DatePicker component */}
+              <DatePicker
+                className="borrow-form__date-picker"
+                value={selectedStartDate}
+                onChange={handleStartDateChange}
+                minDate={minDate}
+                maxDate={lastDayOfCurrentYear}
+              />
+            </div>
+          ) : (
             <div className="borrow-form__inputName">
               <p className="borrow-form__label">
                 {t("itemReservation.startDate")}
               </p>
+              <p>{startDate}</p>
             </div>
-            <DatePicker
-              className="borrow-form__date-picker"
-              value={selectedStartDate}
-              onChange={handleStartDateChange}
-              minDate={minDate}
-              maxDate={lastDayOfCurrentYear}
-            />
-          </div>
-          {selectedStartDate && (
+          )}
+          {selectedStartDate && !startDate && (
             <div className="borrow-form__field">
               <div className="borrow-form__inputName"></div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <p className="borrow-form__label">
                   {t("itemReservation.startTimeSlots")}
                 </p>
                 <Grid container spacing={2} alignItems="flex-start">
                   <Grid item xs={12} md={12}>
+                    {/* TimeTable component */}
                     <TimeTable
                       selectedDate={selectedStartDate}
                       onTimeSelected={handleStartDateChange}
@@ -131,6 +170,7 @@ const BorrowForm = ({
               </motion.div>
             </div>
           )}
+
           <div className="borrow-form__field">
             <div className="borrow-form__inputName">
               <p className="borrow-form__label">
@@ -183,8 +223,7 @@ const BorrowForm = ({
           <button
             className="borrow-form__button"
             onClick={handleSendRequest}
-            disabled={!isFormValid()}
-          >
+            disabled={!isFormValid()}>
             {t("itemReservation.sendRequest")}
           </button>
         </div>

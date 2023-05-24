@@ -8,3 +8,17 @@
 .idea/vcs.xml
 .idea/V-warehouse.iml
 .idea/.gitignore
+frontend/.idea/dbnavigator.xml
+frontend/.idea/.gitignore
+frontend/my-react-app.exe
+frontend/.idea/frontend.iml
+frontend/.idea/misc.xml
+frontend/.idea/modules.xml
+frontend/.idea/vcs.xml
+frontend/.idea/inspectionProfiles/Project_Default.xml
+.gitignore
+.idea/V-Warehouse3.iml
+.gitignore
+backend/src/main/resources/META-INF/MANIFEST.MF
+backend/.mvn/wrapper/maven-wrapper.properties
+.gitignore

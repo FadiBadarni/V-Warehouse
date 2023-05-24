@@ -6,7 +6,7 @@ import ListIcon from "@mui/icons-material/List";
 import BuildIcon from "@mui/icons-material/Build";
 import PeopleIcon from "@mui/icons-material/People";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import BarChartIcon from "@mui/icons-material/BarChart";
+// import BarChartIcon from "@mui/icons-material/BarChart";
 import "./Sidebar.scss";
 import SidebarLink from "./SidebarLink";
 

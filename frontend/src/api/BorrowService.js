@@ -81,3 +81,20 @@ export async function cancelBorrowRequest(requestId) {
     "Failed to cancel borrow request"
   );
 }
+
+export async function transferOwnership(requestId, newOwner) {
+  return apiWrapper(
+    () => axiosInstance.put(`/transferOwnership/${requestId}/${newOwner}`),
+    "transfer Ownership successfully",
+    "Failed to transfer Ownership"
+  );
+}
+
+
+export const getAllUsersNameAndID = async () => {
+  return apiWrapper(
+    () => axiosInstance.get("/get_all_users_username_and_Id"),
+    "All Users requests fetched successfully",
+    "All Users to fetch users requests"
+  );
+};

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import { getUserById } from "../../../api/AdminService";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../Sidebar/AdminLayout";
@@ -60,8 +60,7 @@ const BorrowRequests = () => {
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
           className="custom-tab-indicator custom-tab-text-color"
-          variant="fullWidth"
-        >
+          variant="fullWidth">
           <Tab label={t("borrowRequests.pendingTitle")} id="tab-title" />
           <Tab label={t("borrowRequests.awaitingTitle")} id="tab-title" />
           <Tab label={t("borrowRequests.returnedTitle")} id="tab-title" />

@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import "./RowDetails.scss";
 
 const UserInfo = ({ request, user }) => {

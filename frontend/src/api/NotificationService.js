@@ -23,3 +23,11 @@ export async function markNotificationsAsRead(userId) {
     "An error occurred while marking notifications as read:"
   );
 }
+
+export async function sendToAdminsNotifications(message) {
+  return apiWrapper(
+    () => axiosInstance.put(`/sendToAdminsNotifications/${message}`),
+    "Notifications marked as read successfully",
+    "An error occurred while marking notifications as read:"
+  );
+}

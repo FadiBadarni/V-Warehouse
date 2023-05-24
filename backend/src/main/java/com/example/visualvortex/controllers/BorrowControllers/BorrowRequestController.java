@@ -75,6 +75,14 @@ public class BorrowRequestController {
         borrowRequestService.cancelBorrowRequest(requestId);
     }
 
+    @PutMapping("/transferOwnership/{requestId}/{newOwner}")
+    @ResponseStatus(HttpStatus.OK)
+    public void transferOwnership(@PathVariable UUID requestId,@PathVariable Long newOwner) {
+       borrowRequestService.transferOwnership(requestId,newOwner);
+    }
+
+
+
     @GetMapping("/borrow-requests/{requestId}/itemsIds")
     @ResponseStatus(HttpStatus.OK)
     public List<Long> getItemsIdsByRequestId(@PathVariable UUID requestId) {

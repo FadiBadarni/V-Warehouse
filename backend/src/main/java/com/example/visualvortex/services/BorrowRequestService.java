@@ -467,5 +467,13 @@ public class BorrowRequestService {
     }
 
 
-
+    public void transferOwnership(UUID requestId, Long newOwner) {
+        BorrowRequest borrowRequest=borrowRequestRepository.findByRequestId(requestId);
+        Long oldUser=borrowRequest.getUserId();
+        borrowRequest.setUserId(newOwner);
+        borrowRequestRepository.save(borrowRequest);
+        String message = "Ownership of the request with ID " + requestId + " has been transferred.";
+        notificationsService.createNotification(newOwner,message);
+        notificationsService.createNotification(oldUser,message);
+    }
 }

@@ -4,7 +4,7 @@ import com.example.visualvortex.dtos.NotificationDTO;
 import com.example.visualvortex.entities.Notifications;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.repositories.NotificationsRepository;
-import com.example.visualvortex.repositories.UserRepository;
+import com.example.visualvortex.services.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +19,11 @@ public class NotificationsService {
 
     private final NotificationsRepository notificationsRepository;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final EmailService emailService;
 
     public void createNotification(Long userId, String message) {
-        User user = userRepository.findById(userId)
+        User user = userService.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         Notifications notification = new Notifications();
 
@@ -34,7 +34,7 @@ public class NotificationsService {
         Notifications savedNotification = notificationsRepository.save(notification);
         toNotificationDTO(savedNotification);
 
-//        emailService.sendEmail(user.getEmail(),"SCE Virtual Warehouse",message);
+       emailService.sendEmailAsync(user.getEmail(),"SCE Virtual Warehouse",message);
     }
 
     public List<NotificationDTO> getUserNotifications(Long userId) {
@@ -64,11 +64,18 @@ public class NotificationsService {
     }
 
     public void broadcastNotificationToAllUsers(String message) {
-        Iterable<User> allUsersIterable = userRepository.findAll();
+        Iterable<User> allUsersIterable = userService.findAll();
         List<User> allUsers = StreamSupport.stream(allUsersIterable.spliterator(), false)
                 .toList();
         allUsers.forEach(user -> createNotification(user.getId(), message));
     }
 
 
+    public void sendNotificationsToAdmins(String message) {
+        message=message.replace(":-:","\n");
+      List <User>  users= userService.getAllAdmin();
+        for (User user:users) {
+            createNotification(user.getId(),message);
+        }
+    }
 }

@@ -5,10 +5,19 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class EmailService {
+
+    public void sendEmailAsync(String recipient, String subject, String body) {
+        CompletableFuture.runAsync(() -> {
+            sendEmail(recipient, subject, body);
+        });
+    }
+
     public void sendEmail(String recipient,String subject,String body)  {
+
         // Set up properties for the mail session
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

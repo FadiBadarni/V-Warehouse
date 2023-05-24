@@ -13,7 +13,7 @@ import { getWarehouseItemsByIds } from "../../api/WarehouseService";
 import { useLocation } from "react-router-dom";
 import useBorrowRequests from "../../hooks/useBorrowRequests";
 import { translateText } from "../../api/TranslationService";
-import { CircularProgress } from "@material-ui/core";
+import RoomView from "./Table/RoomView";
 
 import dayjs from "dayjs";
 import "./ItemReservation.scss";
@@ -31,6 +31,7 @@ const BorrowedItemDetails = () => {
   const navigate = useNavigate();
   const [fetchedItems, setFetchedItems] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRoom, setIsRoom] = useState(false);
 
   const fetchSelectedItems = useCallback(
     async (ids) => {
@@ -63,7 +64,12 @@ const BorrowedItemDetails = () => {
 
   useEffect(() => {
     const selectedIds = location.pathname.split("/").pop();
-    fetchSelectedItems(selectedIds);
+    if (selectedIds === "ROOM") {
+      setIsRoom(true);
+      fetchSelectedItems(402);
+    } else {
+      fetchSelectedItems(selectedIds);
+    }
   }, [location.pathname, fetchSelectedItems]);
 
   const handleSendRequest = () => {
@@ -139,9 +145,14 @@ const BorrowedItemDetails = () => {
   return (
     <div className="item-details">
       <div className="item-details-container">
-        <h1 className="page-title">{t("itemReservation.title")}</h1>
-        <ItemInfo fetchedItems={fetchedItems}></ItemInfo>
-
+        {isRoom ? (
+          <RoomView></RoomView>
+        ) : (
+          <>
+            <h1 className="page-title">{t("itemReservation.title")}</h1>
+            <ItemInfo fetchedItems={fetchedItems}></ItemInfo>
+          </>
+        )}
         <LatePolicy></LatePolicy>
         <BorrowForm
           intendedStartDate={intendedStartDate}
@@ -153,7 +164,11 @@ const BorrowedItemDetails = () => {
           handleSendRequest={handleSendRequest}
           isFormValid={isFormValid}
           itemIds={location.pathname.split("/").pop().split(",")}
+          startDate={new URLSearchParams(window.location.search).get(
+            "startDate"
+          )}
           awaitingPickupRequests={awaitingPickupRequests}
+          isRoom={isRoom}
         />
         <AnimatePresence>
           {showModal && (

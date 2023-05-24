@@ -26,6 +26,7 @@ const ItemsGrid = ({ loading, filteredItems, handleMoreInfoClick }) => {
                   <CardContent className="item-card__details">
                     <div className="item-card__header">
                       <p className="item-card__title">{item.itemName}</p>
+                      <p className="item-card__title">{item.id}</p>
                       <p
                         className={`item-card__state item-card__state--${item.state.toLowerCase()}`}
                       >
