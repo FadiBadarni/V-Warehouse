@@ -1,7 +1,7 @@
 @import '../../variables';
 
 .help-support-item {
-    background-color: $third-color;
+    background: linear-gradient(135deg, $third-color 0%, darken($third-color, 5%) 100%);
     color: $primary-color;
     padding: 2rem;
     border-radius: 0.5rem;
@@ -9,15 +9,46 @@
     transition: transform 0.5s, box-shadow 0.5s, background-color 0.5s;
     transform-style: preserve-3d;
     height: 150px;
+    position: relative;
+    perspective: 1000px;
+    overflow: hidden;
+
+    &__front,
+    &__back {
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    &__front {
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__back {
+        transform: rotateY(180deg);
+        width: 100%;
+        height: 100%;
+        background: darken($third-color, 10%);
+        color: lighten($primary-color, 10%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
 
     &:hover {
-        background-color: darken($third-color, 5%);
-        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+        transform: rotateY(180deg);
     }
 
     &__title {
         font-size: 2rem;
         margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 2;
 
         @media only screen and (max-width: 768px) {
             font-size: 1.5rem;
@@ -27,6 +58,9 @@
     &__description {
         font-size: 1.2rem;
         margin-bottom: 1rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 2;
 
         @media only screen and (max-width: 768px) {
             font-size: 1rem;

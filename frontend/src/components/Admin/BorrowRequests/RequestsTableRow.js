@@ -30,7 +30,6 @@ const RequestsTableRow = ({
   expandedRow,
   user,
   handleRowClick,
-  setExpandedRow,
   showState,
   activeTab,
 }) => {
@@ -79,19 +78,6 @@ const RequestsTableRow = ({
     fetchItemInfo();
   }, [request.requestId]);
 
-  const availabilityCheck = () => {
-    for (let i = 0; i < request.itemIds.length; i++) {
-      const itemId = request.itemIds[i];
-      if (instancesCount && instancesCount.available[itemId] === 0) {
-        return 0;
-      }
-      if (instancesCount && instancesCount.required[itemId] > request.itemIds) {
-        return 1;
-      }
-    }
-    return 2;
-  };
-
   return (
     <React.Fragment>
       <TableRow
@@ -99,14 +85,7 @@ const RequestsTableRow = ({
         sx={{ cursor: "pointer" }}
       >
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={(event) => {
-              event.stopPropagation();
-              setExpandedRow(expandedRow === index ? -1 : index);
-            }}
-          >
+          <IconButton aria-label="expand row" size="small">
             {expandedRow === index ? (
               <KeyboardArrowUp />
             ) : (

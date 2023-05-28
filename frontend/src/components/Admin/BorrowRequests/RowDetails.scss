@@ -2,47 +2,106 @@
 
 .expanded-row {
   display: flex;
-  justify-content: space-between;
-  padding: 1rem;
+  flex-direction: column;
+  background: $sce-background-color;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin-bottom: 20px;
 
   &__details {
-    flex: 3;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding-right: 2rem;
+    margin-bottom: 20px;
 
     &__title {
-      font-size: 1.1rem;
+      font-size: 24px;
       font-weight: bold;
-      margin-bottom: 1rem;
+      color: $sce-primary-color;
+      margin-bottom: 10px;
+      transition: color 0.3s ease;
     }
 
     &__information {
-      .rtl & {
-        text-align: right;
-      }
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      font-size: 16px;
+      color: $sce-secondary-color;
+      transition: color 0.3s ease;
 
-      .ltr & {
-        text-align: left;
-      }
+      div {
+        padding: 10px;
+        border: 1px solid $third-color;
+        border-radius: 3px;
+        background: $secondary-color;
 
-      font-size: 1rem;
-      margin-bottom: 2rem;
+        &:first-child {
+          grid-column: span 2;
+          font-weight: bold;
+          color: $sce-primary-color;
+        }
+      }
     }
   }
 
-  .UserInfo {
-    flex: 1;
+  @media (max-width: $breakpoint-medium) {
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    &__details {
+      margin-bottom: 10px;
+
+      &__title {
+        font-size: 20px;
+      }
+
+      &__information {
+        font-size: 14px;
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  &__user {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding-left: 2rem;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid $third-color;
+    border-radius: 3px;
+    background: $secondary-color;
+    transition: background-color 0.3s ease;
 
-    &__title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+    div {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: $sce-text-color-dark;
+      transition: color 0.3s ease;
+
+      &:first-child {
+        font-weight: bold;
+        color: $sce-primary-color;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-medium) {
+    padding: 10px;
+    margin-bottom: 10px;
+
+    &__user {
+      margin-top: 10px;
+      padding: 5px;
+
+      div {
+        font-size: 14px;
+      }
     }
   }
 }

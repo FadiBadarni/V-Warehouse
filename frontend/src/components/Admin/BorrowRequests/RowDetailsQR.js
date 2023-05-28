@@ -147,17 +147,17 @@ const RowDetailsQR = ({
   const separator = <hr key="separator" />;
 
   return (
-    <Box className="expanded-row">
-      <Typography className="expanded-row__title" variant="h6">
+    <Box className="inner-row">
+      <Typography className="inner-row__title" variant="h6">
         Request No. {request.requestId}
       </Typography>
-      <Box className="expanded-row__content">
-        <Box className="expanded-row__info">
+      <Box className="inner-row__content">
+        <Box className="inner-row__info">
           {allItemIds.join(" ")}
-          <Typography className="expanded-row__instance__title">
+          <Typography className="inner-row__instance__title">
             {items.length}
           </Typography>
-          <Typography className="expanded-row__instance__title">
+          <Typography className="inner-row__instance__title">
             Requested Item Info
           </Typography>
           {activeTab === 1 && (
