@@ -102,8 +102,18 @@ public class BorrowRequestService {
         String formattedIntendedStartDate = borrowRequest.getIntendedStartDate().format(formatter);
         String formattedIntendedReturnDate = borrowRequest.getIntendedReturnDate().format(formatter);
 
+        // Fetch items by their IDs
+        List<Item> requestedItems = itemService.getItemsByIds(dto.getItemIds());
+
+        // Convert fetched items to their string representations.
+        // You may replace item.toString() with the method that converts an item to a string.
+        List<String> itemNames = requestedItems.stream().map(Item::getName).collect(Collectors.toList());
+
+        // Convert itemNames list to a single string
+        String itemNamesString = String.join(", ", itemNames);
+
         notificationsService.createNotification(dto.getUserId(),
-                "Your request to borrow " + "requestedItems.get()" +
+                "Your request to borrow " + itemNamesString +
                         " for the period : " + formattedIntendedStartDate +
                         " to : " + formattedIntendedReturnDate + " was sent to review.");
 
