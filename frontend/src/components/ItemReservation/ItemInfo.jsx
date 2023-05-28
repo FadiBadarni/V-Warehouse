@@ -27,12 +27,21 @@ const ItemInfo = ({ fetchedItems }) => {
   if (!fetchedItems || fetchedItems.length === 0) {
     return <div>{t("itemReservation.loading")}</div>;
   }
+  console.log(fetchedItems);
 
   return (
     <Grid container spacing={4}>
       {fetchedItems.map((item) => (
-        <Grid item xs={12} sm={6} md={4} key={item.id}>
-          <Card className="item-info">
+        <Grid
+          item
+          xs={12}
+          sm={item.name === "Studio Room" ? 12 : 6}
+          md={item.name === "Studio Room" ? 12 : 4}
+          key={item.id}
+        >
+          <Card
+            className={`item-info ${item.name === "Studio Room" ? "room" : ""}`}
+          >
             <CardActionArea>
               <div className="item-info__image-container">
                 <Magnifier

@@ -149,8 +149,6 @@ $large-desktop: 1200px;
         padding: 0.4rem;
         list-style-type: none;
 
-        .ltr & {}
-
         .rtl & {
             right: 0;
 
@@ -246,6 +244,7 @@ $large-desktop: 1200px;
 
 .mobile-menu {
     display: none;
+    transition: transform 0.3s ease-out;
 
     @media (max-width: #{($desktop - 1)}) {
         position: fixed;
@@ -259,6 +258,7 @@ $large-desktop: 1200px;
 
         &.open {
             display: block;
+            transform: translateX(0%);
         }
 
         ul {
@@ -280,9 +280,35 @@ $large-desktop: 1200px;
 
                     &:hover {
                         background-color: $sce-text-color2;
+                        color: white;
                     }
                 }
             }
+        }
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: $sce-text-color;
+        font-size: 40px;
+        /* Increase font size */
+        padding: 10px;
+        /* Add some padding */
+        cursor: pointer;
+        transition: color 0.3s ease;
+        /* Add transition for smooth color change */
+
+        &:hover {
+            color: $sce-text-color2;
+            /* Change color on hover for better feedback */
+        }
+
+        @media (min-width: $desktop) {
+            display: none;
         }
     }
 }

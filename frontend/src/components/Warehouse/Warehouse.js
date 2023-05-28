@@ -7,6 +7,9 @@ import { translateText } from "../../api/TranslationService";
 import { fetchedItemTypes } from "../../api/WarehouseService";
 import Items from "./Items";
 import Skeleton from "@mui/material/Skeleton";
+import Fab from "@mui/material/Fab";
+import RoomIcon from "@mui/icons-material/Room";
+import { Link } from "react-router-dom";
 
 import "./Warehouse.scss";
 
@@ -122,6 +125,17 @@ const Warehouse = () => {
         </div>
 
         <Items items={items} selectedTag={selectedTag} />
+
+        <Fab
+          component={Link}
+          to="/warehouse/items/2852"
+          aria-label="add"
+          className="fab"
+          variant="extended"
+        >
+          <RoomIcon />
+          <span className="fab-text">Reserve Room</span>
+        </Fab>
       </div>
     </div>
   );

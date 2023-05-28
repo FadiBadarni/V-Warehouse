@@ -115,7 +115,7 @@ const RowDetailsQR = ({
               if (prevScans.length === request.itemInstanceIds.length - 1) {
                 setReturnButtonIsDisable(false);
               } else setReturnButtonIsDisable(true);
-            
+
               return [...prevScans, data];
             } else {
               return prevScans;
@@ -177,7 +177,8 @@ const RowDetailsQR = ({
                     ))}
                   </Box>
                 )}
-                MenuProps={MenuProps}>
+                MenuProps={MenuProps}
+              >
                 {allInstances.flatMap((instanceList, index) => [
                   ...instanceList.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
@@ -206,13 +207,15 @@ const RowDetailsQR = ({
                     ))}
                   </Box>
                 )}
-                MenuProps={MenuProps}>
+                MenuProps={MenuProps}
+              >
                 {request.itemInstanceIds
                   ? request.itemInstanceIds.map((name) => (
                       <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, items, theme)}>
+                        style={getStyles(name, items, theme)}
+                      >
                         {name}
                       </MenuItem>
                     ))
@@ -220,7 +223,8 @@ const RowDetailsQR = ({
                       <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, items, theme)}>
+                        style={getStyles(name, items, theme)}
+                      >
                         {name}
                       </MenuItem>
                     ))}

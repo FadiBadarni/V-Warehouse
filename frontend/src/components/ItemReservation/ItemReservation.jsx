@@ -13,7 +13,6 @@ import { getWarehouseItemsByIds } from "../../api/WarehouseService";
 import { useLocation } from "react-router-dom";
 import useBorrowRequests from "../../hooks/useBorrowRequests";
 import { translateText } from "../../api/TranslationService";
-import { CircularProgress } from "@material-ui/core";
 
 import dayjs from "dayjs";
 import "./ItemReservation.scss";

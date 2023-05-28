@@ -39,7 +39,11 @@ const Items = ({ items, selectedTag }) => {
   const filteredItems = useMemo(
     () =>
       items
-        .filter((item) => !selectedTag || item.itemType.name === selectedTag)
+        .filter(
+          (item) =>
+            item.name !== "Studio Room" &&
+            (!selectedTag || item.itemType.name === selectedTag)
+        )
         .slice((page - 1) * perPage, page * perPage),
     [items, selectedTag, page]
   );
@@ -59,6 +63,16 @@ const Items = ({ items, selectedTag }) => {
       return newSelectedItems;
     });
   };
+
+  const totalPageCount = useMemo(() => {
+    return Math.ceil(
+      items.filter(
+        (item) =>
+          item.name !== "Studio Room" &&
+          (!selectedTag || item.itemType.name === selectedTag)
+      ).length / perPage
+    );
+  }, [items, selectedTag, perPage]);
 
   return (
     <div className="warehouse__items-container">
@@ -140,7 +154,7 @@ const Items = ({ items, selectedTag }) => {
       </AnimatePresence>
 
       <Pagination
-        count={Math.ceil(items.length / perPage)}
+        count={totalPageCount}
         page={page}
         onChange={handlePageChange}
         size="large"

@@ -9,6 +9,8 @@
         justify-content: center;
     }
 
+
+
     &__item {
 
         background-color: darken($color: rgba(230, 230, 230, 0.637), $amount: 5%);
@@ -132,9 +134,40 @@
             filter: brightness(150%);
         }
     }
+
+
+
+    .fab {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background-color: $sce-primary-color;
+        color: $sce-text-color;
+        width: fit-content;
+
+        &:hover {
+            background-color: darken($sce-primary-color, 30%);
+        }
+
+        animation: floating 3s ease-in-out infinite;
+    }
+
+
 }
 
+@keyframes floating {
+    0% {
+        transform: translateY(0px);
+    }
 
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
 
 @keyframes pulse {
     0% {
