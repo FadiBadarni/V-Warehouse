@@ -3,46 +3,182 @@
 .inner-row {
     display: flex;
     flex-direction: column;
-    background: $sce-background-color;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    margin-bottom: 20px;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    box-shadow: 0px 3px 6px #00000029;
 
     &__title {
-        color: $primary-color;
-        font-family: $font-family;
-        margin-bottom: 10px;
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 8px;
     }
 
     &__content {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
+        align-items: center;
 
-        &__info {
+        .inner-row__info {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+            justify-items: center;
+            align-items: center;
+            flex-wrap: wrap;
 
-            &__instance__title {
-                color: $secondary-color;
-                font-size: 14px;
-                font-weight: bold;
-                margin-bottom: 10px;
+            .form-control-container,
+            .qr-reader-container,
+            .user-info-container {
+                flex: 1;
+
+                .helper-text {
+                    font-size: 1rem;
+                    color: $sce-primary-color;
+                }
             }
-        }
-    }
 
-    @media (max-width: $breakpoint-medium) {
-        padding: 10px;
-        margin-bottom: 10px;
+            .form-control-container {
+                height: 250px;
 
-        &__content {
-            flex-direction: column;
-
-            &__info {
-                width: 100%;
+                .helper-text {
+                    color: #333;
+                    font-weight: bold;
+                    position: relative;
+                    bottom: 1rem;
+                }
             }
+
+            .form-control {
+                margin: 8px 0;
+                padding: 8px;
+                border-radius: 4px;
+
+                // Default styles for form elements
+                select,
+                input {
+                    width: 100%;
+                    padding: 4px 8px;
+                    font-size: 1rem;
+                    line-height: 1.5;
+                    color: #495057;
+                    background-color: #fff;
+                    background-clip: padding-box;
+                    border: 1px solid #ced4da;
+                    border-radius: 0.25rem;
+                    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
+
+            .qr-reader-box {
+                max-width: 450px;
+                margin: 32px auto;
+                padding: 16px;
+                border-radius: 10px;
+
+
+                .helper-text {
+                    color: #333;
+                    font-weight: bold;
+                    position: relative;
+                    top: 3rem;
+                }
+
+                .error-modal-box {
+                    margin-top: 16px;
+                }
+            }
+
         }
+
+        .user-details-card {
+            position: relative;
+            overflow: hidden;
+            width: 450px;
+            margin: 16px;
+            border-radius: 15px;
+            box-shadow: -1px -17px 16px 1px rgba(0, 0, 0, 0.36);
+
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            margin-top: 3rem;
+
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+            }
+
+            .card {
+
+                &__header {
+                    height: 110px;
+                    background: url("../../../assets/sce_card.png");
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    margin-top: 15px;
+
+                }
+
+                &__content {
+                    position: relative;
+                    z-index: 2;
+                    background: transparent;
+                    border-radius: 5%;
+                    background-color: rgba(166, 177, 186, 0.832);
+                    box-shadow: -1px -41px 16px -28px #0a1a2d65;
+
+
+                }
+
+                &__title {
+                    color: $sce-primary-color;
+                    margin: 8px 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .card__icon {
+                        margin-right: 8px;
+                        color: $sce-primary-color;
+                    }
+                }
+
+                &__helper-text {
+                    font-size: 1.25rem;
+                    color: $sce-primary-color;
+                    margin: 4px 0;
+                    display: flex;
+                    align-items: center;
+
+                    .card__icon {
+                        margin-right: 8px;
+                        color: $sce-primary-color;
+                    }
+                }
+
+                &__item {
+                    font-size: 1.25rem;
+                    color: $sce-text-color-dark;
+                    margin: 4px 0;
+                    display: flex;
+                    align-items: center;
+
+                    .card__icon {
+                        margin-right: 8px;
+                        color: $sce-primary-color;
+                    }
+                }
+
+
+            }
+
+
+        }
+
     }
 }

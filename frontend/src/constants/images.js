@@ -17,6 +17,8 @@ import hdmi_to_sdi_3g from "../assets/items/hdmi_to_sdi_3g.png";
 import bidirectional_sdi_hdmi_12g from "../assets/items/bidirectional_sdi_hdmi_12g.png";
 import falconeyes_rx_24tdx from "../assets/items/falconeyes_rx_24tdx.png";
 import studio_room from "../assets/items/studio_room.png";
+import sce_card from "../assets/sce_card.jpg";
+
 const images = {
   audio,
   action,
@@ -37,6 +39,7 @@ const images = {
   bidirectional_sdi_hdmi_12g,
   falconeyes_rx_24tdx,
   studio_room,
+  sce_card,
 };
 
 export default images;
