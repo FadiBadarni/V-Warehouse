@@ -33,10 +33,6 @@ const UserInfo = ({ request, user }) => {
               <InfoIcon className="card__icon" /> {t("userInfo.role")} -{" "}
               {user.role}
             </Typography>
-            <Typography variant="h6" className="card__item">
-              <CommentIcon className="card__icon" /> {t("userInfo.reasoning")} -{" "}
-              {request.borrowingReason}
-            </Typography>
           </CardContent>
         </Card>
       )}

@@ -110,7 +110,9 @@ const Items = ({ items, selectedTag }) => {
               <p className="truncate">{item.description}</p>
               <div className="attributes">
                 <span className="count">
-                  {t("warehouse.available")} {item.quantity}
+                  {item.quantity > 0
+                    ? `${t("warehouse.available")} ${item.quantity}`
+                    : ""}
                 </span>
               </div>
             </div>

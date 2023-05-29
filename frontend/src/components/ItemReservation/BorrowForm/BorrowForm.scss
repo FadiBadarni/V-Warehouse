@@ -120,7 +120,7 @@
 
     div {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 5px;
         transition: background-color 0.3s ease;
         padding: 5px;
@@ -142,7 +142,9 @@
             height: 20px;
             border-radius: 50%;
             transition: box-shadow 0.3s ease;
+            flex-shrink: 0;
         }
+
 
     }
 
@@ -154,7 +156,7 @@
 
     :nth-child(3) {
         span {
-            background-color: orange;
+            background-color: yellow;
         }
     }
 
@@ -175,4 +177,16 @@
             background-color: orange;
         }
     }
+
+    @media (max-width: 600px) {
+        .color-legend {
+            div {
+                span {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+        }
+    }
+
 }
