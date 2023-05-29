@@ -178,11 +178,15 @@ public class ItemService {
                         instance.getItem().getId()))
                 .toList();
 
+        int quantity = (int) item.getItemInstances().stream()
+                .filter(instance -> instance.getState() == ItemState.AVAILABLE)
+                .count();
+
         return itemDTO.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
-                .quantity(item.getItemInstances().size())
+                .quantity(quantity)
                 .itemType(itemTypeDTO)
                 .itemInstances(itemInstanceDTOs)
                 .build();
