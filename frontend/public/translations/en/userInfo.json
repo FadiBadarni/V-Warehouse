@@ -1,0 +1,10 @@
+{
+    "userInfo":
+    {
+      "userInformation": "User Information",
+      "username": "Username",
+      "email": "Email",
+      "role": "Role",
+      "reasoning": "Reasoning"
+    }
+}
