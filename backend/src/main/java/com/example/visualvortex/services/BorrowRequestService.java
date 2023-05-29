@@ -337,6 +337,7 @@ public class BorrowRequestService {
         while (currentDateTime.isBefore(endDateTime)) {
 
             List<ItemInstance> availableIds = new ArrayList<>(itemInstanceList);
+            List<ItemInstance> xy;
             for (BorrowRequest awaitingReturn : awaitingReturnBorrowRequestsTable) {
                 LocalDateTime orderStart =  awaitingReturn.getIntendedStartDate();
                 LocalDateTime orderEnd =  awaitingReturn.getIntendedReturnDate();
@@ -344,7 +345,11 @@ public class BorrowRequestService {
                 if (between(currentDateTime,orderStart,orderEnd)){
                     List<Long> itemInstanceIds = awaitingReturn.getItemInstanceIds();
                     for (Long itemInstanceId : itemInstanceIds)
+                    {
+
                         availableIds.removeAll(itemInstanceService.getInstancesById(itemInstanceId));
+
+                    }
                 }
             }
             int count=0;
