@@ -2,6 +2,7 @@ import React from "react";
 import SignaturePad from "react-signature-canvas";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { CircularProgress } from "@material-ui/core";
 
 const SignatureModal = ({
   showModal,
@@ -37,7 +38,11 @@ const SignatureModal = ({
             {t("itemReservation.clearButton")}
           </button>
           <button onClick={handleSubmit} disabled={!canSubmit || isSubmitting}>
-            {t("itemReservation.submitButton")}
+            {isSubmitting ? (
+              <CircularProgress size={24} />
+            ) : (
+              t("itemReservation.submitButton")
+            )}
           </button>
           <button onClick={handleClose}>
             {t("itemReservation.closeButton")}

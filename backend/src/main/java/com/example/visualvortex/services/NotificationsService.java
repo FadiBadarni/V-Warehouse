@@ -34,7 +34,7 @@ public class NotificationsService {
         Notifications savedNotification = notificationsRepository.save(notification);
         toNotificationDTO(savedNotification);
 
-        emailService.sendEmail(user.getEmail(),"SCE Virtual Warehouse",message);
+//        emailService.sendEmail(user.getEmail(),"SCE Virtual Warehouse",message);
     }
 
     public List<NotificationDTO> getUserNotifications(Long userId) {

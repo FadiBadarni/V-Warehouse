@@ -16,7 +16,6 @@ const RequestsTableHeaders = ({
         <TableCell>{t("borrowRequests.tableHeaders.startDate")}</TableCell>
         <TableCell>{t("borrowRequests.tableHeaders.returnDate")}</TableCell>
         <TableCell>{t("borrowRequests.tableHeaders.itemName")}</TableCell>
-        <TableCell>{t("borrowRequests.tableHeaders.quantity")}</TableCell>
         <TableCell>
           <TableSortLabel
             active={orderBy === "sentRequestTime"}

@@ -41,7 +41,6 @@ const BorrowForm = ({
             setReturnTime(returnTime);
             setSelectedReturnDate(selectedReturnDate);
             setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-            console.log(returnTime);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -65,7 +64,6 @@ const BorrowForm = ({
         setReturnTime(returnTime);
         setSelectedReturnDate(date);
         setIntendedReturnDate(dayjs(date).format("YYYY-MM-DDTHH:mm:ss"));
-        console.log(returnTime);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -145,6 +143,7 @@ const BorrowForm = ({
               onChange={handleReturnDateChange}
               minDate={selectedStartDate || minDate}
               maxDate={lastDayOfCurrentYear}
+              disabled={!selectedStartDate}
             />
             {selectedReturnDate && (
               <div className="borrow-form__field">

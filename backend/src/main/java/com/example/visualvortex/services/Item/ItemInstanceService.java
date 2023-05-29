@@ -105,7 +105,7 @@ public class ItemInstanceService {
     }
 
     public List<ItemInstance> getInstancesById(long id) {
-        return itemInstanceRepository.findAllByItemId(id);
+        return itemInstanceRepository.findAllById(id);
     }
 
     public List<ItemInstance> findByItemTypeId(long id) {

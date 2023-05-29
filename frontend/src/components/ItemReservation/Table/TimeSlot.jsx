@@ -17,6 +17,8 @@ const TimeSlot = ({
   onClick,
 }) => {
   const [partialPendingItemNames, setPartialPendingItemNames] = useState([]);
+  const [partialBookedItemNames, setPartialBookedItemNames] = useState([]);
+
   const { fetchItemDetails } = useItemDetails();
   const fetchPartialPendingItemNames = useCallback(async () => {
     try {
@@ -41,6 +43,26 @@ const TimeSlot = ({
     partialPendingSlotsItemIds,
     fetchPartialPendingItemNames,
   ]);
+
+  const fetchPartialBookedItemNames = useCallback(async () => {
+    try {
+      const fetchedItemNames = await Promise.all(
+        partialBookedSlots.map(async (id) => {
+          const item = await fetchItemDetails(id);
+          return item.name;
+        })
+      );
+      setPartialBookedItemNames(fetchedItemNames);
+    } catch (error) {
+      console.error("Error fetching item names:", error);
+    }
+  }, [partialBookedSlots, fetchItemDetails]);
+
+  useEffect(() => {
+    if (partialBookedSlots) {
+      fetchPartialBookedItemNames();
+    }
+  }, [partialBookedSlots, fetchPartialBookedItemNames]);
 
   const selectedClass = selected ? styles.selected : "";
   const pendingClass = pendingSlots ? styles.pending : "";
@@ -87,7 +109,8 @@ const TimeSlot = ({
       const items = partialPendingItemNames.join(", ");
       return `Item ${items} have a pending request for this slot`;
     } else if (partialBookedSlots) {
-      return "This slot is partially booked";
+      const items = partialBookedItemNames.join(", ");
+      return `The item ${items} is booked for this slot`;
     } else if (bookedReturnClass) {
       return "MUST RETURN BY THIS TIME";
     } else if (pendingReturnSlotsClass) {

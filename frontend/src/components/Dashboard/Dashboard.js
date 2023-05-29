@@ -41,13 +41,17 @@ function Dashboard() {
       try {
         const userId = user && user.id;
         const requests = await getBorrowRequestsByUserId(userId);
-        const requestsWithItem = await Promise.all(
+        const requestsWithItems = await Promise.all(
           requests.map(async (request) => {
-            const item = await fetchItem(request.itemId);
-            return { ...request, item };
+            const items = await Promise.all(
+              request.itemIds.map(async (itemId) => {
+                return await fetchItem(itemId);
+              })
+            );
+            return { ...request, items };
           })
         );
-        setBorrowRequests(requestsWithItem);
+        setBorrowRequests(requestsWithItems);
       } catch (error) {
         console.error("Error fetching borrow requests:", error);
       }
@@ -114,10 +118,12 @@ function Dashboard() {
     setCurrentOngoingPage(value);
   };
 
-  const handleMoreDetailsClick = (request) => {
+  // This function should accept the whole request object
+  function handleMoreDetailsClick(request) {
+    // This would show a modal with more details about the request
     setSelectedRequest(request);
     setDetailsModalOpen(true);
-  };
+  }
 
   const handleCloseDetailsModal = () => {
     setDetailsModalOpen(false);
@@ -232,7 +238,7 @@ function Dashboard() {
                             <span>
                               {t("dashboard.requestId")} {request.requestId}
                             </span>
-                            <span>{request.item.name}</span>
+                            {/* <span>{request.item.name}</span> */}
                           </div>
                           <div className="card-content">
                             <p>
@@ -315,7 +321,7 @@ function Dashboard() {
                             <span>
                               {t("dashboard.requestId")} {request.requestId}
                             </span>
-                            <span>{request.item.name}</span>
+                            {/* <span>{request.item.name}</span> */}
                           </div>
                           <div className="card-content">
                             <p>

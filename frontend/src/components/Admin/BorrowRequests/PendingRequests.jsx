@@ -10,10 +10,9 @@ const PendingRequests = ({
   handleRowClick,
   expandedRow,
   user,
-  activeTab
+  activeTab,
 }) => {
   const { t } = useTranslation("borrowRequests");
-
   return (
     <Box>
       <Typography className="requests-title" variant="h5" gutterBottom>
@@ -26,7 +25,7 @@ const PendingRequests = ({
         handleRowClick={handleRowClick}
         expandedRow={expandedRow}
         user={user}
-        activeTab={ activeTab}
+        activeTab={activeTab}
       />
     </Box>
   );

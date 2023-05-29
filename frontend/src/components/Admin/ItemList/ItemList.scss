@@ -3,10 +3,9 @@
 .admin-equipment-list {
     display: flex;
     flex-direction: row;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 20px;
-
+    background-position: center;
+    background-size: cover;
+    background-image: url('../../../assets/404-bg.jpg');
 
     .title {
         font-weight: 600;
@@ -43,6 +42,8 @@
     margin: 0 auto;
     width: 100%;
     padding: 0 5rem;
+    max-width: 1200px;
+    min-height: 100vh;
 
     @media (max-width: 768px) {
         padding: 0;

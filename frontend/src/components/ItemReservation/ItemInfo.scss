@@ -11,6 +11,8 @@
     width: 100%;
     margin-bottom: 30px;
 
+    &.room {}
+
     &__title {
         color: $sce-primary-color;
         font-size: 1.5rem;

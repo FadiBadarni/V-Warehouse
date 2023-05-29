@@ -1,0 +1,10 @@
+{
+  "userInfo":
+  {
+    "userInformation": "מידע על המשתמש",
+    "username": "שם משתמש",
+    "email": "דואר אלקטרוני",
+    "role": "תפקיד",
+    "reasoning": "תיאור הסיבה"
+  }
+}

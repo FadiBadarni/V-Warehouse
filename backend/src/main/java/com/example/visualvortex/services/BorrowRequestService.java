@@ -102,8 +102,18 @@ public class BorrowRequestService {
         String formattedIntendedStartDate = borrowRequest.getIntendedStartDate().format(formatter);
         String formattedIntendedReturnDate = borrowRequest.getIntendedReturnDate().format(formatter);
 
+        // Fetch items by their IDs
+        List<Item> requestedItems = itemService.getItemsByIds(dto.getItemIds());
+
+        // Convert fetched items to their string representations.
+        // You may replace item.toString() with the method that converts an item to a string.
+        List<String> itemNames = requestedItems.stream().map(Item::getName).collect(Collectors.toList());
+
+        // Convert itemNames list to a single string
+        String itemNamesString = String.join(", ", itemNames);
+
         notificationsService.createNotification(dto.getUserId(),
-                "Your request to borrow " + "requestedItems.get()" +
+                "Your request to borrow " + itemNamesString +
                         " for the period : " + formattedIntendedStartDate +
                         " to : " + formattedIntendedReturnDate + " was sent to review.");
 
@@ -117,7 +127,7 @@ public class BorrowRequestService {
         BorrowRequest borrowRequest = borrowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("BorrowRequest not found with ID: " + requestId));
 
-        if (borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP && status == RequestStatus.AWAITING_RETURN) {
+        if (borrowRequest.getStatus() == RequestStatus.AWAITING_PICKUP) {
             List<ItemInstance> associatedInstances = itemInstanceService.getInstancesByIds(borrowRequest.getItemInstanceIds());
 
             User user = userService.getUserById(borrowRequest.getUserId());
@@ -327,6 +337,7 @@ public class BorrowRequestService {
         while (currentDateTime.isBefore(endDateTime)) {
 
             List<ItemInstance> availableIds = new ArrayList<>(itemInstanceList);
+            List<ItemInstance> xy;
             for (BorrowRequest awaitingReturn : awaitingReturnBorrowRequestsTable) {
                 LocalDateTime orderStart =  awaitingReturn.getIntendedStartDate();
                 LocalDateTime orderEnd =  awaitingReturn.getIntendedReturnDate();
@@ -334,7 +345,11 @@ public class BorrowRequestService {
                 if (between(currentDateTime,orderStart,orderEnd)){
                     List<Long> itemInstanceIds = awaitingReturn.getItemInstanceIds();
                     for (Long itemInstanceId : itemInstanceIds)
+                    {
+
                         availableIds.removeAll(itemInstanceService.getInstancesById(itemInstanceId));
+
+                    }
                 }
             }
             int count=0;

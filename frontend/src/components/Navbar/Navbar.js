@@ -73,6 +73,11 @@ const Navbar = ({ children }) => {
     exit: { opacity: 0, y: -20 },
   };
 
+  const menuVariants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: "-100%" },
+  };
+
   const MobileMenuItem = ({ children, onClick, to }) => (
     <motion.li
       onClick={onClick}
@@ -85,15 +90,28 @@ const Navbar = ({ children }) => {
     </motion.li>
   );
 
+  const handleCloseButtonClick = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
     <div id="navigation-bar" className={direction}>
       <nav className="navbar">
         <button className="hamburger-menu" onClick={handleHamburgerClick}>
           &#9776;
         </button>
-        <div className={`mobile-menu${mobileMenuOpen ? " open" : ""}`}>
-          <AnimatePresence>
-            {mobileMenuOpen && (
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              className={`mobile-menu${mobileMenuOpen ? " open" : ""}`}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={menuVariants}
+            >
+              <button className="close-button" onClick={handleCloseButtonClick}>
+                &times;
+              </button>
               <ul>
                 <MobileMenuItem onClick={handleMobileMenuItemClick} to="/">
                   {t("navbar.home")}
@@ -140,9 +158,9 @@ const Navbar = ({ children }) => {
                   </>
                 )}
               </ul>
-            )}
-          </AnimatePresence>
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <ul className="navbar-menu">
           <motion.li variants={navItemVariant}>
             <Link to="/">{t("navbar.home")}</Link>

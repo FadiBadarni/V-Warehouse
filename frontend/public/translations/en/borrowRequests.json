@@ -18,5 +18,13 @@
           "approve": "Approve",
           "reject": "Reject"
         }
+      },
+      "rowDetails":{
+        "requestId" : "Request ID: ",
+        "requestedItems": "Requested Items: ",
+        "startingDate": "Starting Date: ",
+        "returningDate" : "Returning Date: ",
+        "borrowingReason": "Reason for Borrowing: ",
+        "requestStatus": "Status of The Request: "
       }
 }

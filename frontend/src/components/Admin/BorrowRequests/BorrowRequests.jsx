@@ -56,13 +56,6 @@ const BorrowRequests = () => {
     <Box className="borrow-requests">
       <AdminLayout direction={direction}></AdminLayout>
       <Box className="borrow-requests__content">
-        <Typography
-          className="borrow-requests__title"
-          variant="h4"
-          gutterBottom
-        >
-          {t("borrowRequests.title")}
-        </Typography>
         <Tabs
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}

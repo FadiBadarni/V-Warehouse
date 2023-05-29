@@ -1,49 +1,170 @@
 @import "../../../variables";
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 
 .expanded-row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
 
-  &__title {
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
 
-  &__content {
+  &__details {
     display: flex;
-    justify-content: space-between;
-  }
-
-  &__info {
+    flex-direction: column;
+    margin-bottom: 0;
     flex: 1;
-    padding-right: 1rem;
-    border-right: 3px solid rgba(0, 0, 0, 0.267);
+    justify-content: center;
+    align-items: center;
 
     &__title {
+      font-size: 24px;
       font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+      color: $sce-primary-color;
+      margin-bottom: 10px;
+      transition: color 0.3s ease;
+      margin-bottom: 3rem;
+    }
+
+    &__information {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      font-size: 16px;
+      color: #0a1a2d;
+      transition: color 0.3s ease;
+
+      div {
+        padding: 10px;
+        border: 2px solid $sce-text-color3;
+        border-radius: 3px;
+        background: darken($color: $sce-background-color, $amount: 20%);
+
+        &:first-child,
+        &:last-child {
+          grid-column: span 2;
+        }
+
+        &:nth-last-child(2) {
+          grid-column: span 2;
+          justify-self: center;
+        }
+      }
     }
   }
 
-  &__instance {
-    text-align: center;
+  @media (max-width: $breakpoint-medium) {
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 10px;
 
-    &__title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+    &__details {
+      margin-bottom: 10px;
+
+      &__title {
+        font-size: 20px;
+      }
+
+      &__information {
+        font-size: 14px;
+        grid-template-columns: 1fr;
+      }
     }
   }
 
-  &__user {
+  .user-info {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
 
-    &__title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+    .user-details-card {
+      position: relative;
+      overflow: hidden;
+      width: 450px;
+      margin: 16px;
+      border-radius: 15px;
+      box-shadow: -1px -17px 16px 1px rgba(0, 0, 0, 0.36);
+      margin: 0 16px;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      margin-top: 3rem;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+      }
+
+      .card {
+
+        &__header {
+          height: 110px;
+          background: url("../../../assets/sce_card.png");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+          margin-top: 15px;
+
+        }
+
+        &__content {
+          position: relative;
+          z-index: 2;
+          background: transparent;
+          border-radius: 5%;
+          background-color: rgba(166, 177, 186, 0.832);
+          box-shadow: -1px -41px 16px -28px #0a1a2d65;
+
+
+        }
+
+        &__title {
+          color: $sce-primary-color;
+          margin: 8px 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font: $font-family;
+          font-weight: bold;
+
+          .card__icon {
+            margin-right: 8px;
+            color: $sce-primary-color;
+          }
+        }
+
+        &__helper-text {
+          font-size: 1.25rem;
+          color: $sce-primary-color;
+          margin: 4px 0;
+          display: flex;
+          align-items: center;
+
+          .card__icon {
+            margin-right: 8px;
+            color: $sce-primary-color;
+          }
+        }
+
+        &__item {
+          font-size: 1.25rem;
+          color: $sce-text-color-dark;
+          margin: 4px 0;
+          display: flex;
+          align-items: center;
+
+          .card__icon {
+            margin-right: 8px;
+            color: $sce-primary-color;
+          }
+        }
+
+
+      }
+
+
     }
   }
+
 }

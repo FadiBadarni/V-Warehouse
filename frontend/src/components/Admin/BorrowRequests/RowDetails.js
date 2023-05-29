@@ -1,73 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import "./RowDetails.scss";
 import { getWarehouseItemsByIds } from "../../../api/WarehouseService";
 import UserInfo from "./UserInfo";
+import { useTranslation } from "react-i18next";
 
-const RowDetails = ({ request, user, instancesCount }) => {
-  const [ItemIfo, setItemInfo] = useState();
+const RowDetails = ({ request, user }) => {
+  const [itemInfo, setItemInfo] = useState([]);
+  const { t, i18n } = useTranslation("borrowRequests");
+
   useEffect(() => {
     const fetchItemInfo = async () => {
-      const ItemIfo = await getWarehouseItemsByIds(request.itemIds);
-      setItemInfo(ItemIfo);
+      const items = await getWarehouseItemsByIds(request.itemIds);
+      setItemInfo(items);
     };
     fetchItemInfo();
   }, [request.itemIds]);
 
+  const itemNames = itemInfo.map((item) => item.name).join(", ");
+
   return (
     <Box className="expanded-row">
-      <Box className="expanded-row__content">
-        <Box className="expanded-row__info">
-          {ItemIfo &&
-            instancesCount &&
-            ItemIfo.map((item) => (
-              <Box className="expanded-row__user">
-                <Typography className="expanded-row__title" variant="h6">
-                  {"{" + item.id + "}  " + item.name}
-                </Typography>
-                <Box className="expanded-row__details">
-                  <Typography
-                    className="expanded-row__title"
-                    variant="subtitle2"
-                  >
-                    {"Available: "}
-                    <Typography
-                      component="span"
-                      style={{
-                        color:
-                          instancesCount.available[item.id] === 0
-                            ? "red"
-                            : "green",
-                        fontSize: "1.2rem",
-                      }}
-                    >
-                      {instancesCount.available[item.id]}
-                    </Typography>
-                    {" From " + item.quantity}
-                  </Typography>
-                  <Typography className="expanded-row__title">
-                    {"Required: "}
-                    <span
-                      style={{
-                        color:
-                          item.quantity <= instancesCount.required[item.id]
-                            ? "red"
-                            : "green",
-                        fontSize: "1.2rem",
-                      }}
-                    >
-                      {instancesCount.required[item.id]}
-                    </span>
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-        </Box>
+      <Box className="expanded-row__details">
+        <div className="expanded-row__details__title">
+          {t("rowDetails.requestId")} {request.requestId}
+        </div>
+        <div className="expanded-row__details__information">
+          <div>
+            {t("rowDetails.requestedItems")} {itemNames}
+          </div>
+          <div>
+            {t("rowDetails.startingDate")}
+            {new Date(request.intendedStartDate).toLocaleDateString()}{" "}
+            {new Date(request.intendedStartDate).toLocaleTimeString(
+              i18n.language,
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }
+            )}
+          </div>
+          <div>
+            {t("rowDetails.returningDate")}
+            {new Date(request.intendedReturnDate).toLocaleDateString()}{" "}
+            {new Date(request.intendedReturnDate).toLocaleTimeString(
+              i18n.language,
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }
+            )}
+          </div>
+          <div>
+            {t("rowDetails.requestStatus")} {request.status}
+          </div>
+          <div>
+            {t("rowDetails.borrowingReason")} {request.borrowingReason}
+          </div>
+        </div>
+      </Box>
+      <Box className="user-info">
         <UserInfo request={request} user={user} />
       </Box>
-      <Typography className="expanded-row__title" variant="h12">
-        Request No. {request.requestId}
-      </Typography>
     </Box>
   );
 };
