@@ -32,7 +32,6 @@ public class ItemManagementController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void addItem(@RequestBody InstanceDTO itemDTO) {
-        InstanceDTO x = itemDTO;
         try {
             itemService.saveItem(itemDTO);
         }

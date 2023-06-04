@@ -28,7 +28,7 @@ public class ItemController {
     public List<itemDTO> getAllItems() {
         List<Item> items = itemService.getAllItems();
         return items.stream()
-                .map(itemService::itemToItemDTO)
+                .filter(Item::isForBorrow).map(itemService::itemToItemDTO)
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,6 @@ public class ItemController {
     @GetMapping("itemTypes")
     @ResponseStatus(HttpStatus.OK)
     public List<String> getItemById() {
-        List<String> t = itemTypeService.listType();
         return itemTypeService.listType();
     }
 

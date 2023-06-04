@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Grid,
+  Switch,
+  FormControlLabel,
+} from "@mui/material";
 import {
   addEquipmentItem,
   fetchItemNames,
@@ -27,18 +33,17 @@ const EquipmentForm = () => {
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
   const [isValidSerialNumber, setIsValidSerialNumber] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  // const [previewUrl, setPreviewUrl] = useState(null);
   const [dataUrl, setDataUrl] = useState(null);
+
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
 
     // Create a URL for the selected file to preview it
     const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result);
-    };
+    // reader.onload = () => {
+    //   setPreviewUrl(reader.result);
+    // };
     reader.readAsDataURL(file);
 
     // Resize the image to 512x512 using canvas
@@ -93,6 +98,7 @@ const EquipmentForm = () => {
       const selectedItem = await getItemByName(selectedItemName);
       if (selectedItem) {
         setName(selectedItem.name);
+        setForBorrow(selectedItem.forBorrow);
         setDescription(selectedItem.description);
         setItemType(selectedItem.itemType.name);
         if (
@@ -112,6 +118,7 @@ const EquipmentForm = () => {
       }
     } else {
       setName("");
+      setForBorrow(true);
       setDescription("");
       setItemType("");
       setAttributes([{ attributeName: "", attributeValue: "" }]);
@@ -124,6 +131,7 @@ const EquipmentForm = () => {
     const filterSerialNumber = serialNumber.replace(/[^0-9]/g, "");
     const item = {
       serialNumber: filterSerialNumber,
+      forBorrow,
       name,
       description,
       itemType: { name: itemType, attributes },
@@ -132,6 +140,7 @@ const EquipmentForm = () => {
     await addEquipmentItem(item);
 
     setName("");
+    setForBorrow(true);
     setDescription("");
     setSerialNumber("");
     setItemType("");
@@ -206,11 +215,11 @@ const EquipmentForm = () => {
   const handleDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
-    setSelectedFile(file);
+
     const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result);
-    };
+    // reader.onload = () => {
+    //   setPreviewUrl(reader.result);
+    // };
     reader.readAsDataURL(file);
 
     // Resize the image to 512x512 using canvas
@@ -229,6 +238,12 @@ const EquipmentForm = () => {
   };
   const fileInputRef = React.createRef();
 
+  const [forBorrow, setForBorrow] = useState(true);
+
+  const handleChange = (event) => {
+    setForBorrow(event.target.checked);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="item-management__form">
       <div
@@ -237,8 +252,7 @@ const EquipmentForm = () => {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current.click()}
-      >
+        onClick={() => fileInputRef.current.click()}>
         {dataUrl ? (
           <img
             src={dataUrl}
@@ -247,7 +261,7 @@ const EquipmentForm = () => {
           />
         ) : (
           <img
-            src="https://fomantic-ui.com/images/wireframe/image.png"
+            src="https://static.thenounproject.com/png/3752804-200.png"
             alt="Default"
             style={{ width: "256px", height: "256px" }}
           />
@@ -310,13 +324,19 @@ const EquipmentForm = () => {
             id="description"
             label="Item Description"
             multiline
-            rows={3}
+            rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             disabled={isExistingItem}
           />
         </Grid>
         <Grid item xs={12} md={6}>
+          <FormControlLabel
+            control={<Switch checked={forBorrow} onChange={handleChange} />}
+            label={forBorrow ? "In Borrow" : "In Room"}
+          />
+          <p></p>
+
           <TextField
             fullWidth
             id="serialNumber"
@@ -370,8 +390,7 @@ const EquipmentForm = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            disabled={isExistingItem}
-          >
+            disabled={isExistingItem}>
             Add Attribute
           </Button>
         </Grid>
@@ -384,8 +403,7 @@ const EquipmentForm = () => {
             className="item-management__submit-button"
             variant="contained"
             color="primary"
-            fullWidth
-          >
+            fullWidth>
             Add Item
           </Button>
         </Grid>

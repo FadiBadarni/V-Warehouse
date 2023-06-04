@@ -20,6 +20,8 @@ public class Item {
     private long id;
     private String name;
     private String description;
+    @Column(name = "for_borrow")
+    private boolean forBorrow;
 
     @ManyToOne
     @JoinColumn(name = "item_type_id")

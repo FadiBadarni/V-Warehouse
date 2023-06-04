@@ -59,11 +59,14 @@ public class ItemService {
     }
 
     public void saveItem(InstanceDTO instanceDTO) {
-        saveImageToFile(instanceDTO.getImg(), instanceDTO.getName());
+        try {
+            saveImageToFile(instanceDTO.getImg(), instanceDTO.getName());
+        }catch (Exception e)
+        {
+            System.out.println("dont save img");
+        }
 
         ItemType itemType;
-
-
         // Look for existing item type by name
         Optional<ItemType> existingItemType = itemTypeRepository.findByName(instanceDTO.getItemType().getName());
 
@@ -98,11 +101,17 @@ public class ItemService {
         Item item;
         if (existingItem.isPresent()) {
             item = existingItem.get();
+            item.setDescription(instanceDTO.getDescription());
+            item.setName(instanceDTO.getName());
+            item.setItemType(itemType);
+            item.setForBorrow(instanceDTO.isForBorrow());
+            item = itemRepository.save(item);
         } else {
             item = new Item();
             item.setDescription(instanceDTO.getDescription());
             item.setName(instanceDTO.getName());
             item.setItemType(itemType);
+            item.setForBorrow(instanceDTO.isForBorrow());
             item = itemRepository.save(item);
         }
 
@@ -115,19 +124,21 @@ public class ItemService {
 //            itemInstance.setState(ItemState.AVAILABLE);
 //            itemInstances.add(itemInstance);
 //        }
-        ItemInstance itemInstance = new ItemInstance();
-        itemInstance.setItem(item);
-        itemInstance.setState(ItemState.AVAILABLE);
+        if(instanceDTO.getSerialNumber()!=null) {
+            ItemInstance itemInstance = new ItemInstance();
+            itemInstance.setItem(item);
+            itemInstance.setState(ItemState.AVAILABLE);
 //          long x=Long.parseLong();
-        itemInstance.setId(instanceDTO.getSerialNumber());
+            itemInstance.setId(instanceDTO.getSerialNumber());
 
 
-        // Save the item instances
-        itemInstanceRepository.save(itemInstance);
+            // Save the item instances
+            itemInstanceRepository.save(itemInstance);
 //        ItemInstance savedItemInstances = itemInstanceRepository.save(itemInstance);
 
-        // Update the item with the new instances
-        item.getItemInstances().add(itemInstance);
+            // Update the item with the new instances
+            item.getItemInstances().add(itemInstance);
+        }
         itemRepository.save(item);
 
 //        return savedItemInstances.stream()
@@ -180,6 +191,7 @@ public class ItemService {
 
         return itemDTO.builder()
                 .id(item.getId())
+                .forBorrow(item.isForBorrow())
                 .name(item.getName())
                 .description(item.getDescription())
                 .quantity(item.getItemInstances().size())

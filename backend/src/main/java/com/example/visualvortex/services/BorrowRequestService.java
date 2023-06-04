@@ -48,9 +48,9 @@ public class BorrowRequestService {
 
     }
 
-    public List<BorrowRequestDTO> getPendingRequestsByItemInstance(Long itemInstanceId) {
-        return null;
-    }
+    // public List<BorrowRequestDTO> getPendingRequestsByItemInstance(Long itemInstanceId) {
+    //     return null;
+    // }
 
     public BorrowRequestDTO createBorrowRequest2(Map<String, Object> borrowRequestData) {
         Long userId = Long.parseLong(borrowRequestData.get("userId").toString());

@@ -22,3 +22,6 @@ frontend/.idea/inspectionProfiles/Project_Default.xml
 backend/src/main/resources/META-INF/MANIFEST.MF
 backend/.mvn/wrapper/maven-wrapper.properties
 .gitignore
+.idea/qaplug_profiles.xml
+.idea/$PROJECT_FILE$
+.idea/V-Warehouse-1.iml

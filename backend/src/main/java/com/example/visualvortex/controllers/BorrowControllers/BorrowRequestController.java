@@ -34,12 +34,12 @@ public class BorrowRequestController {
         return borrowRequestService.getAllRequests();
     }
 
-    @GetMapping("/borrow-requests/pending/{itemInstanceId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<BorrowRequestDTO> getPendingRequestsByItemInstance(@PathVariable Long itemInstanceId) {
-        return borrowRequestService.getPendingRequestsByItemInstance(itemInstanceId);
-
-    }
+//    @GetMapping("/borrow-requests/pending/{itemInstanceId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<BorrowRequestDTO> getPendingRequestsByItemInstance(@PathVariable Long itemInstanceId) {
+//        return borrowRequestService.getPendingRequestsByItemInstance(itemInstanceId);
+//
+//    }
 
  //delete
     @PostMapping("/borrow-requests")

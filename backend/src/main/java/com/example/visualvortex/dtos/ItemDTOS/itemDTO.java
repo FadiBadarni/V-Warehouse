@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 public class itemDTO {
     private long id;
+    private  boolean forBorrow;
     private String name;
     private String description;
     private int quantity;
