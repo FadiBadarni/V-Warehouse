@@ -34,7 +34,8 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = new String[]{
             "/",
             "/api/login",
-            "/api/logout"
+            "/api/logout",
+            "/actuator/*"
     };
 
     @Bean

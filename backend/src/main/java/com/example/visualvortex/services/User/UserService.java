@@ -40,10 +40,15 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return Optional.ofNullable(repository.findByUsername(username))
-                .orElseThrow(() -> new UsernameNotFoundException("Did not find user with username: " + username));
-    }
+        User user = Optional.ofNullable(repository.findByUsername(username))
+                .orElseGet(() -> repository.findByIdNumber(username));
 
+        if (user == null) {
+            throw new UsernameNotFoundException("Did not find user with username: " + username);
+        }
+
+        return user;
+    }
     public Optional<UserDetails> authenticateUser(String username, String password) {
         UserDetails userDetails = loadUserByUsername(username);
         return passwordEncoder.matches(password, userDetails.getPassword()) ? Optional.of(userDetails) : Optional.empty();
@@ -84,10 +89,15 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void registerUser(String email, String username, int year, String password) {
+    public void registerUser(String email, String username, int year, String password,String id,String phone) {
         Optional<User> user = repository.findByEmail(email);
         if (user.isPresent()) {
             LOGGER.error("User already exists: {}", email);
+            return;
+        }
+         user = Optional.ofNullable(repository.findByIdNumber(email));
+        if (user.isPresent()) {
+            LOGGER.error("User already exists: {}", id);
             return;
         }
 
@@ -99,9 +109,14 @@ public class UserService implements UserDetailsService {
                     year(year).
                     password(encodePassword(password)).
                     role(UserRole.USER).
+                    idNumber(id).
+                    phoneNumber(phone).
                     build();
 
-            repository.save(newUser);
+
+                repository.save(newUser);
+
+
 
             LOGGER.info("Registered user: {}", email);
         } catch (Exception e) {
@@ -134,17 +149,40 @@ public class UserService implements UserDetailsService {
         Cell usernameCell = row.getCell(1);
         Cell yearCell = row.getCell(2);
         Cell passwordCell = row.getCell(3);
-        if (emailCell != null && passwordCell != null && usernameCell != null && yearCell != null) {
+        Cell idCell = row.getCell(4);
+        Cell phoneCell = row.getCell(5);
+
+        if (emailCell != null && passwordCell != null && usernameCell != null && yearCell != null && idCell!=null && phoneCell !=null ) {
             String email = emailCell.getStringCellValue();
             String username = usernameCell.getStringCellValue();
             int year = Integer.parseInt(String.valueOf((int) yearCell.getNumericCellValue()));
             String password = "";
+            String id = "";
+            String phone = "";
             if (passwordCell.getCellType() == CellType.NUMERIC) {
                 password = Integer.toString((int) passwordCell.getNumericCellValue());
             } else if (passwordCell.getCellType() == CellType.STRING) {
                 password = passwordCell.getStringCellValue();
             }
-            registerUser(email, username, year, password);
+            if (idCell.getCellType() == CellType.NUMERIC) {
+                id = Integer.toString((int) idCell.getNumericCellValue());
+                if(id.length()!=9  && id.length()!=8)
+                    LOGGER.error("Missing data in row {}", row.getRowNum());
+            } else if (idCell.getCellType() == CellType.STRING) {
+                id = idCell.getStringCellValue();
+                if(id.length()!=9  && id.length()!=8)
+                    LOGGER.error("Missing data in row {}", row.getRowNum());
+            }
+            if (phoneCell.getCellType() == CellType.NUMERIC) {
+                phone = Integer.toString((int) phoneCell.getNumericCellValue());
+                if(phone.length()!=9  && phone.length()!=10)
+                    LOGGER.error("Missing data in row {}", row.getRowNum());
+            } else if (phoneCell.getCellType() == CellType.STRING) {
+                phone = phoneCell.getStringCellValue();
+                if(phone.length()!=9  && phone.length()!=10)
+                    LOGGER.error("Missing data in row {}", row.getRowNum());
+            }
+            registerUser(email, username, year, password,id,phone);
         } else {
             LOGGER.error("Missing data in row {}", row.getRowNum());
         }

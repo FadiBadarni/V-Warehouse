@@ -28,7 +28,7 @@ public class Item {
     private ItemType itemType;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
-    private List<ItemInstance> itemInstances = new ArrayList<>();;
+    private List<ItemInstance> itemInstances = new ArrayList<>();
 
 
 }

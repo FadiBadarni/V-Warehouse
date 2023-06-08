@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class itemDTO {
+public class ItemDTO {
     private long id;
     private  boolean forBorrow;
     private String name;

@@ -1,28 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getWarehouseItems } from "../../api/WarehouseService";
+import { getWarehouseRoomItems } from "../../../api/WarehouseService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { translateText } from "../../api/TranslationService";
-import { fetchedItemTypes } from "../../api/WarehouseService";
-import Items from "./Items";
+import { translateText } from "../../../api/TranslationService";
+import { fetchedItemTypes } from "../../../api/WarehouseService";
+import Items from "../Items";
 import Skeleton from "@mui/material/Skeleton";
-import "./Warehouse.scss";
+import "./Room.scss";
 
-const Warehouse = () => {
+const Room = () => {
   const { isAuthenticated, loading, handleTokenExpired } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
-
   const [tags, setTags] = useState(["All"]);
-
   const { t, i18n } = useTranslation("warehouse");
-
   const fetchItems = useCallback(async () => {
     if (isAuthenticated) {
       try {
-        const warehouseItems = await getWarehouseItems();
+        const warehouseItems = await getWarehouseRoomItems();
 
         const newTags = await fetchedItemTypes();
         setTags(["All", ...newTags]);
@@ -125,4 +122,4 @@ const Warehouse = () => {
   );
 };
 
-export default Warehouse;
+export default Room;

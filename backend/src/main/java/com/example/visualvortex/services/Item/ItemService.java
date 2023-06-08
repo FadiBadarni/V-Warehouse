@@ -157,14 +157,14 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public itemDTO getItemByName(String name) {
+    public ItemDTO getItemByName(String name) {
         Item item = itemRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchElementException("Inventory item not found with name: " + name));
 
         return itemToItemDTO(item);
     }
 
-    public itemDTO itemToItemDTO(Item item) {
+    public ItemDTO itemToItemDTO(Item item) {
         ItemType itemType = item.getItemType();
 
 
@@ -193,7 +193,7 @@ public class ItemService {
                 .filter(instance -> instance.getState() == ItemState.AVAILABLE)
                 .count();
 
-        return itemDTO.builder()
+        return ItemDTO.builder()
                 .id(item.getId())
                 .forBorrow(item.isForBorrow())
                 .name(item.getName())

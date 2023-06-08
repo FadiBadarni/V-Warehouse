@@ -2,7 +2,7 @@ package com.example.visualvortex.controllers.AdminControllers;
 
 import com.example.visualvortex.dtos.ItemDTOS.InstanceDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemInstanceDTO;
-import com.example.visualvortex.dtos.ItemDTOS.itemDTO;
+import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
 import com.example.visualvortex.entities.User.User;
 import com.example.visualvortex.services.Item.ItemInstanceService;
 import com.example.visualvortex.services.Item.ItemService;
@@ -51,7 +51,7 @@ public class ItemManagementController {
     @GetMapping("/item-by-name/{name}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public itemDTO getItemByName(@PathVariable String name) {
+    public ItemDTO getItemByName(@PathVariable String name) {
         return itemService.getItemByName(name);
     }
 

@@ -31,6 +31,14 @@ public class User implements Serializable, UserDetails {
 
     @Column(unique = true, nullable = false)
     @NotBlank
+    private String idNumber;
+
+    @Column(unique = true, nullable = false)
+    @NotBlank
+    private String phoneNumber;
+
+    @Column(unique = true, nullable = false)
+    @NotBlank
     private String username;
     
     private Integer year = 0;

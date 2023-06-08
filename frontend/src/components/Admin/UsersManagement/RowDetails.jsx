@@ -64,14 +64,12 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
         animate="open"
         exit="closed"
         transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
-        colSpan={6}
-      >
+        colSpan={6}>
         <a.div style={trailProps[0]}>
           <Box className="users-table__expanded-row__content">
             <Typography
               className="users-table__expanded-row__title"
-              variant="h6"
-            >
+              variant="h6">
               User Details
             </Typography>
             <Box className="users-table__expanded-row__details">
@@ -79,7 +77,13 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                 disabled
                 id="outlined-disabled"
                 label="ID"
-                value={user.id}
+                value={user.idNumber}
+              />
+              <TextField
+                disabled
+                id="outlined-disabled"
+                label="phoneNumber"
+                value={"0" + user.phoneNumber}
               />
               <TextField
                 label="Email"
@@ -98,8 +102,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                 <Select
                   labelId="year-select-label"
                   value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                >
+                  onChange={(e) => setYear(e.target.value)}>
                   <MenuItem value={null}>None</MenuItem>
                   <MenuItem value={1}>1</MenuItem>
                   <MenuItem value={2}>2</MenuItem>
@@ -107,23 +110,22 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                   <MenuItem value={4}>4</MenuItem>
                 </Select>
               </FormControl>
+              <FormControl className="users-table__expanded-row__role-select">
+                <InputLabel id="role-select-label">Role</InputLabel>
+                <Select
+                  labelId="role-select-label"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  inputProps={{
+                    name: "role",
+                    id: "uncontrolled-native",
+                  }}>
+                  <MenuItem value={"ADMIN"}>ADMIN</MenuItem>
+                  <MenuItem value={"USER"}>USER</MenuItem>
+                  <MenuItem value={"TEACHER"}>TEACHER</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
-            <FormControl className="users-table__expanded-row__role-select">
-              <InputLabel id="role-select-label">Role</InputLabel>
-              <Select
-                labelId="role-select-label"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                inputProps={{
-                  name: "role",
-                  id: "uncontrolled-native",
-                }}
-              >
-                <MenuItem value={"ADMIN"}>ADMIN</MenuItem>
-                <MenuItem value={"USER"}>USER</MenuItem>
-                <MenuItem value={"TEACHER"}>TEACHER</MenuItem>
-              </Select>
-            </FormControl>
             <Box className="users-table__expanded-row__actions">
               <Button
                 variant="contained"
@@ -133,8 +135,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                   event.stopPropagation();
                   updateUser({ id: user.id, email, username, role, year });
                 }}
-                disabled={!hasChanged}
-              >
+                disabled={!hasChanged}>
                 UPDATE
               </Button>
               <Button
@@ -144,8 +145,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                 onClick={(event) => {
                   event.stopPropagation();
                   handleDelete(user);
-                }}
-              >
+                }}>
                 DELETE
               </Button>
             </Box>

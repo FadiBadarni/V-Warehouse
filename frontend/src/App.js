@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import Faqs from "./components/Faqs/Faqs";
 import Terms from "./components/Terms/Terms";
 import Contact from "./components/Contact/Contact";
+import Select from "./components/Warehouse/Select";
 
 function App() {
   const { i18n } = useTranslation();
@@ -54,6 +55,7 @@ function App() {
           <Route path="/warehouse" element={<Warehouse />} />
           <Route path="/warehouse/item/:id" element={<ItemReservation />} />
           <Route path="/warehouse/items/:ids" element={<ItemReservation />} />
+          <Route path="/select" element={<Select />} />
 
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/item-list" element={<ItemList />} />
@@ -70,8 +72,7 @@ function App() {
       <Modal
         open={showTokenExpiredModal}
         onClose={handleCloseModal}
-        size="tiny"
-      >
+        size="tiny">
         <Modal.Header>Session Expired</Modal.Header>
         <Modal.Content>
           <p>Your session has expired. Please log in again.</p>

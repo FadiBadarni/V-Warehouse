@@ -84,8 +84,7 @@ const Navbar = ({ children }) => {
       variants={navItemVariant}
       initial="initial"
       animate="animate"
-      exit="exit"
-    >
+      exit="exit">
       <Link to={to}>{children}</Link>
     </motion.li>
   );
@@ -107,8 +106,7 @@ const Navbar = ({ children }) => {
               initial="closed"
               animate="open"
               exit="closed"
-              variants={menuVariants}
-            >
+              variants={menuVariants}>
               <button className="close-button" onClick={handleCloseButtonClick}>
                 &times;
               </button>
@@ -118,21 +116,18 @@ const Navbar = ({ children }) => {
                 </MobileMenuItem>
                 <MobileMenuItem
                   onClick={handleMobileMenuItemClick}
-                  to="/warehouse"
-                >
+                  to="/warehouse">
                   {t("navbar.warehouse")}
                 </MobileMenuItem>
                 <MobileMenuItem
                   onClick={handleMobileMenuItemClick}
-                  to="/dashboard"
-                >
+                  to="/dashboard">
                   {t("navbar.dashboard")}
                 </MobileMenuItem>
                 {!isAuthenticated && (
                   <MobileMenuItem
                     onClick={handleMobileMenuItemClick}
-                    to="/auth/login"
-                  >
+                    to="/auth/login">
                     {t("navbar.login")}
                   </MobileMenuItem>
                 )}
@@ -141,8 +136,7 @@ const Navbar = ({ children }) => {
                     {isAdmin && (
                       <MobileMenuItem
                         onClick={handleMobileMenuItemClick}
-                        to="/admin"
-                      >
+                        to="/admin">
                         {t("navbar.admin")}
                       </MobileMenuItem>
                     )}
@@ -151,8 +145,7 @@ const Navbar = ({ children }) => {
                     </MobileMenuItem>
                     <MobileMenuItem
                       onClick={handleMobileMenuItemClick}
-                      to="/auth/logout"
-                    >
+                      to="/auth/logout">
                       {t("navbar.logout")}
                     </MobileMenuItem>
                   </>
@@ -166,7 +159,7 @@ const Navbar = ({ children }) => {
             <Link to="/">{t("navbar.home")}</Link>
           </motion.li>
           <motion.li variants={navItemVariant}>
-            <Link to="/warehouse">{t("navbar.warehouse")}</Link>
+            <Link to="/select">{t("navbar.warehouse")}</Link>
           </motion.li>
           <motion.li variants={navItemVariant}>
             <Link to="/dashboard">{t("navbar.dashboard")}</Link>
@@ -183,21 +176,18 @@ const Navbar = ({ children }) => {
               {isAdmin && (
                 <motion.li
                   onClick={handleMobileMenuItemClick}
-                  variants={navItemVariant}
-                >
+                  variants={navItemVariant}>
                   <Link to="/admin">{t("navbar.admin")}</Link>
                 </motion.li>
               )}
               <motion.li
                 className="notification-icon"
-                variants={navItemVariant}
-              >
+                variants={navItemVariant}>
                 <Badge
                   color="error"
                   badgeContent={unreadNotifications.length}
                   max={99}
-                  onClick={handleNotificationClick}
-                >
+                  onClick={handleNotificationClick}>
                   <NotificationsIcon
                     className={`bell-icon${
                       unreadNotifications.length ? " active" : ""

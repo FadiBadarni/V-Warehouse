@@ -1,0 +1,123 @@
+@import "../../variables";
+@import "../../directions";
+
+.select-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 30px;
+  text-align: center;
+  background-image: url("../../assets/404-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    padding: 20px;
+    position: absolute;
+    color: $sce-text-color;
+    background-color: $sce-primary-color;
+    border-radius: 60px;
+    font-size: 36px;
+    box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.36);
+    position: fixed;
+    top: 38px; /* Adjust this value to move the .title element up */
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    z-index: 2;
+    transition: color 0.3s ease;
+  }
+  .photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: fixed;
+    top: 120px;
+
+    .gallery-item {
+      position: relative;
+      flex: 1;
+      cursor: pointer;
+      margin: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.36);
+      background-color: $sce-primary-color;
+      transition: border-color 0.3s ease, transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+      &.selected {
+        // transform: scale(1.2);
+        z-index: 1;
+        border: 2px solid green;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(1);
+        transition: filter 0.3s ease;
+        border: 2px solid $sce-primary-color;
+        border-radius: 30px;
+        filter: brightness(0.6);
+      }
+
+      .overlay-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        color: $sce-text-color;
+        font-weight: bold;
+        background-color: $sce-primary-color;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 20px;
+        font-size: 24px;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 12px 6px rgba(0, 0, 0, 0.185);
+      }
+
+      &:hover img {
+        filter: brightness(1);
+      }
+
+      &:hover .overlay-text {
+        opacity: 1;
+      }
+    }
+  }
+
+  .selected-photo {
+    margin-top: 20px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 767px) {
+    .photo-gallery {
+      flex-direction: column;
+
+      .gallery-item {
+        margin: 30px 0;
+      }
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  }
+}
