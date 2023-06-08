@@ -7,7 +7,9 @@ import { translateText } from "../../api/TranslationService";
 import { fetchedItemTypes } from "../../api/WarehouseService";
 import Items from "./Items";
 import Skeleton from "@mui/material/Skeleton";
-import studioRoomImage from "../../assets/studio_room.png";
+import Fab from "@mui/material/Fab";
+import RoomIcon from "@mui/icons-material/Room";
+import { Link } from "react-router-dom";
 
 import "./Warehouse.scss";
 
@@ -17,19 +19,9 @@ const Warehouse = () => {
   const [items, setItems] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
 
-  const [isHovered, setIsHovered] = useState(false);
-
   const [tags, setTags] = useState(["All"]);
 
   const { t, i18n } = useTranslation("warehouse");
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
 
   const fetchItems = useCallback(async () => {
     if (isAuthenticated) {
@@ -75,10 +67,6 @@ const Warehouse = () => {
       fetchItems();
     }
   }, [isAuthenticated, navigate, loading, i18n.language, fetchItems]);
-
-  const handleClick = () => {
-    window.location.href = "../warehouse/items/ROOM";
-  };
 
   if (loading) {
     return (
@@ -129,29 +117,26 @@ const Warehouse = () => {
               className={`warehouse__tag-button ${
                 selectedTag === tag ? "warehouse__tag-button--selected" : ""
               }`}
-              onClick={() => setSelectedTag(tag === "All" ? null : tag)}>
+              onClick={() => setSelectedTag(tag === "All" ? null : tag)}
+            >
               {tag}
             </button>
           ))}
         </div>
 
         <Items items={items} selectedTag={selectedTag} />
-      </div>
 
-      <button
-        className={`floating-button ${isHovered ? "hovered" : ""}`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleClick}>
-        <div className="button-container">
-          <img
-            src={studioRoomImage}
-            alt="Button Icon"
-            className={`button-icon ${isHovered ? "no-animation" : ""}`}
-          />
-          {isHovered && <span className="button-text">STUDIO ROOM</span>}
-        </div>
-      </button>
+        <Fab
+          component={Link}
+          to="/warehouse/items/2852"
+          aria-label="add"
+          className="fab"
+          variant="extended"
+        >
+          <RoomIcon />
+          <span className="fab-text">Reserve Room</span>
+        </Fab>
+      </div>
     </div>
   );
 };

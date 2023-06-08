@@ -1,0 +1,15 @@
+{
+    "terms": {
+      "title": "Terms and Conditions",
+      "generalTermsTitle": "1. General Terms",
+      "generalTermsContent": "By accessing and using this platform, you accept and agree to be bound by the terms and conditions contained herein. The platform reserves the right to modify these terms and conditions without prior notice.",
+      "accountRegistrationTitle": "2. Account Registration",
+      "accountRegistrationContent": "You must register for an account on this platform to access its services. By registering, you agree to provide accurate, current, and complete information about yourself.",
+      "equipmentRentalTitle": "3. Equipment Rental",
+      "equipmentRentalContent": "Equipment rentals are subject to availability and approval by the warehouse manager. You are responsible for the equipment from the time of rental until it is returned. You must return the equipment in the same condition as when it was rented, or you may be held liable for the cost of repair or replacement.",
+      "lateReturnsTitle": "4. Late Returns",
+      "lateReturnsContent": "Late returns are subject to penalties as outlined in our Late Return Policy. You are responsible for returning equipment on time and may be charged additional fees for late returns.",
+      "liabilityTitle": "5. Liability",
+      "liabilityContent": "The platform is not liable for any damages or losses resulting from the use of its services, including the rental of equipment. You agree to indemnify and hold harmless the platform and its affiliates from any claims, damages, or losses resulting from your use of the platform."
+    }
+}

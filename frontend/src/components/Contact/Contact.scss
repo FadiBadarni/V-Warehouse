@@ -1,22 +1,27 @@
 @import '../../variables';
 
-
-
 .contact {
+    position: relative;
+    width: 100%; // Ensures that the component takes the full width of its parent
+    min-height: 100%; // Ensures that the component takes at least the full height of its parent
     padding: 2rem;
-    max-width: 1200px;
     margin: 0 auto;
+    background-image: url('../../assets/404-bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat; // Prevents the image from repeating
+    height: 100vh;
 
     &__content {
         max-width: 1200px;
         margin: 0 auto;
-
     }
 
     &__title {
         text-align: center;
         margin-top: 2rem !important;
         margin-bottom: 2rem !important;
+
     }
 
     &__info {
@@ -60,6 +65,10 @@
     .MuiTextField-root {
         background-color: $sce-background-color;
         margin-bottom: 1rem;
+
+        .MuiInputAdornment-root {
+            color: $sce-secondary-color;
+        }
     }
 
     .MuiInputBase-input {

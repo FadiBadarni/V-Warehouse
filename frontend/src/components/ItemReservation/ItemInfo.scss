@@ -1,5 +1,5 @@
 @import "../../variables";
-@import "../../directions";
+@import '../../directions';
 
 .item-info {
   background-color: darken(
@@ -14,64 +14,75 @@
   width: 100%;
   margin-bottom: 30px;
 
-  &__title {
-    color: $sce-primary-color;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
+    &.room {}
 
-  &__description {
-    color: black !important;
-
-    .ltr & {
-      font-size: 1rem;
-
-      @media screen and (max-width: $breakpoint-small) {
-        font-size: 1.1rem;
-      }
+    &__title {
+        color: $sce-primary-color;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
     }
 
-    .rtl & {
-      font-size: 1rem;
+    &__description {
+        color: black !important;
 
-      @media screen and (max-width: $breakpoint-small) {
-        font-size: 1.2rem;
-      }
+        .ltr & {
+            font-size: 1rem;
+
+            @media screen and (max-width: $breakpoint-small) {
+                font-size: 1.1rem;
+
+            }
+        }
+
+        .rtl & {
+            font-size: 1rem;
+
+            @media screen and (max-width: $breakpoint-small) {
+                font-size: 1.2rem;
+
+            }
+        }
+
+
     }
-  }
 
-  &__image-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    overflow: hidden;
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
-  }
+    &__image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        overflow: hidden;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
 
-  &__attribute-chip {
-    margin: 0 8px 8px 0;
-    padding: 4px 8px;
-    border-radius: 10%;
-    border: 1px solid $sce-primary-color !important;
-    background-color: $sce-background-color;
-    font-size: 14px;
-    font-weight: 500;
-    color: $sce-secondary-color;
-    display: inline-flex;
-    align-items: center;
-    margin-top: 0.3rem;
-    width: 100%;
-
-    &:hover {
-      cursor: pointer;
-      background-color: #f5f5f5;
     }
-  }
 
-  .MuiTypography-subtitle1 {
-    font-weight: 600;
-    text-transform: capitalize;
-  }
+    &__attribute-chip {
+        margin: 0 8px 8px 0;
+        padding: 4px 8px;
+        border-radius: 10%;
+        border: 1px solid $sce-primary-color !important;
+        background-color: $sce-background-color;
+        font-size: 14px;
+        font-weight: 500;
+        color: $sce-secondary-color;
+        display: inline-flex;
+        align-items: center;
+        margin-top: 0.3rem;
+        width: 100%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #f5f5f5;
+        }
+
+
+
+    }
+
+    .MuiTypography-subtitle1 {
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
 }

@@ -5,7 +5,12 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import InputAdornment from "@mui/material/InputAdornment";
 import emailjs from "emailjs-com";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import MessageIcon from "@mui/icons-material/Message";
+import SendIcon from "@mui/icons-material/Send";
 import "./Contact.scss";
 
 const Contact = () => {
@@ -67,6 +72,13 @@ const Contact = () => {
                     id="name"
                     name="name"
                     label="Name"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AccountCircleIcon />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     variant="outlined"
@@ -80,6 +92,13 @@ const Contact = () => {
                     id="email"
                     name="email"
                     label="Email"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailIcon />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     variant="outlined"
@@ -93,6 +112,13 @@ const Contact = () => {
                     id="message"
                     name="message"
                     label="Message"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <MessageIcon />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     variant="outlined"
@@ -109,6 +135,7 @@ const Contact = () => {
                     color="primary"
                     type="submit"
                     className="contact__form-submit"
+                    startIcon={<SendIcon />}
                   >
                     Send Message
                   </Button>

@@ -11,8 +11,9 @@ import {
   Select,
   useTheme,
 } from "@mui/material";
-import "./RowDetails.scss";
+import "./RowDetailsQR.scss";
 import UserInfo from "./UserInfo";
+import { useTranslation } from "react-i18next";
 
 function ErrorModal(props) {
   return (
@@ -38,6 +39,8 @@ const RowDetailsQR = ({
   setAcceptButtonIsDisable,
   setReturnButtonIsDisable,
 }) => {
+  const { t } = useTranslation("rowDetailsQR");
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -115,7 +118,7 @@ const RowDetailsQR = ({
               if (prevScans.length === request.itemInstanceIds.length - 1) {
                 setReturnButtonIsDisable(false);
               } else setReturnButtonIsDisable(true);
-            
+
               return [...prevScans, data];
             } else {
               return prevScans;
@@ -147,92 +150,113 @@ const RowDetailsQR = ({
   const separator = <hr key="separator" />;
 
   return (
-    <Box className="expanded-row">
-      <Typography className="expanded-row__title" variant="h6">
-        Request No. {request.requestId}
+    <Box className="inner-row">
+      <Typography className="inner-row__title" variant="h6">
+        {t("rowDetailsQR.requestNo")} {request.requestId}
       </Typography>
-      <Box className="expanded-row__content">
-        <Box className="expanded-row__info">
-          {allItemIds.join(" ")}
-          <Typography className="expanded-row__instance__title">
-            {items.length}
-          </Typography>
-          <Typography className="expanded-row__instance__title">
-            Requested Item Info
-          </Typography>
-          {activeTab === 1 && (
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={items}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}>
-                {allInstances.flatMap((instanceList, index) => [
-                  ...instanceList.map((item) => (
-                    <MenuItem key={item.id} value={item.id}>
-                      {item.id}
-                    </MenuItem>
-                  )),
-                  index < allInstances.length - 1 ? separator : null,
-                ])}
-              </Select>
-            </FormControl>
-          )}
-          {activeTab === 2 && (
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={items}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}>
-                {request.itemInstanceIds
-                  ? request.itemInstanceIds.map((name) => (
-                      <MenuItem
-                        key={name}
-                        value={name}
-                        style={getStyles(name, items, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))
-                  : request.itemInstanceIds.map((name) => (
-                      <MenuItem
-                        key={name}
-                        value={name}
-                        style={getStyles(name, items, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-              </Select>
-            </FormControl>
-          )}
-          <div style={{ width: "300px", height: "300px" }}>
-            <QrReader onResult={handleResultQRChange} delay={500} />
-          </div>
-          {error && <ErrorModal title={error.title} message={error.message} />}
+      <Box className="inner-row__content">
+        <Box className="inner-row__info">
+          <Box className="form-control-container">
+            <Typography className="helper-text" display="block" gutterBottom>
+              {t("rowDetailsQR.addItemsManually")}
+            </Typography>
+            {activeTab === 1 && (
+              <Box className="form-control">
+                <FormControl sx={{ m: 1, width: 300 }}>
+                  <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
+                  <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={items}
+                    onChange={handleChange}
+                    input={
+                      <OutlinedInput id="select-multiple-chip" label="Chip" />
+                    }
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {allInstances.flatMap((instanceList, index) => [
+                      ...instanceList.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.id}
+                        </MenuItem>
+                      )),
+                      index < allInstances.length - 1 ? separator : null,
+                    ])}
+                  </Select>
+                </FormControl>
+              </Box>
+            )}
+            {activeTab === 2 && (
+              <Box className="form-control">
+                <FormControl sx={{ m: 1, width: 300 }}>
+                  <InputLabel id="demo-multiple-chip-label">Item</InputLabel>
+                  <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={items}
+                    onChange={handleChange}
+                    input={
+                      <OutlinedInput id="select-multiple-chip" label="Chip" />
+                    }
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {request.itemInstanceIds
+                      ? request.itemInstanceIds.map((name) => (
+                          <MenuItem
+                            key={name}
+                            value={name}
+                            style={getStyles(name, items, theme)}
+                          >
+                            {name}
+                          </MenuItem>
+                        ))
+                      : request.itemInstanceIds.map((name) => (
+                          <MenuItem
+                            key={name}
+                            value={name}
+                            style={getStyles(name, items, theme)}
+                          >
+                            {name}
+                          </MenuItem>
+                        ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            )}
+          </Box>
+          <Box className="qr-reader-container">
+            <Box className="qr-reader-box">
+              <Typography className="helper-text" display="block" gutterBottom>
+                {t("rowDetailsQR.scanQRCode")}
+              </Typography>
+              <QrReader onResult={handleResultQRChange} delay={500} />
+              {error && (
+                <Box className="error-modal-box">
+                  <ErrorModal title={error.title} message={error.message} />
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box className="user-info-container">
+            <UserInfo request={request} user={user} />
+          </Box>
         </Box>
-        <UserInfo request={request} user={user} />
       </Box>
     </Box>
   );

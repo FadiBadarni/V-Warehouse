@@ -54,14 +54,16 @@ const RowDetails = ({ request, user }) => {
             )}
           </div>
           <div>
-            {t("rowDetails.borrowingReason")} {request.borrowingReason}
+            {t("rowDetails.requestStatus")} {request.status}
           </div>
           <div>
-            {t("rowDetails.requestStatus")} {request.status}
+            {t("rowDetails.borrowingReason")} {request.borrowingReason}
           </div>
         </div>
       </Box>
-      <UserInfo request={request} user={user} />
+      <Box className="user-info">
+        <UserInfo request={request} user={user} />
+      </Box>
     </Box>
   );
 };

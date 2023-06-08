@@ -30,7 +30,6 @@ const RequestsTableRow = ({
   expandedRow,
   user,
   handleRowClick,
-  setExpandedRow,
   showState,
   activeTab,
 }) => {
@@ -99,14 +98,7 @@ const RequestsTableRow = ({
         sx={{ cursor: "pointer" }}
       >
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={(event) => {
-              event.stopPropagation();
-              setExpandedRow(expandedRow === index ? -1 : index);
-            }}
-          >
+          <IconButton aria-label="expand row" size="small">
             {expandedRow === index ? (
               <KeyboardArrowUp />
             ) : (

@@ -27,90 +27,86 @@ const ItemInfo = ({ fetchedItems }) => {
   if (!fetchedItems || fetchedItems.length === 0) {
     return <div>{t("itemReservation.loading")}</div>;
   }
-  if (fetchedItems === "ROOM") {
-    return (
-      <div className="full-view-photo-container">
-        <div className="photo-frame">
-          <div className="photo-shadow"></div>
-          <img
-            src="https://images.squarespace-cdn.com/content/v1/50e46031e4b0c2f49772822a/1630428519904-ZQW72DBGNYD34XWG6D7T/234387297_10158952489934681_538939411794666493_n.jpg?format=1000w"
-            alt="Full View Photo"
-            className="full-view-photo"
-          />
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <Grid container spacing={4}>
-        {fetchedItems.map((item) => (
-          <Grid item xs={12} sm={6} md={4} key={item.id}>
-            <Card className="item-info">
-              <CardActionArea>
-                <div className="item-info__image-container">
-                  <Magnifier
-                    src={
-                      images[
-                        item.name
-                          .trim()
-                          .toLowerCase()
-                          .replace(/ /g, "_")
-                          .replace(/-/g, "_")
-                      ] || images.notFound
-                    }
-                    width="100%"
-                    mgWidth={150}
-                    mgHeight={150}
-                    className="item-info__image"
-                  />
-                </div>
-              </CardActionArea>
+  console.log(fetchedItems);
 
-              <CardContent>
-                <Typography variant="h6" component="h2" gutterBottom>
-                  {t("itemReservation.itemInfoTitle")}
-                  {item.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  className="item-info__description"
-                  color="textSecondary"
-                  component="p"
-                  gutterBottom>
-                  {t("itemReservation.itemDescription")}
-                  {item.description}
-                </Typography>
-                <Box>
-                  {item.itemType &&
-                  item.itemType.attributes &&
-                  item.itemType.attributes.length > 0
-                    ? item.itemType.attributes
-                        .filter(
-                          (attr) =>
-                            attr.attributeName.trim() !== "" &&
-                            attr.attributeValue.trim() !== ""
-                        )
-                        .map((attr) => (
-                          <Chip
-                            key={attr.id}
-                            icon={
-                              attributeIcons[attr.attributeName] ||
-                              attributeIcons.default
-                            }
-                            label={`${attr.attributeName} ${attr.attributeValue}`}
-                            className="item-info__attribute-chip"
-                            variant="outlined"
-                          />
-                        ))
-                    : null}
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  }
+  return (
+    <Grid container spacing={4}>
+      {fetchedItems.map((item) => (
+        <Grid
+          item
+          xs={12}
+          sm={item.name === "Studio Room" ? 12 : 6}
+          md={item.name === "Studio Room" ? 12 : 4}
+          key={item.id}
+        >
+          <Card
+            className={`item-info ${item.name === "Studio Room" ? "room" : ""}`}
+          >
+            <CardActionArea>
+              <div className="item-info__image-container">
+                <Magnifier
+                  src={
+                    images[
+                      item.name
+                        .trim()
+                        .toLowerCase()
+                        .replace(/ /g, "_")
+                        .replace(/-/g, "_")
+                    ] || images.notFound
+                  }
+                  width="100%"
+                  mgWidth={150}
+                  mgHeight={150}
+                  className="item-info__image"
+                />
+              </div>
+            </CardActionArea>
+
+            <CardContent>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {t("itemReservation.itemInfoTitle")}
+                {item.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                className="item-info__description"
+                color="textSecondary"
+                component="p"
+                gutterBottom
+              >
+                {t("itemReservation.itemDescription")}
+                {item.description}
+              </Typography>
+              <Box>
+                {item.itemType &&
+                item.itemType.attributes &&
+                item.itemType.attributes.length > 0
+                  ? item.itemType.attributes
+                      .filter(
+                        (attr) =>
+                          attr.attributeName.trim() !== "" &&
+                          attr.attributeValue.trim() !== ""
+                      )
+                      .map((attr) => (
+                        <Chip
+                          key={attr.id}
+                          icon={
+                            attributeIcons[attr.attributeName] ||
+                            attributeIcons.default
+                          }
+                          label={`${attr.attributeName} ${attr.attributeValue}`}
+                          className="item-info__attribute-chip"
+                          variant="outlined"
+                        />
+                      ))
+                  : null}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
 
 export default ItemInfo;

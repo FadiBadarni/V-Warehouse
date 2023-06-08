@@ -34,6 +34,9 @@ i18n
       "borrowRequests",
       "dashboard",
       "adminHome",
+      "userInfo",
+      "rowDetailsQR",
+      "terms",
     ],
     defaultNS: "home",
   });
