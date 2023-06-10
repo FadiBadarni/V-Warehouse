@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+import {
+  TextField,
+  Switch,
+  Grid,
+  FormGroup,
+  FormControlLabel,
+  Button,
+} from "@mui/material";
 import {
   addEquipmentItem,
   fetchItemNames,
@@ -12,15 +19,58 @@ import Autocomplete from "@mui/material/Autocomplete";
 import QRCode from "react-qr-code";
 import QRCodePrint from "./QRCodePrint";
 import { fetchedItemTypes } from "../../../api/WarehouseService";
+import { styled } from "@mui/system";
+import NoMeetingRoomIcon from "@mui/icons-material/NoMeetingRoom";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 import "./ItemManagement.scss";
 
+const CustomSwitch = styled(Switch)(({ theme }) => ({
+  width: 64, // Switch width
+  height: 28, // Switch height
+  padding: 0,
+  "& .MuiSwitch-switchBase": {
+    padding: 1,
+    margin: 1.5, // Adjusted margin to fit smaller thumb
+    transitionDuration: "300ms",
+    "&.Mui-checked": {
+      transform: "translateX(36px)", // Ensure the thumb slides to the end
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        opacity: 1,
+        backgroundColor: "#64dd17", // Change to desired track color when switched on
+      },
+    },
+    "&.Mui-focusVisible $thumb": {
+      color: "#52d869", // Change to desired thumb color on focus
+      border: "6px solid #fff", // Add focus border to the thumb
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    width: 24, // Smaller thumb width
+    height: 24, // Smaller thumb height
+    boxShadow: "none", // Remove default shadow
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 14, // Track rounded ends
+    opacity: 1,
+    backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be", // Track color
+    boxSizing: "border-box", // Ensures consistent dimensions
+  },
+}));
+
 const EquipmentForm = () => {
+  const { t } = useTranslation("itemManagement");
+
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
   const [itemType, setItemType] = useState("");
+  const [takeOut, setTakeOut] = useState(false);
+
   const [isExistingItem, setIsExistingItem] = useState(false);
   const [generatedQRCodes, setGeneratedQRCodes] = useState([]);
 
@@ -95,6 +145,7 @@ const EquipmentForm = () => {
         setName(selectedItem.name);
         setDescription(selectedItem.description);
         setItemType(selectedItem.itemType.name);
+        setTakeOut(selectedItem.takeOut);
         if (
           selectedItem.itemType.attributes &&
           selectedItem.itemType.attributes.length > 0
@@ -116,6 +167,7 @@ const EquipmentForm = () => {
       setItemType("");
       setAttributes([{ attributeName: "", attributeValue: "" }]);
       setIsExistingItem(false);
+      setTakeOut(false);
     }
   };
 
@@ -128,6 +180,7 @@ const EquipmentForm = () => {
       description,
       itemType: { name: itemType, attributes },
       img: dataUrl,
+      takeOut,
     };
     await addEquipmentItem(item);
 
@@ -138,6 +191,7 @@ const EquipmentForm = () => {
     setAttributes([{ attributeName: "", attributeValue: "" }]);
     setIsExistingItem(false);
     setIsPrintButtonDisabled(false); // Enable the print button
+    setTakeOut(false);
 
     // Clear item names and item types to reload them on next focus
     setItemNames([]);
@@ -232,7 +286,9 @@ const EquipmentForm = () => {
   return (
     <form onSubmit={handleSubmit} className="item-management__form">
       <div
-        className={`file-uploader ${dragging ? "dragging" : ""}`}
+        className={`item-management__form__file-uploader ${
+          dragging ? "item-management__form__file-uploader--dragging" : ""
+        }`}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -243,13 +299,13 @@ const EquipmentForm = () => {
           <img
             src={dataUrl}
             alt="Selected"
-            style={{ width: "256px", height: "256px" }}
+            className="item-management__form__image"
           />
         ) : (
           <img
             src="https://fomantic-ui.com/images/wireframe/image.png"
             alt="Default"
-            style={{ width: "256px", height: "256px" }}
+            className="item-management__form__image"
           />
         )}
         <input
@@ -259,7 +315,7 @@ const EquipmentForm = () => {
           hidden
         />
       </div>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="item-management__form__grid">
         <Grid item xs={12} md={6}>
           <Autocomplete
             autoFocus
@@ -278,13 +334,47 @@ const EquipmentForm = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Item Name"
+                label={t("itemManagement.itemName")}
                 onFocus={handleNameInputClick}
                 required
               />
             )}
           />
         </Grid>
+        <Grid item xs={12} md={6}>
+          <FormGroup>
+            <Grid container alignItems="center" justify="center">
+              <FormControlLabel
+                control={
+                  <Grid container alignItems="center" justify="center">
+                    <Grid item>
+                      <Tooltip title="Item to be borrowed in the studio">
+                        <NoMeetingRoomIcon />
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <CustomSwitch
+                        checked={takeOut}
+                        onChange={(event) => setTakeOut(event.target.checked)}
+                        disabled={isExistingItem}
+                        className="item-management__toggle-switch"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Item that can be taken out">
+                        <MeetingRoomIcon />
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                }
+                label={t("itemManagement.takeoutItem")}
+                labelPlacement="top"
+                className="item-management__form__toggle-label"
+              />
+            </Grid>
+          </FormGroup>
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <Autocomplete
             fullWidth
@@ -297,30 +387,19 @@ const EquipmentForm = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Item Type"
+                label={t("itemManagement.itemType")}
                 onFocus={handleTypeInputClick}
                 onChange={(event) => setItemType(event.target.value)}
               />
             )}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            id="description"
-            label="Item Description"
-            multiline
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={isExistingItem}
-          />
-        </Grid>
+
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
             id="serialNumber"
-            label="Serial Number"
+            label={t("itemManagement.serialNumber")}
             type="text"
             value={serialNumber}
             onChange={handleSerialChange}
@@ -337,13 +416,24 @@ const EquipmentForm = () => {
               </p>
             ))}
         </Grid>
-
+        <Grid item xs={12} md={12}>
+          <TextField
+            fullWidth
+            id="description"
+            label={t("itemManagement.itemDescription")}
+            multiline
+            rows={1}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            disabled={isExistingItem}
+          />
+        </Grid>
         {attributes.map((attribute, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label={`Attribute Name ${index + 1}`}
+                label={`${t("itemManagement.attributeName")} ${index + 1}`}
                 value={attribute.attributeName}
                 onChange={(e) =>
                   handleAttributeChange(index, "attributeName", e.target.value)
@@ -354,7 +444,7 @@ const EquipmentForm = () => {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label={`Attribute Value ${index + 1}`}
+                label={`${t("itemManagement.attributeValue")} ${index + 1}`}
                 value={attribute.attributeValue}
                 onChange={(e) =>
                   handleAttributeChange(index, "attributeValue", e.target.value)
@@ -368,11 +458,10 @@ const EquipmentForm = () => {
           <Button
             onClick={addAttributeField}
             variant="outlined"
-            color="primary"
             fullWidth
             disabled={isExistingItem}
           >
-            Add Attribute
+            {t("itemManagement.addAttribute")}
           </Button>
         </Grid>
 
@@ -383,10 +472,9 @@ const EquipmentForm = () => {
             type="submit"
             className="item-management__submit-button"
             variant="contained"
-            color="primary"
             fullWidth
           >
-            Add Item
+            {t("itemManagement.addItem")}
           </Button>
         </Grid>
         <Grid item xs={12} md={6}>

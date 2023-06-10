@@ -33,49 +33,35 @@ body {
 
     &__form {
         width: 100%;
+        margin-bottom: 5rem;
 
-        .MuiGrid-container {
-            margin-bottom: 2rem;
+        &__button-root {
+            background-color: #3f51b5;
+            color: #fff;
         }
 
-        .MuiButton-root {
-            &.item-management__submit-button {
-                background-color: #3f51b5;
-                color: #fff;
+        &__file-uploader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 260px;
+            border: 1px dashed #bbb;
+            border-radius: 5px;
+            padding: 10px;
+            width: fit-content;
+            margin: 2rem auto;
 
-                &:hover {
-                    background-color: #283593;
-                }
+            &--dragging {
+                border: 1px dashed #3f51b5;
+                background-color: #f0f0f0;
             }
         }
 
-        .file-uploader {
-
-            img {}
-
-
+        &__image {
+            width: 256px;
+            height: 256px;
         }
     }
-}
 
-.MuiTypography-root {
-    &.MuiTypography-h4 {
-        margin-bottom: 1rem;
-        font-weight: 500;
-        font-size: 2rem;
-        line-height: 1.2;
-        letter-spacing: 0.00735em;
-    }
-}
 
-.MuiTextField-root {
-    & .MuiInputLabel-root {
-        font-weight: 500;
-    }
-}
-
-.MuiAutocomplete-root {
-    & .MuiInputLabel-root {
-        font-weight: 500;
-    }
 }
