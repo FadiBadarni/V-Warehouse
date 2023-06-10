@@ -63,8 +63,8 @@ const UsersManagement = () => {
 
     try {
       const result = await importUsers(formData);
-      if (result) {
-        alert("Users have been imported successfully.");
+      if (Array.isArray(result)) {
+        alert(result.join("\n"));
       } else {
         alert("Failed to import users.");
       }
@@ -72,6 +72,7 @@ const UsersManagement = () => {
       alert("Failed to import users: " + error.message);
     }
   };
+
   const [activeTab, setActiveTab] = useState(0);
   const [expandedRow, setExpandedRow] = useState(-1);
   const [users, setAllUsers] = useState([]);
@@ -136,7 +137,8 @@ const UsersManagement = () => {
           onChange={(_, newValue) => setActiveTab(newValue)}
           indicatorColor="primary"
           variant="fullWidth"
-          className="custom-tab-indicator custom-tab-text-color">
+          className="custom-tab-indicator custom-tab-text-color"
+        >
           <Tab label="Register Users" id="tab-title" />
           <Tab label="Users List" id="tab-title" />
           <Tab label="Add user" id="tab-title" />

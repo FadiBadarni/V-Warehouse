@@ -77,8 +77,8 @@ const EquipmentForm = () => {
   const [isPrintButtonDisabled, setIsPrintButtonDisabled] = useState(true);
   const [isValidSerialNumber, setIsValidSerialNumber] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [setSelectedFile] = useState(null);
+  const [setPreviewUrl] = useState(null);
   const [dataUrl, setDataUrl] = useState(null);
   const handleFileSelect = (event) => {
     const file = event.target.files[0];

@@ -57,7 +57,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
 
   return (
     <AnimatePresence>
-      <motion.td
+      <motion.div
         className="users-table__expanded-row"
         variants={animationVariants}
         initial="closed"
@@ -97,6 +97,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
                 <InputLabel id="year-select-label">Year</InputLabel>
                 <Select
                   labelId="year-select-label"
+                  label="Year"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
                 >
@@ -112,6 +113,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
               <InputLabel id="role-select-label">Role</InputLabel>
               <Select
                 labelId="role-select-label"
+                label="Role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 inputProps={{
@@ -151,7 +153,7 @@ const RowDetails = ({ user, handleDelete, updateUser }) => {
             </Box>
           </Box>
         </a.div>
-      </motion.td>
+      </motion.div>
     </AnimatePresence>
   );
 };

@@ -3,10 +3,12 @@ package com.example.visualvortex.controllers.AdminControllers;
 import com.example.visualvortex.dtos.UserRequestDto;
 import com.example.visualvortex.services.User.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,9 +18,9 @@ public class ImportUsersController {
     private final UserService userService;
 
     @PostMapping("/importUsers")
-    public ResponseEntity<?> importUsers(@RequestParam("file") MultipartFile file) {
-        userService.importUsers(file);
-        return ResponseEntity.ok("Users imported successfully");
+    public ResponseEntity<List<String>> importUsers(@RequestParam("file") MultipartFile file) {
+        List<String> results = userService.importUsers(file);
+        return ResponseEntity.ok(results);
     }
 
     @PutMapping("/{id}/role")

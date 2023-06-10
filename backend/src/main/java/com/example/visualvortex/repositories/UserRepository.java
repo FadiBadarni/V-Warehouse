@@ -15,6 +15,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
     User findByUsername(String username);
 
-//    @Query("DELETE FROM User u WHERE u.id = :id")
-//    String deleteByID(@Param("id") long id);
+    Optional<User> findById(Long id);
 }

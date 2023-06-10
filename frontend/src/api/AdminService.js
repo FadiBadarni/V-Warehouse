@@ -106,9 +106,9 @@ export const updateUser = async (id, email, username, role, year) => {
 
 export const deleteUser = async (id) => {
   return apiWrapper(
-    () => axiosInstance.put(`/delete-user/${id}`),
-    "Users imported successfully",
-    "Error importing users:"
+    () => axiosInstance.delete(`/delete-user/${id}`),
+    "User Deleted successfully",
+    "Error Deleting user:"
   );
 };
 

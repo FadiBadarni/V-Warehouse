@@ -46,7 +46,7 @@ const Items = ({ items, selectedTag, checked }) => {
             (!checked || item.takeOut)
         )
         .slice((page - 1) * perPage, page * perPage),
-    [items, selectedTag, page]
+    [items, selectedTag, page, checked]
   );
 
   const handlePageChange = (event, value) => {

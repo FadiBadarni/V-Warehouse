@@ -44,11 +44,11 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
       color: "#fff",
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor: "#64dd17", // Change to desired track color when switched on
+        backgroundColor: "#64dd17",
       },
     },
     "&.Mui-focusVisible $thumb": {
-      color: "#52d869", // Change to desired thumb color on focus
+      color: "#52d869",
       border: "6px solid #fff", // Add focus border to the thumb
     },
   },
@@ -69,7 +69,7 @@ const Warehouse = () => {
   const { isAuthenticated, loading, handleTokenExpired } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-  const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedTag] = useState(null);
   const [tags, setTags] = useState(["All"]);
   const { t, i18n } = useTranslation("warehouse");
 
@@ -77,8 +77,6 @@ const Warehouse = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   const [checked, setChecked] = useState(false);
-
-  const isRTL = ["ar", "he", "fa"].includes(i18n.language);
 
   const fetchItems = useCallback(async () => {
     if (isAuthenticated) {

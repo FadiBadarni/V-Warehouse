@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegistrationDto {
 
+    private Long id;
+
     @NotEmpty(message = "email is required")
     private String email;
     @NotEmpty

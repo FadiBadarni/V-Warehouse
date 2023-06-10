@@ -18,7 +18,19 @@ import bidirectional_sdi_hdmi_12g from "../assets/items/bidirectional_sdi_hdmi_1
 import falconeyes_rx_24tdx from "../assets/items/falconeyes_rx_24tdx.png";
 import studio_room from "../assets/items/studio_room.png";
 import sce_card from "../assets/sce_card.jpg";
-
+import rodecaster_pro_2 from "../assets/items/rodecaster_pro_2.png";
+import sm7b from "../assets/items/sm7b.png";
+import zoom_h8 from "../assets/items/zoom_h8.png";
+import atomos_sumo_19se from "../assets/items/atomos_sumo_19se.png";
+import manfrotto_befree_advanced from "../assets/items/manfrotto_befree_advanced.png";
+import manfrotto_1004bac_3 from "../assets/items/manfrotto_1004bac_3.png";
+import cp_x2510n_ef from "../assets/items/cp_x2510n_ef.png";
+import sony_uwp_d21 from "../assets/items/sony_uwp_d21.png";
+import vga from "../assets/items/vga.png";
+import sony_mdr_7506 from "../assets/items/sony_mdr_7506.png";
+import micro_hdmi from "../assets/items/micro_hdmi.png";
+import panasonic_dcs5 from "../assets/items/panasonic_dcs5.png";
+import xlr from "../assets/items/xlr.png";
 const images = {
   audio,
   action,
@@ -40,6 +52,19 @@ const images = {
   falconeyes_rx_24tdx,
   studio_room,
   sce_card,
+  rodecaster_pro_2,
+  sm7b,
+  zoom_h8,
+  atomos_sumo_19se,
+  manfrotto_befree_advanced,
+  manfrotto_1004bac_3,
+  cp_x2510n_ef,
+  sony_uwp_d21,
+  vga,
+  sony_mdr_7506,
+  micro_hdmi,
+  panasonic_dcs5,
+  xlr,
 };
 
 export default images;

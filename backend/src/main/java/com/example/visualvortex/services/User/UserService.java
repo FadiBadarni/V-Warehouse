@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -86,16 +83,22 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void registerUser(String email, String username, int year, String password) {
-        Optional<User> user = repository.findByEmail(email);
-        if (user.isPresent()) {
+    public String registerUser(Long id, String email, String username, int year, String password) {
+        Optional<User> userByEmail = repository.findByEmail(email);
+        Optional<User> userById = repository.findById(id);
+        if (userByEmail.isPresent()) {
             LOGGER.error("User already exists: {}", email);
-            return;
+            return "User already exists: " + email;
+        }
+        if (userById.isPresent()) {
+            LOGGER.error("ID already exists: {}", id);
+            return "ID already exists: " + id;
         }
 
         try {
             User newUser = User.
                     builder().
+                    id(id).
                     email(email).
                     username(username).
                     year(year).
@@ -106,37 +109,60 @@ public class UserService implements UserDetailsService {
             repository.save(newUser);
 
             LOGGER.info("Registered user: {}", email);
+            return "Registered user: " + email;
         } catch (Exception e) {
             LOGGER.error("Error registering user: {}", email, e);
+            String errorMessage = "Error registering user: " + email;
             e.printStackTrace();
+            return errorMessage;
         }
     }
 
-    public void importUsers(MultipartFile file) {
+    public List<String> importUsers(MultipartFile file) {
+        List<String> results = new ArrayList<>();
+
         try (InputStream inputStream = file.getInputStream();
              Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
-            LOGGER.info("Total rows in the sheet: {}", sheet.getPhysicalNumberOfRows());
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 Row row = sheet.getRow(i);
                 if (row != null) {
-                    processRow(row);
+                    String result = processRow(row);
+                    if (result != null) {
+                        results.add(result);
+                    }
                 } else {
                     LOGGER.error("Row {} is empty", i);
+                    results.add("Row " + i + " is empty");
                 }
-
             }
         } catch (IOException e) {
             throw new FileParsingException("Failed to parse Excel file", e);
         }
+
+        return results;
     }
 
-    private void processRow(Row row) {
-        Cell emailCell = row.getCell(0);
-        Cell usernameCell = row.getCell(1);
-        Cell yearCell = row.getCell(2);
-        Cell passwordCell = row.getCell(3);
-        if (emailCell != null && passwordCell != null && usernameCell != null && yearCell != null) {
+    private String processRow(Row row) {
+        Cell idCell = row.getCell(0);
+        Cell emailCell = row.getCell(1);
+        Cell usernameCell = row.getCell(2);
+        Cell yearCell = row.getCell(3);
+        Cell passwordCell = row.getCell(4);
+        if (idCell != null && emailCell != null && passwordCell != null && usernameCell != null && yearCell != null) {
+            String idStr = "";
+            if (idCell.getCellType() == CellType.NUMERIC) {
+                idStr = Integer.toString((int) idCell.getNumericCellValue());
+            } else if (idCell.getCellType() == CellType.STRING) {
+                idStr = idCell.getStringCellValue();
+            }
+
+            if (idStr.length() != 9) {
+                LOGGER.error("Invalid ID length in row {}", row.getRowNum());
+                return "Invalid ID length in row " + row.getRowNum();
+            }
+
+            Long id = Long.parseLong(idStr);
             String email = emailCell.getStringCellValue();
             String username = usernameCell.getStringCellValue();
             int year = Integer.parseInt(String.valueOf((int) yearCell.getNumericCellValue()));
@@ -146,9 +172,11 @@ public class UserService implements UserDetailsService {
             } else if (passwordCell.getCellType() == CellType.STRING) {
                 password = passwordCell.getStringCellValue();
             }
-            registerUser(email, username, year, password);
+
+            return registerUser(id, email, username, year, password);
         } else {
             LOGGER.error("Missing data in row {}", row.getRowNum());
+            return "Missing data in row " + row.getRowNum();
         }
     }
 
