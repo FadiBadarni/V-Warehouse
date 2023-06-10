@@ -33,7 +33,7 @@ const SearchFilters = ({
             id="outlined-basic"
             variant="outlined"
             fullWidth
-            label="Search By Category"
+            label="Search By Serial Number" // <- Here
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             InputProps={{

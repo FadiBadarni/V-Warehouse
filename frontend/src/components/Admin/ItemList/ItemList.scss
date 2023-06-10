@@ -58,80 +58,31 @@
     }
 
     .item-card {
-        display: flex;
-        flex-direction: column;
         background-color: #ffffff;
         border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.295);
         transition: all 0.3s ease;
         overflow: hidden;
-        height: 140px;
+        height: 90%;
 
         &:hover {
             transform: translateY(-5px);
         }
 
-        &__details {
-            flex: 1;
-            padding: 16px;
-
-            &__header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 8px;
-            }
-        }
-
-        &__title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333333;
-            margin: 0;
-            text-align: center;
-        }
-
         &__state {
-            font-size: 14px;
-            font-weight: 400;
-            position: relative;
-            top: 1rem;
-
             &--available {
-                color: #4caf50;
+                background-color: #4caf50;
             }
 
             &--taken {
-                color: #f44336;
+                background-color: #f44336;
             }
 
             &--damaged {
-                color: #ff5722;
+                background-color: #ff5722;
             }
 
             &--in-maintenance {
-                color: #ff9800;
-            }
-        }
-
-        &__actions {
-            padding: 8px 16px;
-            background-color: $sce-background-color;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            align-items: center;
-            justify-content: center;
-
-        }
-
-        &__button {
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: none;
-            color: $sce-primary-color;
-
-            &:hover {
-                background-color: transparent;
-                color: darken($color: $sce-primary-color, $amount: 10%);
+                background-color: #ff9800;
             }
         }
     }
@@ -144,89 +95,62 @@
     margin-bottom: 2rem;
 }
 
+.custom-dialog {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+}
 
-.item-modal {
-    background-color: $sce-background-color;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
+.custom-dialog-title {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: $sce-primary-color ;
+    text-align: center;
+}
 
-    &__header {
-        background-color: $sce-primary-color;
-        color: $sce-background-color;
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin: -1rem -1rem 1rem;
-        padding: 1rem;
-        text-align: center;
-    }
+.custom-dialog-itemname {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: $sce-text-color-dark !important;
+}
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+.custom-dialog-select {
+    margin-bottom: 16px !important;
+    border-color: $sce-primary-color !important;
+}
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
+.custom-dialog-text {
+    font-size: 16px !important;
+    color: $sce-text-color3 !important;
+    margin-bottom: 12px !important;
+}
 
-        p {
-            display: flex;
-            gap: 0.5rem;
+.item-modal__attributes {
+    list-style: none;
+    padding-left: 0;
+    font-size: 16px;
+    color: $sce-text-color3;
+}
 
-            &::before {
-                content: attr(data-label);
-                font-weight: bold;
-            }
-        }
+.item-modal__attributes li {
+    margin-bottom: 5px;
+}
 
-        .item-modal__fields {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+.custom-dialog-actions {
 
-            .item-modal__field {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
+    justify-content: space-between !important;
+}
 
-                Select {
-                    width: 200px;
-                    height: 36px;
-                }
-            }
-        }
+.custom-dialog-close-button {
+    text-transform: none !important;
 
-        .item-modal__attributes {
-            list-style: none;
-            padding-left: 0;
+    border: 1px solid $sce-secondary-color !important;
+    color: $sce-secondary-color !important;
+}
 
-            li {
-                font-size: 14px;
-                color: $sce-text-color-dark;
-                margin-bottom: 5px;
-            }
-        }
-    }
+.custom-dialog-update-button {
+    text-transform: none !important;
 
-    &__actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-        margin-top: 1rem;
-    }
-
-    .item-modal__button {
-        background-color: $sce-primary-color;
-        border-color: $sce-primary-color;
-        color: $sce-background-color;
-
-        &:hover {
-            background-color: darken($sce-primary-color, 10%);
-            border-color: darken($sce-primary-color, 10%);
-        }
-    }
+    background-color: $sce-primary-color !important;
+    color: $sce-background-color ;
 }

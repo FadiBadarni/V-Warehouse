@@ -29,8 +29,7 @@ const useItemFilter = (initialItems, itemsPerPage) => {
           (itemType === "" || itemType === item.itemType.name) &&
           (itemName === "" || itemName === item.itemName) &&
           (itemState === "" || itemState === item.state) &&
-          (searchQuery === "" ||
-            item.itemName.toLowerCase().includes(searchQuery.toLowerCase()))
+          (searchQuery === "" || item.id.toString().includes(searchQuery))
       )
       .slice(start, end);
 
