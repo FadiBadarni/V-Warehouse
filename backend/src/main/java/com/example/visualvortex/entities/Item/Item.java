@@ -20,6 +20,8 @@ public class Item {
     private long id;
     private String name;
     private String description;
+    @Column(nullable = true)
+    private boolean takeOut;
 
     @ManyToOne
     @JoinColumn(name = "item_type_id")
@@ -27,6 +29,5 @@ public class Item {
 
     @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private List<ItemInstance> itemInstances = new ArrayList<>();;
-
 
 }

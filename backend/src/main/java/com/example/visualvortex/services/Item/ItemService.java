@@ -102,40 +102,24 @@ public class ItemService {
             item = new Item();
             item.setDescription(instanceDTO.getDescription());
             item.setName(instanceDTO.getName());
+            item.setTakeOut(instanceDTO.isTakeOut());
             item.setItemType(itemType);
             item = itemRepository.save(item);
         }
 
-        // Create the item instances
-//        List<ItemInstance> itemInstances = new ArrayList<>();
-//
-//        for (int i = 0; i < itemDTO.getQuantity(); i++) {
-//            ItemInstance itemInstance = new ItemInstance();
-//            itemInstance.setItem(item);
-//            itemInstance.setState(ItemState.AVAILABLE);
-//            itemInstances.add(itemInstance);
-//        }
         ItemInstance itemInstance = new ItemInstance();
         itemInstance.setItem(item);
         itemInstance.setState(ItemState.AVAILABLE);
-//          long x=Long.parseLong();
         itemInstance.setId(instanceDTO.getSerialNumber());
 
 
         // Save the item instances
         itemInstanceRepository.save(itemInstance);
-//        ItemInstance savedItemInstances = itemInstanceRepository.save(itemInstance);
 
         // Update the item with the new instances
         item.getItemInstances().add(itemInstance);
         itemRepository.save(item);
 
-//        return savedItemInstances.stream()
-//                .map(instance -> new ItemInstanceDTO(
-//                        instance.getId(),
-//                        instance.getState(),
-//                        instance.getItem().getId()))
-//                .collect(Collectors.toList());
     }
 
 
@@ -186,6 +170,7 @@ public class ItemService {
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
+                .takeOut(item.isTakeOut())
                 .quantity(quantity)
                 .itemType(itemTypeDTO)
                 .itemInstances(itemInstanceDTOs)

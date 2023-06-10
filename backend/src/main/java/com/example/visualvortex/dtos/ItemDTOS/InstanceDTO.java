@@ -15,6 +15,7 @@ public class InstanceDTO {
     private Long serialNumber;
     private String name;
     private String description;
+    private boolean takeOut;
     private ItemTypeDTO itemType;
     private String img;
 }
