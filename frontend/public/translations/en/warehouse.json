@@ -2,6 +2,10 @@
     "warehouse" :{
         "title": "The Visual Nexus: Where Creativity Meets Equipment",
         "subtitle": "Discover, reserve, and conquer your projects with the right tools",
-        "available": "Available Now:"
-      }
+        "available": "Available Now:",
+        "itemType": "Item Type",
+        "searchByName": "Search by name",
+        "takeoutItems": "Takeout Items",
+        "reserveRoom": "Reserve Room"
+    }
 }

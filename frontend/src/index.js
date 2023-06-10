@@ -37,6 +37,7 @@ i18n
       "userInfo",
       "rowDetailsQR",
       "terms",
+      "itemManagement",
     ],
     defaultNS: "home",
   });

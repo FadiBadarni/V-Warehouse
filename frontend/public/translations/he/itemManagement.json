@@ -1,0 +1,13 @@
+{
+    "itemManagement": {
+        "itemName": "שם הפריט",
+        "takeoutItem": "פריט להוצאה",
+        "itemType": "סוג הפריט",
+        "serialNumber": "מספר סידורי",
+        "itemDescription": "תיאור הפריט",
+        "attributeName": "שם התכונה",
+        "attributeValue": "ערך התכונה",
+        "addAttribute": "הוסף תכונה",
+        "addItem": "הוסף פריט"
+    }
+}

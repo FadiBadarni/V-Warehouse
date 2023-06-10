@@ -1,0 +1,13 @@
+{
+    "itemManagement": {
+        "itemName": "Item Name",
+        "takeoutItem": "Takeout Item",
+        "itemType": "Item Type",
+        "serialNumber": "Serial Number",
+        "itemDescription": "Item Description",
+        "attributeName": "Attribute Name",
+        "attributeValue": "Attribute Value",
+        "addAttribute": "Add Attribute",
+        "addItem": "Add Item"
+    }
+}
