@@ -23,7 +23,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
-import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
+import NoMeetingRoomIcon from "@mui/icons-material/NoMeetingRoom";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SearchIcon from "@mui/icons-material/Search";
 import Tooltip from "@mui/material/Tooltip";
@@ -77,6 +77,8 @@ const Warehouse = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   const [checked, setChecked] = useState(false);
+
+  const isRTL = ["ar", "he", "fa"].includes(i18n.language);
 
   const fetchItems = useCallback(async () => {
     if (isAuthenticated) {
@@ -182,11 +184,14 @@ const Warehouse = () => {
           <h1>{t("warehouse.title")}</h1>
           <h2>{t("warehouse.subtitle")}</h2>
         </header>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="warehouse__controls">
           <FormControl variant="outlined" className="warehouse__item-type">
-            <InputLabel id="demo-simple-select-label">Item Type</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              {t("warehouse.itemType")}
+            </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
+              labelId="item-type-label"
+              label={t("warehouse.itemType")}
               id="demo-simple-select"
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
@@ -198,7 +203,7 @@ const Warehouse = () => {
               MenuProps={{
                 PaperProps: {
                   style: {
-                    maxHeight: "300px", // Set desired max height
+                    maxHeight: "300px",
                   },
                 },
               }}
@@ -212,7 +217,7 @@ const Warehouse = () => {
           </FormControl>
           <TextField
             variant="outlined"
-            label="Search by name"
+            label={t("warehouse.searchByName")}
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
             className="warehouse__search"
@@ -229,21 +234,21 @@ const Warehouse = () => {
               control={
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Tooltip title="Takeout items">
-                      <TakeoutDiningIcon />
+                    <Tooltip title="Items to be borrowed in the studio">
+                      <NoMeetingRoomIcon />
                     </Tooltip>
                   </Grid>
                   <Grid item>
                     <CustomSwitch checked={checked} onChange={toggleChecked} />
                   </Grid>
                   <Grid item>
-                    <Tooltip title="Items for room reservation">
+                    <Tooltip title="Items that can be taken out">
                       <MeetingRoomIcon />
                     </Tooltip>
                   </Grid>
                 </Grid>
               }
-              label="Reservation Mode"
+              label={t("warehouse.takeoutItems")}
               labelPlacement="top"
             />
           </FormGroup>
@@ -259,7 +264,7 @@ const Warehouse = () => {
           variant="extended"
         >
           <RoomIcon />
-          <span className="fab-text">Reserve Room</span>
+          <span className="fab-text">{t("warehouse.reserveRoom")}</span>
         </Fab>
       </div>
     </div>
