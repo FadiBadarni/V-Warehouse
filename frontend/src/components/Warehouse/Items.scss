@@ -46,10 +46,6 @@
             margin-right: 0.2rem;
         }
 
-        &--limited {
-            animation: pulse 2s infinite;
-        }
-
         .attributes {
             max-width: 13rem;
             margin-top: 0.8rem;
@@ -166,22 +162,5 @@
 
     100% {
         transform: translateY(0px);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(0.96);
-        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
-    }
-
-    70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
-    }
-
-    100% {
-        transform: scale(0.96);
-        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
     }
 }

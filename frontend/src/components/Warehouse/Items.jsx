@@ -8,7 +8,7 @@ import images from "../../constants/images";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 
-const Items = ({ items, selectedTag }) => {
+const Items = ({ items, selectedTag, checked }) => {
   const { t } = useTranslation("warehouse");
   const perPage = 12;
   const [page, setPage] = useState(1);
@@ -42,7 +42,8 @@ const Items = ({ items, selectedTag }) => {
         .filter(
           (item) =>
             item.name !== "Studio Room" &&
-            (!selectedTag || item.itemType.name === selectedTag)
+            (!selectedTag || item.itemType.name === selectedTag) &&
+            (!checked || item.takeOut)
         )
         .slice((page - 1) * perPage, page * perPage),
     [items, selectedTag, page]

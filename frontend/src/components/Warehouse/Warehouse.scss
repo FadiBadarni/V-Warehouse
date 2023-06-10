@@ -60,5 +60,35 @@
         }
     }
 
+    &__item-type {
+        width: 30%;
+
+    }
+
+    &__search {
+        width: 30%;
+    }
+
+    &__toggle-switch {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .MuiFormControlLabel-label {
+            color: $sce-text-color4;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .MuiSvgIcon-root {
+            color: $sce-primary-color;
+            width: 1.5em;
+            height: 1.5em;
+        }
+    }
+
+
+
 
 }
