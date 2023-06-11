@@ -40,7 +40,6 @@ public class LogoutControllerTest {
         loginDto.setUsername("Fadi");
         loginDto.setPassword("123");
 
-        // Assuming you have already set up a user with the above credentials in the UserService
         String json = mockMvc.perform(post("/api/login")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(loginDto)))

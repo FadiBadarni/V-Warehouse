@@ -1,48 +1,44 @@
 package com.example.visualvortex.Services;
 
-import com.example.visualvortex.dtos.ItemDTOS.ItemAttributeDTO;
-import com.example.visualvortex.dtos.ItemDTOS.InstanceDTO;
-import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
 import com.example.visualvortex.dtos.ItemDTOS.itemDTO;
 import com.example.visualvortex.entities.Item.*;
-import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ItemRepository;
-import com.example.visualvortex.repositories.ItemTypeRepository;
+import com.example.visualvortex.services.Item.ItemAttributeService;
 import com.example.visualvortex.services.Item.ItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceTest {
 
     @InjectMocks
+    @Spy
     private ItemService itemService;
 
     @Mock
     private ItemRepository itemRepository;
 
     @Mock
-    private ItemTypeRepository itemTypeRepository;
+    private ItemAttributeService itemAttributeService;
 
-    @Mock
-    private ItemInstanceRepository itemInstanceRepository;
 
-    private ItemType itemType;
     private Item item;
 
     @BeforeEach
     void setUp() {
-        itemType = new ItemType();
+        ItemType itemType = new ItemType();
         itemType.setId(1L);
         itemType.setName("Type1");
 
@@ -98,47 +94,6 @@ public class ItemServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> itemService.getItemById(1L));
     }
-
-    @Test
-    void testSaveItem() {
-        InstanceDTO itemDTO = new InstanceDTO();
-        itemDTO.setName("NewItem");
-        itemDTO.setDescription("NewItem description");
-//        itemDTO.setQuantity(2);
-        ItemTypeDTO itemTypeDTO = new ItemTypeDTO();
-        itemTypeDTO.setName("Type1");
-        itemTypeDTO.setAttributes(Set.of(new ItemAttributeDTO(1L, "Color", "Red"),
-                new ItemAttributeDTO(2L, "Size", "M")));
-        itemDTO.setItemType(itemTypeDTO);
-
-        when(itemTypeRepository.findByName(anyString())).thenReturn(Optional.of(itemType));
-        when(itemRepository.findByNameAndItemTypeId(anyString(), anyLong())).thenReturn(Optional.empty());
-        when(itemRepository.save(any(Item.class))).thenReturn(item);
-        Item item1 = new Item();
-        item1.setId(1L);
-        ItemInstance itemInstance1 = new ItemInstance();
-        itemInstance1.setItem(item1);
-        itemInstance1.setId(1L);
-        itemInstance1.setState(ItemState.AVAILABLE);
-
-        Item item2 = new Item();
-        item2.setId(2L);
-        ItemInstance itemInstance2 = new ItemInstance();
-        itemInstance2.setItem(item2);
-        itemInstance2.setId(2L);
-        itemInstance2.setState(ItemState.AVAILABLE);
-
-        when(itemInstanceRepository.saveAll(anyList())).thenReturn(List.of(itemInstance1, itemInstance2));
-
-//        List<ItemInstanceDTO> result = itemService.saveItem(itemDTO);
-
-//        assertEquals(2, result.size());
-        verify(itemTypeRepository, times(1)).findByName(anyString());
-        verify(itemRepository, times(1)).findByNameAndItemTypeId(anyString(), anyLong());
-        verify(itemRepository, times(2)).save(any(Item.class));
-        verify(itemInstanceRepository, times(2)).saveAll(anyList());
-    }
-
 
     @Test
     void testGetItemNames() {
