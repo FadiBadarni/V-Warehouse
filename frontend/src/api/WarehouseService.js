@@ -48,3 +48,11 @@ export async function getCountInstancesTime(id) {
     "An error occurred while fetching warehouse item by ID:"
   );
 }
+
+export async function getWarehouseRoomItems() {
+  return apiWrapper(
+    async () => await axiosInstance.get(`/warehouseRoomItems/`),
+    "Warehouse  Room item fetched successfully",
+    "An error occurred while fetching warehouse item by ID:"
+  );
+}

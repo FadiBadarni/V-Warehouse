@@ -24,6 +24,7 @@ import Faqs from "./components/Faqs/Faqs";
 import Terms from "./components/Terms/Terms";
 import Contact from "./components/Contact/Contact";
 import Select from "./components/Warehouse/Select";
+import Room from "./components/Warehouse/Room/Room";
 
 function App() {
   const { i18n } = useTranslation();
@@ -56,6 +57,7 @@ function App() {
           <Route path="/warehouse/item/:id" element={<ItemReservation />} />
           <Route path="/warehouse/items/:ids" element={<ItemReservation />} />
           <Route path="/select" element={<Select />} />
+          <Route path="/room" element={<Room />} />
 
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/item-list" element={<ItemList />} />

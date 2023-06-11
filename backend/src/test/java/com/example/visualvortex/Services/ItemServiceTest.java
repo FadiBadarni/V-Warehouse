@@ -3,7 +3,7 @@ package com.example.visualvortex.Services;
 import com.example.visualvortex.dtos.ItemDTOS.ItemAttributeDTO;
 import com.example.visualvortex.dtos.ItemDTOS.InstanceDTO;
 import com.example.visualvortex.dtos.ItemDTOS.ItemTypeDTO;
-import com.example.visualvortex.dtos.ItemDTOS.itemDTO;
+import com.example.visualvortex.dtos.ItemDTOS.ItemDTO;
 import com.example.visualvortex.entities.Item.*;
 import com.example.visualvortex.repositories.ItemInstanceRepository;
 import com.example.visualvortex.repositories.ItemRepository;
@@ -154,7 +154,7 @@ public class ItemServiceTest {
     void testGetItemByName() {
         when(itemRepository.findByName(anyString())).thenReturn(Optional.of(item));
 
-        itemDTO result = itemService.getItemByName(item.getName());
+        ItemDTO result = itemService.getItemByName(item.getName());
 
         assertEquals(item.getId(), result.getId());
         assertEquals(item.getName(), result.getName());

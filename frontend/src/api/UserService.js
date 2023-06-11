@@ -70,31 +70,31 @@ export async function logoutUser() {
   }
 }
 
-// export const getUserInfo = async () => {
-//   const token = window.localStorage.getItem("token");
-//   const response = await fetch("/api/userInfo", {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   if (response.status === 403 || response.status === 401) {
-//     return { status: "TokenExpired" };
-//   }
-//   console.log("response");
-//   console.log(response);
+export const getUserInfo = async () => {
+  const token = window.localStorage.getItem("token");
+  const response = await fetch("/api/userInfo", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 403 || response.status === 401) {
+    return { status: "TokenExpired" };
+  }
+  console.log("response");
+  console.log(response);
 
-//   console.log("response.data");
-//   console.log(response.data);
+  console.log("response.data");
+  console.log(response.data);
 
-//   if (response.ok) {
-//     const data = await response.json();
-//     window.localStorage.setItem("userId", data.id);
-//     return data;
-//   } else {
-//     throw new Error("Failed to fetch user info");
-//   }
-// };
+  if (response.ok) {
+    const data = await response.json();
+    window.localStorage.setItem("userId", data.id);
+    return data;
+  } else {
+    throw new Error("Failed to fetch user info");
+  }
+};
 
 export function getUserIdFromLocalStorage() {
   return localStorage.getItem("userId");
@@ -108,11 +108,11 @@ export async function getBorrowRequestsByUserId(userId) {
   );
 }
 
-export async function getUserInfo() {
-  const token = window.localStorage.getItem("token");
-  return apiWrapper(
-    () => axiosInstance.get("/userInfo", `Bearer ${token}`),
-    "Borrow requests fetched successfully",
-    "Failed to fetch borrow requests"
-  );
-}
+// export async function getUserInfo() {
+//   const token = window.localStorage.getItem("token");
+//   return apiWrapper(
+//     () => axiosInstance.get("/userInfo", `Bearer ${token}`),
+//     "Borrow requests fetched successfully",
+//     "Failed to fetch borrow requests"
+//   );
+// }

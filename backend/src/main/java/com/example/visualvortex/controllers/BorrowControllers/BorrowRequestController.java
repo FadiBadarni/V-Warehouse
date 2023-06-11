@@ -64,7 +64,7 @@ public class BorrowRequestController {
     @GetMapping("/items/{itemId}/instances")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemInstanceDTO> getItemInstancesByItemId(@PathVariable Long itemId) {
-        List<ItemInstanceDTO> t = itemInstanceService.getItemInstancesByItemId(itemId);
+//        List<ItemInstanceDTO> t = itemInstanceService.getItemInstancesByItemId(itemId);
         return itemInstanceService.getItemInstancesByItemId(itemId);
     }
 
