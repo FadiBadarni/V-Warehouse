@@ -1,85 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import useAdminRole from "../../../hooks/useAdminRole";
 import AdminLayout from "../Sidebar/AdminLayout";
 import { useTranslation } from "react-i18next";
-import {
-  Box,
-  Typography,
-  Table,
-  TableContainer,
-  Paper,
-  Tab,
-  Tabs,
-} from "@mui/material";
-import InstancesTableHeaders from "./InstancesTableHeaders";
-import InstancesTableBody from "./InstancesTableBody";
-import { getAllItemInstances } from "../../../api/AdminService";
+import { Box, Typography } from "@mui/material";
+import images from "../../../constants/images";
 
 import "./Statistics.scss";
 
-const DummyPage = () => (
-  <Box>
-    <Typography variant="h4" gutterBottom>
-      Dummy Page
-    </Typography>
-    <Typography variant="body1">This is a dummy page.</Typography>
-  </Box>
-);
+const ComingSoonPage = () => {
+  return (
+    <Box
+      style={{
+        position: "relative",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundImage: `url(${images.graphs})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          filter: "blur(8px)",
+          zIndex: 1,
+        }}
+      />
+      <Typography
+        variant="h1"
+        style={{
+          color: "white",
+          fontWeight: "900",
+          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+          zIndex: 2,
+        }}
+      >
+        Coming Soon
+      </Typography>
+    </Box>
+  );
+};
 
 const Statistics = () => {
   useAdminRole();
   const { i18n } = useTranslation();
   const direction = i18n.language === "he" ? "rtl" : "ltr";
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [expandedRow, setExpandedRow] = useState(-1);
-  const [itemInstances, setItemInstances] = useState([]);
-
-  const handleRowClick = (index) => {
-    setExpandedRow(expandedRow === index ? -1 : index);
-  };
-
-  useEffect(() => {
-    const fetchItemInstances = async () => {
-      const instances = await getAllItemInstances();
-      setItemInstances(instances);
-    };
-
-    fetchItemInstances();
-  }, []);
-
   return (
     <Box className="statistics">
       <AdminLayout direction={direction}></AdminLayout>
       <Box className="statistics__content">
-        <Tabs
-          value={activeTab}
-          onChange={(_, newValue) => setActiveTab(newValue)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-        >
-          <Tab label="Dummy Page" />
-          <Tab label="Statistics" />
-        </Tabs>
-        {activeTab === 0 && <DummyPage />}
-        {activeTab === 1 && (
-          <>
-            <Typography className="statistics__title" variant="h4" gutterBottom>
-              Statistics
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <InstancesTableHeaders />
-                <InstancesTableBody
-                  itemInstances={itemInstances}
-                  handleRowClick={handleRowClick}
-                  expandedRow={expandedRow}
-                />
-              </Table>
-            </TableContainer>
-          </>
-        )}
+        <ComingSoonPage />
       </Box>
     </Box>
   );

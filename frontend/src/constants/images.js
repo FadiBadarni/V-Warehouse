@@ -31,6 +31,7 @@ import sony_mdr_7506 from "../assets/items/sony_mdr_7506.png";
 import micro_hdmi from "../assets/items/micro_hdmi.png";
 import panasonic_dcs5 from "../assets/items/panasonic_dcs5.png";
 import xlr from "../assets/items/xlr.png";
+import graphs from "../assets/graphs.png";
 const images = {
   audio,
   action,
@@ -65,6 +66,7 @@ const images = {
   micro_hdmi,
   panasonic_dcs5,
   xlr,
+  graphs,
 };
 
 export default images;

@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import Pagination from "@mui/material/Pagination";
 import images from "../../constants/images";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 
 const Items = ({ items, selectedTag, checked }) => {
-  const { t } = useTranslation("warehouse");
   const perPage = 12;
   const [page, setPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState(new Set());
@@ -109,13 +107,6 @@ const Items = ({ items, selectedTag, checked }) => {
             <div className="warehouse__item-details">
               <h3>{item.name}</h3>
               <p className="truncate">{item.description}</p>
-              <div className="attributes">
-                <span className="count">
-                  {item.quantity > 0
-                    ? `${t("warehouse.available")} ${item.quantity}`
-                    : ""}
-                </span>
-              </div>
             </div>
             <div className="warehouse__item-checkbox">
               <Checkbox

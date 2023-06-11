@@ -89,7 +89,9 @@ const Warehouse = () => {
           warehouseItems
             .filter(
               (item) =>
-                (filter === "" || item.itemType.name === filter) &&
+                (filter === "" ||
+                  filter === "All" ||
+                  item.itemType.name === filter) &&
                 item.name.includes(nameFilter) &&
                 (checked ? item.takeOut : !item.takeOut)
             )
