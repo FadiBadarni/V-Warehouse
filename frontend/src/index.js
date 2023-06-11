@@ -38,6 +38,7 @@ i18n
       "rowDetailsQR",
       "terms",
       "itemManagement",
+      "contact",
     ],
     defaultNS: "home",
   });

@@ -85,14 +85,14 @@
     }
 
     .MuiButton-containedPrimary {
-        background-color: $sce-text-color;
+        background-color: $sce-primary-color;
         color: $sce-background-color;
         padding: 8px 16px;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
         &:hover {
-            background-color: darken($sce-text-color, 5%);
+            background-color: darken($sce-primary-color, 5%);
         }
     }
 

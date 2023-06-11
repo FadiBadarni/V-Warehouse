@@ -89,6 +89,10 @@
         @media (max-width: 600px) {
             width: 100%;
         }
+
+        .rtl & {
+            direction: rtl;
+        }
     }
 
     &__toggle-switch {
@@ -123,7 +127,7 @@
             }
         }
 
-        .rtl & {}
+
 
     }
 

@@ -1,0 +1,12 @@
+{
+  "contact": {
+    "getInTouch": "צור קשר",
+    "contactInformation": "מידע ליצירת קשר",
+    "address": "כתובת",
+    "phone": "טלפון",
+    "email": "דואר אלקטרוני",
+    "name": "שם",
+    "message": "הודעה",
+    "sendMessage": "שלח הודעה"
+  }
+}

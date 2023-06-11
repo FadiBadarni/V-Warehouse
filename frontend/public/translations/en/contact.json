@@ -1,0 +1,12 @@
+{
+    "contact": {
+      "getInTouch": "Get in Touch",
+      "contactInformation": "Contact Information",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "name": "Name",
+      "message": "Message",
+      "sendMessage": "Send Message"
+    }
+  }

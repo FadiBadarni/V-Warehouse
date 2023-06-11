@@ -11,9 +11,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
 import MessageIcon from "@mui/icons-material/Message";
 import SendIcon from "@mui/icons-material/Send";
+import { useTranslation } from "react-i18next";
+
 import "./Contact.scss";
 
 const Contact = () => {
+  const { t } = useTranslation("contact");
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -30,7 +34,6 @@ const Contact = () => {
       )
       .then(
         (result) => {
-          console.log(result.text);
           setName("");
           setEmail("");
           setMessage("");
@@ -45,22 +48,23 @@ const Contact = () => {
     <Box className="contact">
       <Box className="contact__content">
         <Typography variant="h4" className="contact__title">
-          Get in Touch
+          {t("contact.getInTouch")}
         </Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Box className="contact__info">
               <Typography variant="h6" className="contact__info-title">
-                Contact Information
+                {t("contact.contactInformation")}
               </Typography>
               <Typography variant="body1" className="contact__info-item">
-                <strong>Address:</strong> 1234 Fadi St, Anytown, Israel
+                <strong>{t("contact.address")}:</strong> 1234 Fadi St, Anytown,
+                Israel
               </Typography>
               <Typography variant="body1" className="contact__info-item">
-                <strong>Phone:</strong> (052) 418-3083
+                <strong>{t("contact.phone")}:</strong> (052) 418-3083
               </Typography>
               <Typography variant="body1" className="contact__info-item">
-                <strong>Email:</strong> fadibadarnii@gmail.com
+                <strong>{t("contact.email")}:</strong> fadibadarnii@gmail.com
               </Typography>
             </Box>
           </Grid>
@@ -71,7 +75,7 @@ const Contact = () => {
                   <TextField
                     id="name"
                     name="name"
-                    label="Name"
+                    label={t("contact.name")}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -91,7 +95,7 @@ const Contact = () => {
                   <TextField
                     id="email"
                     name="email"
-                    label="Email"
+                    label={t("contact.email")}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -111,7 +115,7 @@ const Contact = () => {
                   <TextField
                     id="message"
                     name="message"
-                    label="Message"
+                    label={t("contact.message")}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -137,7 +141,7 @@ const Contact = () => {
                     className="contact__form-submit"
                     startIcon={<SendIcon />}
                   >
-                    Send Message
+                    {t("contact.sendMessage")}
                   </Button>
                 </Box>
               </form>
